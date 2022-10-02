@@ -30,7 +30,7 @@ public class CardDealer : MonoBehaviour
     count - number of random cards to produce
 
     minCardNum - the minimum card number to use. the lowest possible value for a card is 1.
-    maxCardNum - the maximum card number to use. the highest possible value for a card is 14.
+    maxCardNum - the maximum card number to use. the highest possible value for a card is 13.
     inclClubs - boolean to specify whether to include club suits
     inclHearts - boolean to specify whether to include heart suit
     inclSpades - boolean to specify whether to include spades suit
@@ -109,11 +109,6 @@ public class CardDealer : MonoBehaviour
             suits[currentIndex] = "diamonds";
         }
 
-        for (int i = 0; i < suits.Length; i++)
-        {
-            Debug.Log(suits[i]);
-        }
-
         // get random cards
         for (int i = 0; i < count; i++) {
             // picks a random card number (index)
@@ -135,5 +130,40 @@ public class CardDealer : MonoBehaviour
         }
 
         return randomCards;
+    }
+
+    /*
+    Card shuffler.
+
+    Given an array of GameObject cards, the function will randomly shuffle the cards and return a new, shuffled array containing the same GameObjects.
+
+    toShuffle - array of GameObject cards to shuffle
+    */
+    public GameObject[] ShuffleCards(GameObject[] toShuffle) {
+        for (int i = 0; i < toShuffle.Length; i++) {
+            Debug.Log("old: " + toShuffle[i]);
+        }
+
+        int currentIndex = 0;
+        GameObject[] shuffled = new GameObject[toShuffle.Length];
+        bool[] shuffleStatus = new bool[toShuffle.Length];
+
+        while (currentIndex < toShuffle.Length) {
+            int randomNewIndex = Random.Range(0, toShuffle.Length);
+
+            if (shuffleStatus[randomNewIndex] == false) {
+                shuffled[randomNewIndex] = toShuffle[currentIndex];
+
+                shuffleStatus[randomNewIndex] = true;
+
+                currentIndex++;
+            }
+        }
+
+        for (int i = 0; i < shuffled.Length; i++) {
+            Debug.Log("new:" + shuffled[i]);
+        }
+
+        return shuffled;
     }
 }
