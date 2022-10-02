@@ -7,7 +7,7 @@ using TMPro;
 using Photon.Pun;
 using Photon.Realtime;
 
-namespace com.CS307.CoolCardGames
+namespace com.CS307.CoolCardGames.PlayerNameInputField
 {
     /// <summary>
     /// Player name input field. Let the user input his name, will appear above the player in the game.
