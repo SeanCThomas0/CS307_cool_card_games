@@ -11,11 +11,13 @@ public class GoFishLogic : MonoBehaviour
     void Start()
     {
         cardDealer = Square.GetComponent<CardDealer>();
-        GameObject[] someCards = cardDealer.CreateCards(5, 1, 3, true, false, false, false);
 
+        GameObject[] someCards = cardDealer.CreateCards(5, 1, 13, true, false, false, false);
         for (int i = 0; i < someCards.Length; i++) {
             GameObject cardOne = Instantiate(someCards[i], new Vector3(0,0,0), Quaternion.identity);
         }
+
+        GameObject[] shuffledCards = cardDealer.ShuffleCards(someCards);
     }
 
     // Update is called once per frame
