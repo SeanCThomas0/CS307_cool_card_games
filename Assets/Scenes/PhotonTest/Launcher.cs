@@ -48,7 +48,6 @@ namespace com.CS307.CoolCardGames.Launcher
 
         void Start()
         {
-            Connect();
         }
 
 
