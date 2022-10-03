@@ -33,6 +33,10 @@ namespace com.CS307.CoolCardGames.Launcher
         [SerializeField]
         private GameObject progressLabel;
 
+        [Tooltip("The UI for game stuff")]
+        [SerializeField]
+        private GameObject GameController;
+
         #endregion
 
         #region MonoBehavior Callbacks
@@ -77,6 +81,7 @@ namespace com.CS307.CoolCardGames.Launcher
             controlPanel.SetActive(false);
 
 
+
             //we check if we are connected or not, if we are then join, if not we make the connection
             if (PhotonNetwork.IsConnected)
             {
@@ -107,6 +112,8 @@ namespace com.CS307.CoolCardGames.Launcher
         {
             progressLabel.SetActive(false);
             controlPanel.SetActive(true);
+            GameController.SetActive(false);
+
 
 
             Debug.LogWarningFormat("PUN Basics Tutorial/Launcher: OnDisconnected() was called by PUN with reason {0}", cause);
@@ -125,6 +132,9 @@ namespace com.CS307.CoolCardGames.Launcher
         public override void OnJoinedRoom()
         {
             Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
+            progressLabel.SetActive(false);
+            GameController.SetActive(true);
+
         }
 
 
