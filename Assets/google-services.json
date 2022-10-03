@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "146898551955",
+    "project_id": "cool-card-games",
+    "storage_bucket": "cool-card-games.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:146898551955:android:61b371c6db31246f85b966",
+        "android_client_info": {
+          "package_name": "com.team11.coolcardgames"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "146898551955-sk7f9qc5s8j2d4ic1t0qabgjkcft9h3j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGLKJhGnJJEMFTtOEoNzcQO2vHo1Q8abs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "146898551955-sk7f9qc5s8j2d4ic1t0qabgjkcft9h3j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
