@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SolitaireLogic : MonoBehaviour
+public class UserInput : MonoBehaviour
 {
-    CardDealer CardDealer;
     // Start is called before the first frame update
     void Start()
     {
