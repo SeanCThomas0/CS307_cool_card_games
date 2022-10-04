@@ -1,3 +1,5 @@
+using System;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +15,7 @@ public class GameManagerEuchre : MonoBehaviour
     public GameObject UserPlayer;
     public GameObject GameManager;
 
+    /*Temporary card class for testing to be replaced with CardDealer script*/
     public class Card {
         private int numbValue;
         private string faceValue;
@@ -57,16 +60,19 @@ public class GameManagerEuchre : MonoBehaviour
 
     }
 
+    /*CardPlayer class for individual game players*/
     public class CardPlayer {
-        private ArrayList hand;
+        private List<Card> hand;
         private string userID;
+        private int teamNumber;
 
-        public CardPlayer(string userID) {
-            hand = new ArrayList();
+        public CardPlayer(string userID, int teamNumber) {
+            hand = new List<Card>();
             this.userID = userID;
+            this.teamNumber = teamNumber;
         }
 
-        public ArrayList getHandList() {
+        public List<Card> getHandList() {
             return hand;
         }
         
@@ -74,9 +80,22 @@ public class GameManagerEuchre : MonoBehaviour
             return userID;
         }
 
+        public int getTeamNumber() {
+            return teamNumber; 
+        }
+
+        public void addToHand(Card cardToAdd) {
+            hand.Add(cardToAdd);
+        }
+
+        public void removeFromHand(int indexInHand) {
+            hand.RemoveAt(indexInHand - 1);
+        }
+
+        /*gets card value and removes it from the User's hand*/
         public Card playCard(int indexInHand) {
             Card returnCard = (Card) hand[indexInHand - 1];
-            hand.RemoveAt(indexInHand - 1);
+            removeFromHand(indexInHand);
             return returnCard;
         }
     
@@ -86,9 +105,15 @@ public class GameManagerEuchre : MonoBehaviour
     void Start()
     {
         Debug.Log("Euchre Game Starting");
-        ArrayList cardDeck = new ArrayList();
-        ArrayList playerQueue = new ArrayList();
+        List<Card> cardDeck = new List<Card>();
+        Queue<CardPlayer> playerQueue = new Queue<CardPlayer>();
+        
+        CardPlayer playerOne;
+        CardPlayer playerTwo;
+        CardPlayer playerThree;
+        CardPlayer playerFour;
 
+        /*create cards needed for game*/
         for(int i = 9; i <= 14; i++) {
             for(int j = 1; j <= 4; j++) {
                 cardDeck.Add(new Card(i, j));
@@ -100,28 +125,95 @@ public class GameManagerEuchre : MonoBehaviour
             string message = "Added card: " + tempFace + " of " + tempSuit + "\n" ; 
             Debug.Log(message);
         }
-        CardPlayer[] teamOne = new CardPlayer[2];
-        CardPlayer[] teamTwo = new CardPlayer[2];
+        
         int oneCount = 0;
         int twoCount = 0;
 
+        /*create card player objects with userID's*/
         for(int i = 1; i <= 4; i++) {
-            playerQueue.Add(new CardPlayer("" + i));
             if(i % 2 == 1) {
-                teamOne[oneCount] = (CardPlayer) playerQueue[i-1];
+                if(i == 1) {
+                    playerOne = new CardPlayer("" + i, 1);
+                    playerQueue.Enqueue(playerOne);
+                } else {
+                    playerThree = new CardPlayer("" + i, 1);
+                    playerQueue.Enqueue(playerThree);
+                }
                 oneCount++;
-            }
-            if(i % 2 == 0) {
-                teamTwo[twoCount] = (CardPlayer) playerQueue[i-1];
+            } else if(i % 2 == 0) {
+                if(i == 2) {
+                    playerTwo = new CardPlayer("" + i, 2);
+                    playerQueue.Enqueue(playerTwo);
+                } else {
+                    playerFour = new CardPlayer("" + i, 2);
+                    playerQueue.Enqueue(playerFour);
+                }
                 twoCount++;
             }
         }
         int teamOneScore = 0;
         int teamTwoScore = 0;
+        CardPlayer dealer = null;
 
-        while (teamOneScore <= 10 && teamTwoScore <= 10) {
-            teamOneScore++;
+        /*begin game flow of dealing and playing cards */
+        while (teamOneScore < 10 && teamTwoScore < 10) {
+            dealer = playerQueue.Dequeue();
+            playerQueue.Enqueue(dealer);
+
+            /* deal cards to each player */
+            CardPlayer currentPlayer = null;
+            int deckCount = 0;
+            for(int dealNumb = 0; dealNumb < 4; dealNumb++) {
+                currentPlayer = playerQueue.Dequeue();
+                for(int handCount = 0; handCount < 5; handCount++) {
+                    currentPlayer.addToHand(cardDeck[deckCount]);
+                    deckCount++;
+                }
+                playerQueue.Enqueue(currentPlayer);
+            }
+            
+            //test to make sure each player gets 5 unique cards
+            for(int dealNumb = 0; dealNumb < 4; dealNumb++) {
+                currentPlayer = playerQueue.Dequeue();
+                List<Card> tempHand = currentPlayer.getHandList();
+                foreach(Card currCard in tempHand) {
+                    StringBuilder testsb = new StringBuilder("", 100);
+                    testsb.AppendFormat("{0} has {1} of {2}", currentPlayer.getUserID(), currCard.getFaceValue(), currCard.getSuit());
+                    string message = testsb.ToString();
+                    Debug.Log(message);
+                }
+                playerQueue.Enqueue(currentPlayer);
+            }
+            //ignore above section and delete later
+
+            /* have users choose to pick up card that has been flipped on top of remaining cards*/
+
+            /* have users choose the trump suit if top card was not picked up*/
+            
+            /* Play 5 tricks to determine who wins the hand*/ 
+            //string trumpSuit = "";
+            int teamOneTrickScore = 0;
+            int teamTwoTrickScore = 0;
+
+            for(int trickNumber = 0; trickNumber < 5; trickNumber++) {
+                //string leadSuit = "";
+                /* have players each play their cards */
+                
+                /* calculate winner of the given trick */
+                teamTwoTrickScore++;
+                
+                /*rotate queue so that winner plays the first card at the beginning of the next trick */
+            }
+
+            /* calculate winner of the hand and points based off who called trump */
+            if(teamOneTrickScore > teamTwoScore) {
+                teamOneScore+=10;
+            } else {
+                teamTwoScore+=10;
+            }
         }
+
+        /* Check to see if */
         if(teamOneScore >= 10) {
             string message = "Team 1 wins!";
             Debug.Log(message);
