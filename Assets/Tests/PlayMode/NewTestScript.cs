@@ -1,35 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
-using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
+// using System.Collections;
+// using System.Collections.Generic;
+// using NUnit.Framework;
+// using UnityEngine;
+// using UnityEngine.TestTools;
 
-public class NewTestScript
-{
-    // A Test behaves as an ordinary method
-    [Test]
-    public void NewTestScriptSimplePasses()
-    {
-        // Use the Assert class to test conditions
-    }
+// public class NewTestScript
+// {
+//     // A Test behaves as an ordinary method
+//     [Test]
+//     public void NewTestScriptSimplePasses()
+//     {
+//         // Use the Assert class to test conditions
+//     }
 
-    // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
-    // `yield return null;` to skip a frame.
-    [UnityTest]
-    public IEnumerator NewTestScriptWithEnumeratorPasses()
-    {
-        // Use the Assert class to test conditions.
-        // Use yield to skip a frame.
+//     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
+//     // `yield return null;` to skip a frame.
+//     [UnityTest]
+//     public IEnumerator NewTestScriptWithEnumeratorPasses()
+//     {
+//         // Use the Assert class to test conditions.
+//         // Use yield to skip a frame.
 
-        var gameObject = new GameObject();
-        var cardDealer = gameObject.AddComponent<CardDealer>();
+//         var gameObject = new GameObject();
+//         var cardDealer = gameObject.AddComponent<CardDealer>();
 
-        GameObject[] returnedCards = cardDealer.CreateCards(5);
+//         GameObject[] returnedCards = cardDealer.CreateCards(5);
 
-        Debug.Log(returnedCards);
+//         Debug.Log(returnedCards);
 
-        Assert.AreEqual(5, returnedCards.Length);
+//         Assert.AreEqual(5, returnedCards.Length);
 
-        yield return null;
-    }
-}
+//         yield return null;
+//     }
+// }
