@@ -101,18 +101,21 @@ public class GameManagerEuchre : MonoBehaviour
     
     }
     public string currentInput = "empty";
+    //public bool notEmpty = false;
+    public List<Card> cardDeck = new List<Card>();
+    public Queue<CardPlayer> playerQueue = new Queue<CardPlayer>();
+    public CardPlayer playerOne;
+    public CardPlayer playerTwo;
+    public CardPlayer playerThree;
+    public CardPlayer playerFour;
+    public int teamOneScore = 0;
+    public int teamTwoScore = 0;
+    public CardPlayer dealer = null;
 
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log("Euchre Game Starting");
-        List<Card> cardDeck = new List<Card>();
-        Queue<CardPlayer> playerQueue = new Queue<CardPlayer>();
-        
-        CardPlayer playerOne;
-        CardPlayer playerTwo;
-        CardPlayer playerThree;
-        CardPlayer playerFour;
 
         /*create cards needed for game*/
         for(int i = 9; i <= 14; i++) {
@@ -152,13 +155,23 @@ public class GameManagerEuchre : MonoBehaviour
                 twoCount++;
             }
         }
-        int teamOneScore = 0;
-        int teamTwoScore = 0;
-        CardPlayer dealer = null;
 
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         /*begin game flow of dealing and playing cards */
         while (teamOneScore < 10 && teamTwoScore < 10) {
             //get user test input
+            /*
+            while(currentInput.Equals("empty")) {
+                if(!currentInput.Equals("empty")) {
+                    break;
+                }
+            }
+            */
             Debug.Log("Program recieved " + currentInput);
             currentInput = "empty";
 
@@ -228,38 +241,34 @@ public class GameManagerEuchre : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     
     public void OnEnter(string userInput) {
         Debug.Log("User entered " + userInput); 
         currentInput = userInput;
-        gameObject.SendMessage("recieve", userInput);
+        //gameObject.SendMessage("recieve", userInput);
     }
 
     public void recieve(string message)
     {
-        Debug.Log("GameManager recieved " + message); 
+        Debug.Log("GameManager recieved " + message);     
     }
     
 
     public void OnClick() {
         Debug.Log("Deal button clicked");
-        GameObject card1Instance = Instantiate(handcard1, new Vector3(1, 0, 0), Quaternion.identity);
-        GameObject card2Instance = Instantiate(handcard2, new Vector3(-1, 0, 0), Quaternion.identity);
-        GameObject card3Instance = Instantiate(handcard3, new Vector3(1, 0, 0), Quaternion.identity);
-        GameObject card4Instance = Instantiate(handcard4, new Vector3(-1, 0, 0), Quaternion.identity);
-        GameObject card5Instance = Instantiate(handcard5, new Vector3(1, 0, 0), Quaternion.identity);
+        /*
+        GameObject card1Instance = Instantiate(handcard1, new Vector3(-30, 0, 0), Quaternion.identity);
+        GameObject card2Instance = Instantiate(handcard2, new Vector3(-60, 0, 0), Quaternion.identity);
+        GameObject card3Instance = Instantiate(handcard3, new Vector3(0, 0, 0), Quaternion.identity);
+        GameObject card4Instance = Instantiate(handcard4, new Vector3(30, 0, 0), Quaternion.identity);
+        GameObject card5Instance = Instantiate(handcard5, new Vector3(60, 0, 0), Quaternion.identity);
 
         card1Instance.transform.SetParent(handarea.transform, false);
         card2Instance.transform.SetParent(handarea.transform, false);
         card3Instance.transform.SetParent(handarea.transform, false);
         card4Instance.transform.SetParent(handarea.transform, false);
         card5Instance.transform.SetParent(handarea.transform, false);
+        */
 
         // card1Instance.transform.scale = new Vector3(0.5f, 0.5f, 0.5f);  
     }
