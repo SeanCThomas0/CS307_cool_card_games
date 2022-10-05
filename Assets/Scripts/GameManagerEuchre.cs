@@ -100,6 +100,7 @@ public class GameManagerEuchre : MonoBehaviour
         }
     
     }
+    public string currentInput = "empty";
 
     // Start is called before the first frame update
     void Start()
@@ -157,6 +158,10 @@ public class GameManagerEuchre : MonoBehaviour
 
         /*begin game flow of dealing and playing cards */
         while (teamOneScore < 10 && teamTwoScore < 10) {
+            //get user test input
+            Debug.Log("Program recieved " + currentInput);
+            currentInput = "empty";
+
             dealer = playerQueue.Dequeue();
             playerQueue.Enqueue(dealer);
 
@@ -228,6 +233,19 @@ public class GameManagerEuchre : MonoBehaviour
     {
         
     }
+
+    
+    public void OnEnter(string userInput) {
+        Debug.Log("User entered " + userInput); 
+        currentInput = userInput;
+        gameObject.SendMessage("recieve", userInput);
+    }
+
+    public void recieve(string message)
+    {
+        Debug.Log("GameManager recieved " + message); 
+    }
+    
 
     public void OnClick() {
         Debug.Log("Deal button clicked");
