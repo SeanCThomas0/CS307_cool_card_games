@@ -26,28 +26,23 @@ public class CardDealer : MonoBehaviour
     /*
     returns a standard deck of 52 cards
     */
-    public GameObject[] StandardDeck() {
-        GameObject[] standardDeck = new GameObject[52];
-        int index = 0;
+    public List<GameObject> StandardDeck() {
+        List<GameObject> standardDeck = new List<GameObject>();
 
         for (int i = 0; i < clubs.Length; i++) {
-            standardDeck[index] = clubs[i];
-            index++;
+            standardDeck.Add(clubs[i]);
         }
 
         for (int i = 0; i < hearts.Length; i++) {
-            standardDeck[index] = hearts[i];
-            index++;
+            standardDeck.Add(hearts[i]);
         }
 
         for (int i = 0; i < spades.Length; i++) {
-            standardDeck[index] = spades[i];
-            index++;
+            standardDeck.Add(spades[i]);
         }
 
         for (int i = 0; i < diamonds.Length; i++) {
-            standardDeck[index] = diamonds[i];
-            index++;
+            standardDeck.Add(diamonds[i]);
         }
 
         return standardDeck;
@@ -76,12 +71,11 @@ public class CardDealer : MonoBehaviour
     inclDiamonds - boolean to specify whether to include diamonds suit
     */
 
-    public GameObject[] RandomCards(int count)
+    public List<GameObject> RandomCards(int count)
     {
-        GameObject[] randomCards = new GameObject[count];
+        List<GameObject> randomCards = new List<GameObject>();
 
-        int numberReturned = 0;
-        while(numberReturned < count) {
+        while(randomCards.Count < count) {
             // picks a random card number (index)
             int randomNum = UnityEngine.Random.Range(0, 13);
 
@@ -90,24 +84,20 @@ public class CardDealer : MonoBehaviour
 
             // adds card to array
             if (randomSuit == 0) {
-                if (!Array.Exists(randomCards, element => element == clubs[randomNum])) {
-                    randomCards[numberReturned] = clubs[randomNum];
-                    numberReturned++;
+                if (randomCards.Contains(clubs[randomNum])) {
+                    randomCards.Add(clubs[randomNum]);
                 }
             } else if (randomSuit == 1) {
-                if (!Array.Exists(randomCards, element => element == hearts[randomNum])) {
-                    randomCards[numberReturned] = hearts[randomNum];
-                    numberReturned++;
+                if (randomCards.Contains(hearts[randomNum])) {
+                    randomCards.Add(hearts[randomNum]);
                 }
             } else if (randomSuit == 2) {
-                if (!Array.Exists(randomCards, element => element == spades[randomNum])) {
-                    randomCards[numberReturned] = spades[randomNum];
-                    numberReturned++;
+                if (randomCards.Contains(spades[randomNum])) {
+                    randomCards.Add(spades[randomNum]);
                 }
             } else if (randomSuit == 3) {
-                if (!Array.Exists(randomCards, element => element == diamonds[randomNum])) {
-                    randomCards[numberReturned] = diamonds[randomNum];
-                    numberReturned++;
+                if (randomCards.Contains(diamonds[randomNum])) {
+                    randomCards.Add(diamonds[randomNum]);
                 }
             }
         }
