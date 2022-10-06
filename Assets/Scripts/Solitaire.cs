@@ -8,7 +8,7 @@ public class Solitaire : MonoBehaviour
     CardDealer cardDealer;
     public GameObject cardPrefab;
 
-    public GameObject[] deck;
+    public List<GameObject> deck;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,7 +24,7 @@ public class Solitaire : MonoBehaviour
     }
 
     void SolitaireDeal() {
-        for (int i = 0; i < deck.Length; i++) {
+        for (int i = 0; i < deck.Count; i++) {
             GameObject newCard = Instantiate(deck[i], transform.position, Quaternion.identity);
             
         }
