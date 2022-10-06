@@ -83,104 +83,84 @@ public class CardDealer : MonoBehaviour
             int randomSuit = UnityEngine.Random.Range(0, 4);
 
             // adds card to array
-            if (randomSuit == 0) {
-                if (randomCards.Contains(clubs[randomNum])) {
+            switch (randomSuit)
+            {
+                case 0:
                     randomCards.Add(clubs[randomNum]);
-                }
-            } else if (randomSuit == 1) {
-                if (randomCards.Contains(hearts[randomNum])) {
+                    break;
+                case 1:
                     randomCards.Add(hearts[randomNum]);
-                }
-            } else if (randomSuit == 2) {
-                if (randomCards.Contains(spades[randomNum])) {
+                    break;
+                case 2:
                     randomCards.Add(spades[randomNum]);
-                }
-            } else if (randomSuit == 3) {
-                if (randomCards.Contains(diamonds[randomNum])) {
+                    break;
+                case 3:
                     randomCards.Add(diamonds[randomNum]);
-                }
+                    break;
+                default:
+                    Debug.Log("Error...added joker card as a joke. Not really as a joke, but at least this will avoid an infinite loop in the case this error occurs, although it never should.");
+                    randomCards.Add(joker);
+                    break;
             }
         }
 
         return randomCards;
     }
 
-    public GameObject[] RandomCards(int count, int minCardNum, int maxCardNum, bool inclClubs, bool inclHearts, bool inclSpades, bool inclDiamonds)
+    public List<GameObject> RandomCards(int count, int minCardNum, int maxCardNum, bool inclClubs, bool inclHearts, bool inclSpades, bool inclDiamonds)
     {
-        GameObject[] randomCards = new GameObject[count];
-
-        // determine how big to make array to make randomness easier later
-        int numOfSuites = 0;
-
-        if (inclClubs) {
-            numOfSuites++;
-        }
-        
-        if (inclHearts) {
-            numOfSuites++;
-        }
-        
-        if (inclSpades) {
-            numOfSuites++;
-        }
-
-        if (inclDiamonds) {
-            numOfSuites++;
-        }
+        List<GameObject> randomCards = new List<GameObject>();
 
         // add suits to array to enable randomness later
-        string[] suits = new string[numOfSuites];
-        int currentIndex = 0;
+        List<string> suits = new List<string>();
 
+        int numOfSuits = 0;
         if (inclClubs) {
-            suits[currentIndex] = "clubs";
-            currentIndex++;
+            suits.Add("clubs");
+            numOfSuits++;
         }
         
         if (inclHearts) {
-            suits[currentIndex] = "hearts";
-            currentIndex++;
+            suits.Add("hearts");
+            numOfSuits++;
         }
         
         if (inclSpades) {
-            suits[currentIndex] = "spades";
-            currentIndex++;
+            suits.Add("spades");
+            numOfSuits++;
         }
 
         if (inclDiamonds) {
-            suits[currentIndex] = "diamonds";
+            suits.Add("diamonds");
+            numOfSuits++;
         }
 
         // get random cards
-        int numberReturned = 0;
-        while (numberReturned < count) {
+        while (randomCards.Count < count) {
             // picks a random card number (index)
             int randomNum = UnityEngine.Random.Range(minCardNum - 1, maxCardNum);
 
             // picks a random suit (index)
-            int randomSuit = UnityEngine.Random.Range(0, numOfSuites);
+            int randomSuit = UnityEngine.Random.Range(0, numOfSuits);
 
-            // adds card to array
-            if (suits[randomSuit].Equals("clubs")) {
-                if (!Array.Exists(randomCards, element => element == clubs[randomNum])) {
-                    randomCards[numberReturned] = clubs[randomNum];
-                    numberReturned++;
-                }
-            } else if (suits[randomSuit].Equals("hearts")) {
-                if (!Array.Exists(randomCards, element => element == hearts[randomNum])) {
-                    randomCards[numberReturned] = hearts[randomNum];
-                    numberReturned++;
-                }
-            } else if (suits[randomSuit].Equals("spades")) {
-                if (!Array.Exists(randomCards, element => element == spades[randomNum])) {
-                    randomCards[numberReturned] = spades[randomNum];
-                    numberReturned++;
-                }
-            } else if (suits[randomSuit].Equals("diamonds")) {
-                if (!Array.Exists(randomCards, element => element == diamonds[randomNum])) {
-                    randomCards[numberReturned] = diamonds[randomNum];
-                    numberReturned++;
-                }
+            switch (randomSuit)
+            {
+                case 0:
+                    randomCards.Add(clubs[randomNum]);
+                    break;
+                case 1:
+                    randomCards.Add(hearts[randomNum]);
+                    break;
+                case 2:
+                    randomCards.Add(spades[randomNum]);
+                    break;
+                case 3:
+                    randomCards.Add(diamonds[randomNum]);
+                    break;
+                default:
+                    Debug.Log("Error...added joker card as a joke. Not really as a joke, but at least this will avoid an infinite loop in the case this error occurs, although it never should.");
+                    randomCards.Add(joker);
+                    break;
             }
         }
 
@@ -194,13 +174,13 @@ public class CardDealer : MonoBehaviour
 
     toShuffle - array of GameObject cards to shuffle
     */
-    public GameObject[] ShuffleCards(GameObject[] toShuffle) {
+    public List<GameObject> ShuffleCards(GameObject[] toShuffle) {
         // for (int i = 0; i < toShuffle.Length; i++) {
         //     Debug.Log("old: " + toShuffle[i]);
         // }
 
         int currentIndex = 0;
-        GameObject[] shuffled = new GameObject[toShuffle.Length];
+        List<GameObject> shuffled = new List<GameObject>();
         bool[] shuffleStatus = new bool[toShuffle.Length];
 
         while (currentIndex < toShuffle.Length) {
