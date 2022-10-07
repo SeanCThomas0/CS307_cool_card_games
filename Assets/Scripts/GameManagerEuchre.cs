@@ -227,6 +227,15 @@ public class GameManagerEuchre : MonoBehaviour
 
             } if(currentState == 1) { //have players choose to pick up top card 
                 if(pickCount <= 4) {
+                    if(currentPlayer.getIsHuman() == true) {
+                        //wait for user input
+                        if(!currentInput.Equals("empty")) {
+                            trumpCount++;
+                        }
+                    } else {
+                        //have computer choose whether to pick up or pass
+                        pickCount++;
+                    }
                     pickCount++;
                 } else {
                     currentState = 2;
@@ -234,26 +243,44 @@ public class GameManagerEuchre : MonoBehaviour
                 }
             } if(currentState == 2) { //have players choose trump (dealer has to if no one else will) 
                 if(trumpCount < 4) {
-                    trumpCount++;
+                    if(currentPlayer.getIsHuman() == true) {
+                        //wait for user input
+                        if(!currentInput.Equals("empty")) {
+                            trumpCount++;
+                        }
+                    } else {
+                        //have computer choose whether to pick up or pass
+                        trumpCount++;
+                    }
                 } else {
                     currentState = 3;
-                    pickCount = 0;
+                    trumpCount = 0;
                 }
             } if(currentState == 3) { //have players play their cards 
                 if(cardCount < 4) {
-                    cardCount++;
+                    if(currentPlayer.getIsHuman() == true) {
+                        //wait for user input
+                        if(!currentInput.Equals("empty")) {
+                            cardCount++;
+                        }
+                    } else {
+                        //have computer choose whether to pick up or pass
+                        cardCount++;
+                    }
                 } else {
                     currentState = 4;
                 }
             } if(currentState == 4) { //calculate winner of the trick
                 if(trickCount < 5) {
                     trickCount++;
+                    cardCount = 0;
                     oneTrickScore++;
                     currentState = 3;
                 } else {
                     currentState = 5;
                 }
             } if(currentState == 5) { //calculate the winner of hand and scores
+                trickCount = 0;
                 if(oneTrickScore > twoTrickScore) {
                     if(oneTrickScore == 5 || trumpChosingTeam == 2) {
                         teamOneScore += 2;
