@@ -29,6 +29,7 @@ public class CardDealer : MonoBehaviour
     public List<GameObject> StandardDeck() {
         List<GameObject> standardDeck = new List<GameObject>();
 
+        // loops through each card, returning a standard 52 card deck
         for (int i = 0; i < clubs.Length; i++) {
             standardDeck.Add(clubs[i]);
         }
@@ -52,6 +53,7 @@ public class CardDealer : MonoBehaviour
     returns the joker card
     */
     public GameObject JokerCard() {
+        // returns joker card
         return joker;
     }
 
@@ -62,19 +64,17 @@ public class CardDealer : MonoBehaviour
     provide all of the parameters to limit randomness.
 
     count - number of random cards to produce
-
-    minCardNum - the minimum card number to use. the lowest possible value for a card is 1.
-    maxCardNum - the maximum card number to use. the highest possible value for a card is 13.
-    inclClubs - boolean to specify whether to include club suits
-    inclHearts - boolean to specify whether to include heart suit
-    inclSpades - boolean to specify whether to include spades suit
-    inclDiamonds - boolean to specify whether to include diamonds suit
     */
-
     public List<GameObject> RandomCards(int count)
     {
+        if (count <= 0) {
+            Debug.Log("\"count\" must be 1 or greater.");
+            return null;
+        }
+
         List<GameObject> randomCards = new List<GameObject>();
 
+        // ensures number of returned cards is the requested size
         while(randomCards.Count < count) {
             // picks a random card number (index)
             int randomNum = UnityEngine.Random.Range(0, 13);
@@ -107,8 +107,33 @@ public class CardDealer : MonoBehaviour
         return randomCards;
     }
 
+    /*
+    A random card generator.
+    
+    provide just count to create a random number of cards with random values and random suits.
+    provide all of the parameters to limit randomness.
+
+    count - number of random cards to produce
+
+    minCardNum - the minimum card number to use. the lowest possible value for a card is 1.
+    maxCardNum - the maximum card number to use. the highest possible value for a card is 13.
+    inclClubs - boolean to specify whether to include club suits
+    inclHearts - boolean to specify whether to include heart suit
+    inclSpades - boolean to specify whether to include spades suit
+    inclDiamonds - boolean to specify whether to include diamonds suit
+    */
     public List<GameObject> RandomCards(int count, int minCardNum, int maxCardNum, bool inclClubs, bool inclHearts, bool inclSpades, bool inclDiamonds)
     {
+        if (count <= 0) {
+            Debug.Log("\"count\" must be 1 or greater.");
+            return null;
+        }
+
+        if (minCardNum < 1 || minCardNum > 13 || maxCardNum < 1 || maxCardNum > 13) {
+            Debug.Log("minCardNum and maxCardNum must be greater than or equal to 1 and less than or equal to 13.");
+            return null;
+        }
+
         List<GameObject> randomCards = new List<GameObject>();
 
         // add suits to array to enable randomness later
@@ -143,6 +168,7 @@ public class CardDealer : MonoBehaviour
             // picks a random suit (index)
             int randomSuit = UnityEngine.Random.Range(0, numOfSuits);
 
+            // add cards to array
             switch (randomSuit)
             {
                 case 0:
@@ -174,17 +200,21 @@ public class CardDealer : MonoBehaviour
 
     toShuffle - array of GameObject cards to shuffle
     */
-    public List<GameObject> ShuffleCards(GameObject[] toShuffle) {
+    public List<GameObject> ShuffleCards(List<GameObject> toShuffle) {
+        if (toShuffle.Count <= 1 || toShuffle == null) {
+            Debug.Log("\"toShuffle\" must be of length 2 or greater in order to be shuffled.");
+        }
+
         // for (int i = 0; i < toShuffle.Length; i++) {
         //     Debug.Log("old: " + toShuffle[i]);
         // }
 
         int currentIndex = 0;
         List<GameObject> shuffled = new List<GameObject>();
-        bool[] shuffleStatus = new bool[toShuffle.Length];
+        bool[] shuffleStatus = new bool[toShuffle.Count];
 
-        while (currentIndex < toShuffle.Length) {
-            int randomNewIndex = UnityEngine.Random.Range(0, toShuffle.Length);
+        while (currentIndex < toShuffle.Count) {
+            int randomNewIndex = UnityEngine.Random.Range(0, toShuffle.Count);
 
             if (shuffleStatus[randomNewIndex] == false) {
                 shuffled[randomNewIndex] = toShuffle[currentIndex];
