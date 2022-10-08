@@ -10,6 +10,23 @@ public class CardDealer : MonoBehaviour
     public GameObject[] spades;
     public GameObject[] diamonds;
     public GameObject joker;
+    public GameObject[] blue;
+    public GameObject[] green;
+    public GameObject[] red;
+
+    public enum backColor {
+        BLUE,
+        GREEN,
+        RED
+    }
+
+    public enum backDesign {
+        PLAIN,
+        OUTLINE,
+        OUTLINE_PATTERN,
+        OUTLINE_SIMPLE_PATTERN,
+        PATTERN
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -55,6 +72,78 @@ public class CardDealer : MonoBehaviour
     public GameObject JokerCard() {
         // returns joker card
         return joker;
+    }
+
+    /*
+    returns a list of specified card backs
+
+    count - number of cards to return
+    color - color of card back (use by stating "CardDealer.backColor.COLOR" where COLOR is BLUE, GREEN, or RED)
+    design - design of card back (use by stating "CardDealer.backDesign.DESIGN" where DESIGN is PLAIN, OUTLINE, OUTLINE_PATTERN, OUTLINE_SIMPLE_PATTERN, or PATTERN)
+    */
+    public List<GameObject> CardBacks(int count, backColor color, backDesign design) {
+        List<GameObject> cardBacks = new List<GameObject>();
+
+        for (int i = 0; i < count; i++) {
+            if (color == backColor.BLUE) {
+                switch (design) {
+                    case backDesign.PLAIN:
+                        cardBacks.Add(blue[0]);
+                        break;
+                    case backDesign.OUTLINE:
+                        cardBacks.Add(blue[1]);
+                        break;
+                    case backDesign.OUTLINE_PATTERN:
+                        cardBacks.Add(blue[2]);
+                        break;
+                    case backDesign.OUTLINE_SIMPLE_PATTERN:
+                        cardBacks.Add(blue[3]);
+                        break;
+                    case backDesign.PATTERN:
+                        cardBacks.Add(blue[4]);
+                        break;
+                }
+               
+            } else if (color == backColor.GREEN) {
+                switch (design) {
+                    case backDesign.PLAIN:
+                        cardBacks.Add(blue[0]);
+                        break;
+                    case backDesign.OUTLINE:
+                        cardBacks.Add(blue[1]);
+                        break;
+                    case backDesign.OUTLINE_PATTERN:
+                        cardBacks.Add(blue[2]);
+                        break;
+                    case backDesign.OUTLINE_SIMPLE_PATTERN:
+                        cardBacks.Add(blue[3]);
+                        break;
+                    case backDesign.PATTERN:
+                        cardBacks.Add(blue[4]);
+                        break;
+                }
+            } else if (color == backColor.RED) {
+                switch (design) {
+                    case backDesign.PLAIN:
+                        cardBacks.Add(blue[0]);
+                        break;
+                    case backDesign.OUTLINE:
+                        cardBacks.Add(blue[1]);
+                        break;
+                    case backDesign.OUTLINE_PATTERN:
+                        cardBacks.Add(blue[2]);
+                        break;
+                    case backDesign.OUTLINE_SIMPLE_PATTERN:
+                        cardBacks.Add(blue[3]);
+                        break;
+                    case backDesign.PATTERN:
+                        cardBacks.Add(blue[4]);
+                        break;
+                }
+            }
+        }
+
+        return cardBacks;
     }
 
     /*
