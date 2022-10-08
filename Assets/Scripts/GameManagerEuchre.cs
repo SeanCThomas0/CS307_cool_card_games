@@ -92,6 +92,15 @@ public class GameManagerEuchre : MonoBehaviour
             return isHuman;
         }
 
+        public void printHand() {
+            int count = 1;
+            Debug.Log("\n" + userID + "Current hand:");
+            foreach (Card currentCard in hand) {
+                Debug.Log(count + ": " + currentCard.getFaceValue() + " of " + currentCard.getSuit());
+                count++;
+            }
+        }
+
         public void addToHand(Card cardToAdd) {
             hand.Add(cardToAdd);
         }
@@ -151,6 +160,7 @@ public class GameManagerEuchre : MonoBehaviour
     public int trickCount = 0; //count how many tricks out of 5 have been played
     public int trumpChosingTeam = 1; //track who chose trump
     int cardCount = 0; //used to track how many cards have been played in a trick
+    public Card[] trickCards; //array for cards played in a given trick
     
     
 
@@ -202,6 +212,61 @@ public class GameManagerEuchre : MonoBehaviour
         gameDecision();
     }
 
+    /* functions to calculate winner of a given trick refactored from a previous personal project authored by Isaac Stephan*/
+    private bool getJackValue(string trumpSuit, Card jack) {
+        if (trumpSuit.Equals("clubs") && jack.getSuit().Equals("spades")) {
+            return true;
+        } else if (trumpSuit.Equals("spades") && jack.getSuit().Equals("clubs")) {
+            return true;
+        } else if (trumpSuit.Equals("hearts") && jack.getSuit().Equals("diamonds")) {
+            return true;
+        } else if (trumpSuit.Equals("diamonds") && jack.getSuit().Equals("hearts")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private string getCardSuit(Card firstCard, string trumpSuit) {
+        if (firstCard.getFaceValue().Equals("jack") && getJackValue(trumpSuit, firstCard)) {
+            return trumpSuit;
+        } else {
+            return firstCard.getSuit();
+        }
+    }
+
+    private int getTrickWinner (string trumpSuit, Card[] playedCards) {
+        int maxScore = 0;
+        int maxIndex = 0;
+        string leadSuit = getCardSuit(playedCards[0], trumpSuit);
+
+        for (int cardIndex = 0; cardIndex < 4; cardIndex++) {
+            int currentScore = 0;
+            if (playedCards[cardIndex].getSuit().Equals(leadSuit)) {
+                currentScore += 16;
+            }
+            if (playedCards[cardIndex].getSuit().Equals(trumpSuit)) {
+                currentScore += 32;
+                if (playedCards[cardIndex].getFaceValue().Equals("jack")) {
+                    currentScore += 16;
+                } else {
+                    currentScore += playedCards[cardIndex].getNumbValue();
+                }
+            } else if (playedCards[cardIndex].getFaceValue().Equals("jack") && getJackValue(trumpSuit, playedCards[cardIndex])) {
+                currentScore += 47; 
+            } else {
+                currentScore += playedCards[cardIndex].getNumbValue();
+            }
+            if (currentScore >maxScore) {
+                maxIndex = cardIndex;
+                maxScore = currentScore;
+            }
+        }
+
+        return maxIndex;
+    }
+    /* end of functions to calculate winner of a given trick*/
+
     void gameDecision() {
         bool finished = checkForWinner();
         if(!finished) {
@@ -221,8 +286,10 @@ public class GameManagerEuchre : MonoBehaviour
                         currentPlayer.addToHand(cardDeck[deckCount]);
                         deckCount++;
                     }
+                    currentPlayer.printHand();
                     playerQueue.Enqueue(currentPlayer);
                 }
+                currentPlayer = playerQueue.Dequeue();
                 currentState = 1;
 
             } if(currentState == 1) { //have players choose to pick up top card 
@@ -231,10 +298,17 @@ public class GameManagerEuchre : MonoBehaviour
                         //wait for user input
                         if(!currentInput.Equals("empty")) {
                             trumpCount++;
+                            Debug.Log("GameManager recieved pick/pass: " + currentInput);
+                            currentInput = "empty";
+                            playerQueue.Enqueue(currentPlayer);
+                            currentPlayer = playerQueue.Dequeue();
                         }
                     } else {
                         //have computer choose whether to pick up or pass
+                        Debug.Log("GameManager recieved Computer top card [pick/pass]");
                         pickCount++;
+                        playerQueue.Enqueue(currentPlayer);
+                        currentPlayer = playerQueue.Dequeue();
                     }
                     pickCount++;
                 } else {
@@ -247,10 +321,17 @@ public class GameManagerEuchre : MonoBehaviour
                         //wait for user input
                         if(!currentInput.Equals("empty")) {
                             trumpCount++;
+                            Debug.Log("GameManager recieved trump pick" + currentInput);
+                            currentInput = "empty";
+                            playerQueue.Enqueue(currentPlayer);
+                            currentPlayer = playerQueue.Dequeue();
                         }
                     } else {
-                        //have computer choose whether to pick up or pass
+                        //have computer choose trump suit or pass
+                        Debug.Log("GameManager recieved Computer trump pick [suit]");
                         trumpCount++;
+                        playerQueue.Enqueue(currentPlayer);
+                        currentPlayer = playerQueue.Dequeue();
                     }
                 } else {
                     currentState = 3;
@@ -262,10 +343,17 @@ public class GameManagerEuchre : MonoBehaviour
                         //wait for user input
                         if(!currentInput.Equals("empty")) {
                             cardCount++;
+                            Debug.Log("GameManager recieved user card play " + currentInput);
+                            currentInput = "empty";
+                            playerQueue.Enqueue(currentPlayer);
+                            currentPlayer = playerQueue.Dequeue();
                         }
                     } else {
-                        //have computer choose whether to pick up or pass
+                        //have computer choose what card to play
+                        Debug.Log("GameManager recieved Computer card play [computer card]");
                         cardCount++;
+                        playerQueue.Enqueue(currentPlayer);
+                        currentPlayer = playerQueue.Dequeue();
                     }
                 } else {
                     currentState = 4;
@@ -280,6 +368,7 @@ public class GameManagerEuchre : MonoBehaviour
                     currentState = 5;
                 }
             } if(currentState == 5) { //calculate the winner of hand and scores
+                playerQueue.Enqueue(currentPlayer);
                 trickCount = 0;
                 if(oneTrickScore > twoTrickScore) {
                     if(oneTrickScore == 5 || trumpChosingTeam == 2) {
@@ -401,11 +490,6 @@ public class GameManagerEuchre : MonoBehaviour
         Debug.Log("User entered " + userInput); 
         currentInput = userInput;
         //gameObject.SendMessage("recieve", userInput);
-    }
-
-    public void recieve(string message)
-    {
-        Debug.Log("GameManager recieved " + message);     
     }
     
 
