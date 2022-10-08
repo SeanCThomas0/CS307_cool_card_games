@@ -4,29 +4,47 @@ using UnityEngine;
 
 public class GoFishLogic : MonoBehaviour
 {
-    public GameObject Square;
+    public GameObject Controller;
     CardDealer cardDealer;
+
+    List<Card> pool;
 
     // Start is called before the first frame update
     void Start()
     {
-        cardDealer = Square.GetComponent<CardDealer>();
+        cardDealer = Controller.GetComponent<CardDealer>();
 
-        // GameObject jokerCard = cardDealer.jokerCard();
-        List<GameObject> someCards = cardDealer.CardBacks(5, CardDealer.backColor.RED, CardDealer.backDesign.OUTLINE);
-
-        for (int i = 0; i < someCards.Count; i++) {
-            GameObject cardOne = Instantiate(someCards[i], new Vector3(0,0,0), Quaternion.identity);
-        }
-
-        // GameObject joker = Instantiate(jokerCard, new Vector3(0,0,0), Quaternion.identity);
-
-        // GameObject[] shuffledCards = cardDealer.ShuffleCards(someCards);
+       pool = cardDealer.RandomCards(52);
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public class Player {
+        private string userID;
+        private List<Card> hand;
+
+        public Player(string userID) {
+            this.userID = userID;
+        }
+
+        public string getUserID() {
+            return userID;
+        }
+
+        public void addToHand(Card card) {
+
+        }
+
+        public void removeFromHand(Card card) {
+
+        }
+    }
+
+    public void addToHand_removeFromPool(Player player) {
+
     }
 }

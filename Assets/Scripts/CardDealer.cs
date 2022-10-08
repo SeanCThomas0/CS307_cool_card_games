@@ -43,24 +43,24 @@ public class CardDealer : MonoBehaviour
     /*
     returns a standard deck of 52 cards
     */
-    public List<GameObject> StandardDeck() {
-        List<GameObject> standardDeck = new List<GameObject>();
+    public List<Card> StandardDeck() {
+        List<Card> standardDeck = new List<Card>();
 
         // loops through each card, returning a standard 52 card deck
         for (int i = 0; i < clubs.Length; i++) {
-            standardDeck.Add(clubs[i]);
+            standardDeck.Add(new Card(clubs[i], 0, Card.suit.CLUBS));
         }
 
         for (int i = 0; i < hearts.Length; i++) {
-            standardDeck.Add(hearts[i]);
+            standardDeck.Add(new Card(hearts[i], 0, Card.suit.HEARTS));
         }
 
         for (int i = 0; i < spades.Length; i++) {
-            standardDeck.Add(spades[i]);
+            standardDeck.Add(new Card(spades[i], 0, Card.suit.SPADES));
         }
 
         for (int i = 0; i < diamonds.Length; i++) {
-            standardDeck.Add(diamonds[i]);
+            standardDeck.Add(new Card(diamonds[i], 0, Card.suit.DIAMONDS));
         }
 
         return standardDeck;
@@ -69,9 +69,9 @@ public class CardDealer : MonoBehaviour
     /*
     returns the joker card
     */
-    public GameObject JokerCard() {
+    public Card JokerCard() {
         // returns joker card
-        return joker;
+        return new Card(joker, 0, Card.suit.JOKER);
     }
 
     /*
@@ -81,63 +81,63 @@ public class CardDealer : MonoBehaviour
     color - color of card back (use by stating "CardDealer.backColor.COLOR" where COLOR is BLUE, GREEN, or RED)
     design - design of card back (use by stating "CardDealer.backDesign.DESIGN" where DESIGN is PLAIN, OUTLINE, OUTLINE_PATTERN, OUTLINE_SIMPLE_PATTERN, or PATTERN)
     */
-    public List<GameObject> CardBacks(int count, backColor color, backDesign design) {
-        List<GameObject> cardBacks = new List<GameObject>();
+    public List<Card> CardBacks(int count, backColor color, backDesign design) {
+        List<Card> cardBacks = new List<Card>();
 
         for (int i = 0; i < count; i++) {
             if (color == backColor.BLUE) {
                 switch (design) {
                     case backDesign.PLAIN:
-                        cardBacks.Add(blue[0]);
+                        cardBacks.Add(new Card(blue[0], 0, Card.suit.BACK));
                         break;
                     case backDesign.OUTLINE:
-                        cardBacks.Add(blue[1]);
+                        cardBacks.Add(new Card(blue[1], 0, Card.suit.BACK));
                         break;
                     case backDesign.OUTLINE_PATTERN:
-                        cardBacks.Add(blue[2]);
+                        cardBacks.Add(new Card(blue[2], 0, Card.suit.BACK));
                         break;
                     case backDesign.OUTLINE_SIMPLE_PATTERN:
-                        cardBacks.Add(blue[3]);
+                        cardBacks.Add(new Card(blue[3], 0, Card.suit.BACK));
                         break;
                     case backDesign.PATTERN:
-                        cardBacks.Add(blue[4]);
+                        cardBacks.Add(new Card(blue[4], 0, Card.suit.BACK));
                         break;
                 }
                
             } else if (color == backColor.GREEN) {
                 switch (design) {
                     case backDesign.PLAIN:
-                        cardBacks.Add(blue[0]);
+                        cardBacks.Add(new Card(green[0], 0, Card.suit.BACK));
                         break;
                     case backDesign.OUTLINE:
-                        cardBacks.Add(blue[1]);
+                        cardBacks.Add(new Card(green[1], 0, Card.suit.BACK));
                         break;
                     case backDesign.OUTLINE_PATTERN:
-                        cardBacks.Add(blue[2]);
+                        cardBacks.Add(new Card(green[2], 0, Card.suit.BACK));
                         break;
                     case backDesign.OUTLINE_SIMPLE_PATTERN:
-                        cardBacks.Add(blue[3]);
+                        cardBacks.Add(new Card(green[3], 0, Card.suit.BACK));
                         break;
                     case backDesign.PATTERN:
-                        cardBacks.Add(blue[4]);
+                        cardBacks.Add(new Card(green[4], 0, Card.suit.BACK));
                         break;
                 }
             } else if (color == backColor.RED) {
                 switch (design) {
                     case backDesign.PLAIN:
-                        cardBacks.Add(blue[0]);
+                        cardBacks.Add(new Card(red[0], 0, Card.suit.BACK));
                         break;
                     case backDesign.OUTLINE:
-                        cardBacks.Add(blue[1]);
+                        cardBacks.Add(new Card(red[1], 0, Card.suit.BACK));
                         break;
                     case backDesign.OUTLINE_PATTERN:
-                        cardBacks.Add(blue[2]);
+                        cardBacks.Add(new Card(red[2], 0, Card.suit.BACK));
                         break;
                     case backDesign.OUTLINE_SIMPLE_PATTERN:
-                        cardBacks.Add(blue[3]);
+                        cardBacks.Add(new Card(red[3], 0, Card.suit.BACK));
                         break;
                     case backDesign.PATTERN:
-                        cardBacks.Add(blue[4]);
+                        cardBacks.Add(new Card(red[4], 0, Card.suit.BACK));
                         break;
                 }
             }
@@ -154,14 +154,14 @@ public class CardDealer : MonoBehaviour
 
     count - number of random cards to produce
     */
-    public List<GameObject> RandomCards(int count)
+    public List<Card> RandomCards(int count)
     {
         if (count <= 0) {
             Debug.Log("\"count\" must be 1 or greater.");
             return null;
         }
 
-        List<GameObject> randomCards = new List<GameObject>();
+        List<Card> randomCards = new List<Card>();
 
         // ensures number of returned cards is the requested size
         while(randomCards.Count < count) {
@@ -175,20 +175,20 @@ public class CardDealer : MonoBehaviour
             switch (randomSuit)
             {
                 case 0:
-                    randomCards.Add(clubs[randomNum]);
+                    randomCards.Add(new Card(clubs[randomNum], randomNum + 1, Card.suit.CLUBS));
                     break;
                 case 1:
-                    randomCards.Add(hearts[randomNum]);
+                    randomCards.Add(new Card(hearts[randomNum], randomNum + 1, Card.suit.HEARTS));
                     break;
                 case 2:
-                    randomCards.Add(spades[randomNum]);
+                    randomCards.Add(new Card(spades[randomNum], randomNum + 1, Card.suit.SPADES));
                     break;
                 case 3:
-                    randomCards.Add(diamonds[randomNum]);
+                    randomCards.Add(new Card(diamonds[randomNum], randomNum + 1, Card.suit.DIAMONDS));
                     break;
                 default:
                     Debug.Log("Error...added joker card as a joke. Not really as a joke, but at least this will avoid an infinite loop in the case this error occurs, although it never should.");
-                    randomCards.Add(joker);
+                    randomCards.Add(new Card(joker, 0, Card.suit.JOKER));
                     break;
             }
         }
@@ -211,7 +211,7 @@ public class CardDealer : MonoBehaviour
     inclSpades - boolean to specify whether to include spades suit
     inclDiamonds - boolean to specify whether to include diamonds suit
     */
-    public List<GameObject> RandomCards(int count, int minCardNum, int maxCardNum, bool inclClubs, bool inclHearts, bool inclSpades, bool inclDiamonds)
+    public List<Card> RandomCards(int count, int minCardNum, int maxCardNum, bool inclClubs, bool inclHearts, bool inclSpades, bool inclDiamonds)
     {
         if (count <= 0) {
             Debug.Log("\"count\" must be 1 or greater.");
@@ -223,7 +223,7 @@ public class CardDealer : MonoBehaviour
             return null;
         }
 
-        List<GameObject> randomCards = new List<GameObject>();
+        List<Card> randomCards = new List<Card>();
 
         // add suits to array to enable randomness later
         List<string> suits = new List<string>();
@@ -261,20 +261,20 @@ public class CardDealer : MonoBehaviour
             switch (randomSuit)
             {
                 case 0:
-                    randomCards.Add(clubs[randomNum]);
+                    randomCards.Add(new Card(clubs[randomNum], randomNum + 1, Card.suit.CLUBS));
                     break;
                 case 1:
-                    randomCards.Add(hearts[randomNum]);
+                    randomCards.Add(new Card(hearts[randomNum], randomNum + 1, Card.suit.HEARTS));
                     break;
                 case 2:
-                    randomCards.Add(spades[randomNum]);
+                    randomCards.Add(new Card(spades[randomNum], randomNum + 1, Card.suit.SPADES));
                     break;
                 case 3:
-                    randomCards.Add(diamonds[randomNum]);
+                    randomCards.Add(new Card(diamonds[randomNum], randomNum + 1, Card.suit.DIAMONDS));
                     break;
                 default:
                     Debug.Log("Error...added joker card as a joke. Not really as a joke, but at least this will avoid an infinite loop in the case this error occurs, although it never should.");
-                    randomCards.Add(joker);
+                    randomCards.Add(new Card(joker, 0, Card.suit.JOKER));
                     break;
             }
         }
@@ -289,7 +289,7 @@ public class CardDealer : MonoBehaviour
 
     toShuffle - array of GameObject cards to shuffle
     */
-    public List<GameObject> ShuffleCards(List<GameObject> toShuffle) {
+    public List<Card> ShuffleCards(List<Card> toShuffle) {
         if (toShuffle.Count <= 1 || toShuffle == null) {
             Debug.Log("\"toShuffle\" must be of length 2 or greater in order to be shuffled.");
         }
@@ -299,7 +299,7 @@ public class CardDealer : MonoBehaviour
         // }
 
         int currentIndex = 0;
-        List<GameObject> shuffled = new List<GameObject>();
+        List<Card> shuffled = new List<Card>();
         bool[] shuffleStatus = new bool[toShuffle.Count];
 
         while (currentIndex < toShuffle.Count) {
