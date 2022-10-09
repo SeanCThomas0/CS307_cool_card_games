@@ -850,7 +850,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1003608396}
         m_TargetAssemblyTypeName: script, Scripts
-        m_MethodName: OnConnected
+        m_MethodName: JoinChatRoom
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1886,9 +1886,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   msgInput: {fileID: 1756702947}
   msgArea: {fileID: 245017287}
+  usernameInputField: {fileID: 364202529}
   joinChatButton: {fileID: 503151813}
   usernameInput: {fileID: 364202527}
   chatRoomImage: {fileID: 791549340}
+  username: 
 --- !u!4 &1003608397
 Transform:
   m_ObjectHideFlags: 0

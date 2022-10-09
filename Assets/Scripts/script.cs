@@ -15,7 +15,7 @@ public class script : MonoBehaviour, IChatClientListener
     public TMP_InputField msgInput;
     public TMP_Text msgArea;
     //public Button joinChatButton;
-   // public TMP_InputField usernameInput;
+    public TMP_InputField usernameInputField;
     //hello
     //public PhotonManager photonManager;
     [SerializeField]
@@ -28,6 +28,8 @@ public class script : MonoBehaviour, IChatClientListener
     [SerializeField]
     private GameObject chatRoomImage;
 
+    public string username;
+
     
 
     // Start is called before the first frame update
@@ -39,10 +41,9 @@ public class script : MonoBehaviour, IChatClientListener
             Debug.LogError("No AppID Provided");
             return;
         }
-        Debug.Log("Connecting");
-        chatClient = new ChatClient(this);
-        chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion,
-            new Photon.Chat.AuthenticationValues(PhotonNetwork.LocalPlayer.NickName));
+        ConnectToServer();
+        Join();
+        
     }
 
     // Update is called once per frame
@@ -56,7 +57,10 @@ public class script : MonoBehaviour, IChatClientListener
 
     public void ConnectToServer()
     {
-        
+        Debug.Log("Connecting");
+        chatClient = new ChatClient(this);
+        chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion,
+            new Photon.Chat.AuthenticationValues(PhotonNetwork.LocalPlayer.NickName));
     }
 
     public void DisconnectFromServer()
@@ -68,14 +72,14 @@ public class script : MonoBehaviour, IChatClientListener
     public void SendMsg()
     {
         
-        chatClient.PublishMessage("Chatroom 1", "Bob" + ": " + "<color=black>" + msgInput.text + "</color>");
+        chatClient.PublishMessage("Chatroom", "<color=black>" + username + ": " + msgInput.text + "</color>");
         if (string.IsNullOrEmpty(msgArea.text))
             {
-                msgArea.text += "<color=black>" + msgInput.text + "</color>" + ", ";
+                msgArea.text += "<color=black>" + username + ": " + msgInput.text + "</color>";
             }
         else
         {
-            msgArea.text += "\r\n" + "<color=black>" + msgInput.text + "</color>" + ", ";
+            msgArea.text += "\r\n" + "<color=black>" + username + ": " + msgInput.text + "</color>";
         }
         msgInput.text = "";
         
@@ -83,8 +87,8 @@ public class script : MonoBehaviour, IChatClientListener
 
     public void Join()
     {
-        chatClient.Subscribe(new string[] {"Chatroom 1"});
-        chatClient.SetOnlineStatus(ChatUserStatus.Online);
+       //chatClient.Subscribe(new string[] {"Chatroom"});
+        //chatClient.SetOnlineStatus(ChatUserStatus.Online);
     }
 
     public void Leave()
@@ -105,10 +109,17 @@ public class script : MonoBehaviour, IChatClientListener
 
     public void OnConnected()
     {
+        Debug.Log("Connected and Subscribed");
+        chatClient.Subscribe(new string[] {"Chatroom"});
+        chatClient.SetOnlineStatus(ChatUserStatus.Online);
+    }
+
+    public void JoinChatRoom() {
+        username = usernameInputField.text;
         joinChatButton.SetActive(false);
         usernameInput.SetActive(false);
         chatRoomImage.SetActive(true);
-        
+        msgArea.text += "\r\n" + "<color=black>" + username + ": " + "joined" + "</color>";
     }
 
     public void OnChatStateChange(ChatState state)
@@ -118,6 +129,7 @@ public class script : MonoBehaviour, IChatClientListener
 
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
     {
+        Debug.Log("Received");
         for (int i = 0; i < senders.Length; i++)
         {
             Debug.Log(senders[i]);
@@ -139,7 +151,8 @@ public class script : MonoBehaviour, IChatClientListener
 
     public void OnSubscribed(string[] channels, bool[] results)
     {
-        
+        Debug.Log("Subcribed");
+        //msgArea.text += "\r\n" + "<color=black>" + username + ": " + "joined" + "</color>";
     }
 
     public void OnUnsubscribed(string[] channels)
