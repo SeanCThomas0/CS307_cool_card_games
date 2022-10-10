@@ -1886,6 +1886,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   msgInput: {fileID: 1756702947}
   msgArea: {fileID: 245017287}
+  toInput: {fileID: 1850453047}
   usernameInputField: {fileID: 364202529}
   joinChatButton: {fileID: 503151813}
   usernameInput: {fileID: 364202527}

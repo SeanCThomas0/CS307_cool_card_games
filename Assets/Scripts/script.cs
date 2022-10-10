@@ -14,6 +14,8 @@ public class script : MonoBehaviour, IChatClientListener
     
     public TMP_InputField msgInput;
     public TMP_Text msgArea;
+
+    public TMP_InputField toInput;
     //public Button joinChatButton;
     public TMP_InputField usernameInputField;
     //hello
@@ -42,7 +44,7 @@ public class script : MonoBehaviour, IChatClientListener
             return;
         }
         ConnectToServer();
-        Join();
+        
         
     }
 
@@ -59,8 +61,9 @@ public class script : MonoBehaviour, IChatClientListener
     {
         Debug.Log("Connecting");
         chatClient = new ChatClient(this);
-        chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion,
-            new Photon.Chat.AuthenticationValues(PhotonNetwork.LocalPlayer.NickName));
+        //chatClient.AuthValues = new Photon.Chat.AuthenticationValues("Bob");
+        chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new Photon.Chat.AuthenticationValues("Bob"));
+        //new Photon.Chat.AuthenticationValues(PhotonNetwork.LocalPlayer.NickName
     }
 
     public void DisconnectFromServer()
@@ -71,16 +74,17 @@ public class script : MonoBehaviour, IChatClientListener
 
     public void SendMsg()
     {
-        
-        chatClient.PublishMessage("Chatroom", "<color=black>" + username + ": " + msgInput.text + "</color>");
-        if (string.IsNullOrEmpty(msgArea.text))
-            {
-                msgArea.text += "<color=black>" + username + ": " + msgInput.text + "</color>";
-            }
-        else
-        {
-            msgArea.text += "\r\n" + "<color=black>" + username + ": " + msgInput.text + "</color>";
+        if(string.IsNullOrEmpty(toInput.text)) {
+            chatClient.PublishMessage("Chatroom", "<color=black>" + username + ": " + msgInput.text + "</color>");
+            
         }
+        else {
+            chatClient.SendPrivateMessage(toInput.text, "<color=black>" + username + ": " + msgInput.text + "</color>");
+            Debug.Log("Target: " + toInput.text);
+        }
+        
+        
+        
         msgInput.text = "";
         
     }
@@ -135,18 +139,26 @@ public class script : MonoBehaviour, IChatClientListener
             Debug.Log(senders[i]);
             if (string.IsNullOrEmpty(msgArea.text))
             {
-                msgArea.text += messages[i] + ", ";
+                msgArea.text += messages[i];
             }
             else
             {
-                msgArea.text += "\r\n" + messages[i] + ", ";
+                msgArea.text += "\r\n" + messages[i];
             }
         }
     }
 
     public void OnPrivateMessage(string sender, object message, string channelName)
     {
-        
+        Debug.Log("Received Private");
+        if (string.IsNullOrEmpty(msgArea.text))
+            {
+                msgArea.text += "(Private) " + message;
+            }
+            else
+            {
+                msgArea.text += "\r\n" + "(Private) " + message;
+            }
     }
 
     public void OnSubscribed(string[] channels, bool[] results)
