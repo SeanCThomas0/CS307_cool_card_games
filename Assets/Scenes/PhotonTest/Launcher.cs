@@ -132,6 +132,13 @@ namespace com.CS307.CoolCardGames.Launcher
         public override void OnJoinedRoom()
         {
             Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
+            for(int i = 0; i< PhotonNetwork.PlayerList.Length; i ++) {
+                Player temp_player =PhotonNetwork.PlayerList[i];
+                if (temp_player.IsLocal) {
+
+                    temp_player.NickName=PhotonNetwork.NickName;
+                }
+            }
             PhotonNetwork.LoadLevel(1);
             //progressLabel.SetActive(false);
             //GameController.SetActive(true);

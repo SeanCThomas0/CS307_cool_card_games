@@ -71,9 +71,10 @@ namespace com.CS307.CoolCardGames.gameLogic
 
                 cur_player = cur_player.GetNext();
 
+
                 turnText.text = cur_player.NickName;
 
-                Debug.Log(cur_player.NickName);
+
             }
 
 
