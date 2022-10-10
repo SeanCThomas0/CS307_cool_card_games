@@ -82,7 +82,8 @@ namespace com.CS307.CoolCardGames.gameLogic
 
                 cur_player = cur_player.GetNext();
 
-                this.photonView.RPC("update_turn_text", RpcTarget.All,"guh");
+                this.photonView.RPC("update_turn_text", RpcTarget.All,guh);
+
 
 
             }
