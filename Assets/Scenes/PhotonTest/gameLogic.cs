@@ -69,10 +69,12 @@ namespace com.CS307.CoolCardGames.gameLogic
             if(num_players > 0) {
                 Player cur_player =PhotonNetwork.PlayerList[0];
 
+                string guh =cur_player.NickName;
+
                 cur_player = cur_player.GetNext();
 
 
-                turnText.text = cur_player.NickName;
+                turnText.text = guh;
 
 
             }
