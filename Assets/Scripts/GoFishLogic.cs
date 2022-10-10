@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GoFishLogic : MonoBehaviour
 {
-    public GameObject Controller;
+    public GameObject cardDealerController;
 
     private CardDealer cardDealer;
     private List<Card> pool;
@@ -15,10 +15,14 @@ public class GoFishLogic : MonoBehaviour
     void Start()
     {
         // set up deck of cards
-        cardDealer = Controller.GetComponent<CardDealer>();
+        cardDealer = cardDealerController.GetComponent<CardDealer>();
 
         pool = cardDealer.RandomCards(52);
 
+        for (int i = 0; i < pool.Count; i++) {
+            pool[i].transform.position = new Vector3(0 + i * 2, 0, 0);
+        }
+        
         // create players
         playerBot = new Player("0");
         playerSingle = new Player("1");
@@ -27,13 +31,13 @@ public class GoFishLogic : MonoBehaviour
         distributeCards(playerBot, 5);
         distributeCards(playerSingle, 5);
 
-        for (int i = 0; i < playerBot.getHand().Count; i++) {
-            Debug.Log("Bot: " + playerBot.getHand()[i].getGameObject() + ", " + playerBot.getHand()[i].getNumValue() + ", " + playerBot.getHand()[i].getSuitValue());
-        }
+        // for (int i = 0; i < playerBot.getHand().Count; i++) {
+        //     Debug.Log("Bot: " + playerBot.getHand()[i].getGameObject() + ", " + playerBot.getHand()[i].getNumValue() + ", " + playerBot.getHand()[i].getSuitValue());
+        // }
 
-        for (int i = 0; i < playerSingle.getHand().Count; i++) {
-            Debug.Log("Player: " + playerSingle.getHand()[i].getGameObject() + ", " + playerSingle.getHand()[i].getNumValue() + ", " + playerSingle.getHand()[i].getSuitValue());
-        }
+        // for (int i = 0; i < playerSingle.getHand().Count; i++) {
+        //     Debug.Log("Player: " + playerSingle.getHand()[i].getGameObject() + ", " + playerSingle.getHand()[i].getNumValue() + ", " + playerSingle.getHand()[i].getSuitValue());
+        // }
     }
 
     // Update is called once per frame
@@ -47,13 +51,13 @@ public class GoFishLogic : MonoBehaviour
         private List<Card> hand;
 
         private int[] numOfValues;
-        private List<Card> cardsOfFour;
+        // private List<Card> cardsOfFour;
 
         public Player(string userID) {
             this.userID = userID;
             this.hand = new List<Card>();
             this.numOfValues = new int[13];
-            this.cardsOfFour = new List<Card>();
+            // this.cardsOfFour = new List<Card>();
         }
 
         public string getUserID() {
@@ -70,11 +74,11 @@ public class GoFishLogic : MonoBehaviour
             // numOfValues[card.getNumValue()]--;
         }
 
-        public int removeAllFromHand(int numValue) {
+        public int removeAllNumFromHand(int numValue) {
             int numRemoved = 0;
 
             for (int i = 0; i < hand.Count; i++) {
-                if (hand[i].getNumValue() == numValue) {
+                if (hand[i].numValue == numValue) {
                     hand.RemoveAt(i);
                     numRemoved++;
                     i--;
@@ -84,9 +88,26 @@ public class GoFishLogic : MonoBehaviour
             return numRemoved;
         }
 
-        public int[] getNumOfValues() {
-            return numOfValues;
+        public int removeAllSuitFromHand(Card.suit suit)
+        {
+            int numRemoved = 0;
+
+            for (int i = 0; i < hand.Count; i++)
+            {
+                if (hand[i].suitValue == suit)
+                {
+                    hand.RemoveAt(i);
+                    numRemoved++;
+                    i--;
+                }
+            }
+            // numOfValues[numValue] = numOfValues[numValue] - numRemoved;
+            return numRemoved;
         }
+
+        // public int[] getNumOfValues() {
+        //     return numOfValues;
+        // }
 
         public List<Card> getHand() {
             return hand;
@@ -101,7 +122,7 @@ public class GoFishLogic : MonoBehaviour
         }
 
         for (int i = 0; i < count; i++) {        
-            player.addToHand(pool[i]);
+            // player.addToHand(pool[i]);
             pool.RemoveAt(i);
         }
     }
@@ -110,7 +131,7 @@ public class GoFishLogic : MonoBehaviour
     // returns true if the player had the cards
     // false if the player did not have any cards
     public bool requestCards(Player from, Player to, Card card) {
-        int numRemoved = from.removeAllFromHand(card.getNumValue());
+        int numRemoved = from.removeAllNumFromHand(card.numValue);
         for (int i = 0; i < numRemoved; i++) {
             to.addToHand(card);
         }
@@ -121,8 +142,6 @@ public class GoFishLogic : MonoBehaviour
             return false;
         }
     }
-
-
 
     // public List<Card> determineFourOfAKind(Player player) {
     //     for (int i = 0; i < player.getNumOfValues().Length; i++) {

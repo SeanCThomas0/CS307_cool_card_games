@@ -5,14 +5,15 @@ using UnityEngine;
 
 public class CardDealer : MonoBehaviour
 {
-    public GameObject[] clubs;
-    public GameObject[] hearts;
-    public GameObject[] spades;
-    public GameObject[] diamonds;
-    public GameObject joker;
-    public GameObject[] blue;
-    public GameObject[] green;
-    public GameObject[] red;
+    public Card card;
+    public Sprite[] clubs;
+    public Sprite[] hearts;
+    public Sprite[] spades;
+    public Sprite[] diamonds;
+    public Sprite joker;
+    public Sprite[] blue;
+    public Sprite[] green;
+    public Sprite[] red;
 
     public enum backColor {
         BLUE,
@@ -37,7 +38,7 @@ public class CardDealer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     /*
@@ -48,19 +49,43 @@ public class CardDealer : MonoBehaviour
 
         // loops through each card, returning a standard 52 card deck
         for (int i = 0; i < clubs.Length; i++) {
-            standardDeck.Add(new Card(clubs[i], 0, Card.suit.CLUBS));
+            Card newCard = Instantiate(card) as Card;
+
+            newCard.GetComponent<SpriteRenderer>().sprite = clubs[i];
+            newCard.numValue = i + 1;
+            newCard.suitValue = Card.suit.CLUBS;
+
+            standardDeck.Add(newCard);
         }
 
         for (int i = 0; i < hearts.Length; i++) {
-            standardDeck.Add(new Card(hearts[i], 0, Card.suit.HEARTS));
+            Card newCard = Instantiate(card) as Card;
+
+            newCard.GetComponent<SpriteRenderer>().sprite = hearts[i];
+            newCard.numValue = i + 1;
+            newCard.suitValue = Card.suit.HEARTS;
+
+            standardDeck.Add(newCard);
         }
 
         for (int i = 0; i < spades.Length; i++) {
-            standardDeck.Add(new Card(spades[i], 0, Card.suit.SPADES));
+            Card newCard = Instantiate(card) as Card;
+
+            newCard.GetComponent<SpriteRenderer>().sprite = spades[i];
+            newCard.numValue = i + 1;
+            newCard.suitValue = Card.suit.SPADES;
+
+            standardDeck.Add(newCard);
         }
 
         for (int i = 0; i < diamonds.Length; i++) {
-            standardDeck.Add(new Card(diamonds[i], 0, Card.suit.DIAMONDS));
+            Card newCard = Instantiate(card) as Card;
+
+            newCard.GetComponent<SpriteRenderer>().sprite = diamonds[i];
+            newCard.numValue = i + 1;
+            newCard.suitValue = Card.suit.DIAMONDS;
+
+            standardDeck.Add(newCard);
         }
 
         return standardDeck;
@@ -71,7 +96,12 @@ public class CardDealer : MonoBehaviour
     */
     public Card JokerCard() {
         // returns joker card
-        return new Card(joker, 0, Card.suit.JOKER);
+        Card newCard = Instantiate(card) as Card;
+
+        newCard.GetComponent<SpriteRenderer>().sprite = joker;
+        newCard.numValue = 0;
+        newCard.suitValue = Card.suit.JOKER;
+        return newCard;
     }
 
     /*
@@ -84,62 +114,55 @@ public class CardDealer : MonoBehaviour
     public List<Card> CardBacks(int count, backColor color, backDesign design) {
         List<Card> cardBacks = new List<Card>();
 
-        for (int i = 0; i < count; i++) {
-            if (color == backColor.BLUE) {
-                switch (design) {
-                    case backDesign.PLAIN:
-                        cardBacks.Add(new Card(blue[0], 0, Card.suit.BACK));
-                        break;
-                    case backDesign.OUTLINE:
-                        cardBacks.Add(new Card(blue[1], 0, Card.suit.BACK));
-                        break;
-                    case backDesign.OUTLINE_PATTERN:
-                        cardBacks.Add(new Card(blue[2], 0, Card.suit.BACK));
-                        break;
-                    case backDesign.OUTLINE_SIMPLE_PATTERN:
-                        cardBacks.Add(new Card(blue[3], 0, Card.suit.BACK));
-                        break;
-                    case backDesign.PATTERN:
-                        cardBacks.Add(new Card(blue[4], 0, Card.suit.BACK));
-                        break;
-                }
-               
-            } else if (color == backColor.GREEN) {
-                switch (design) {
-                    case backDesign.PLAIN:
-                        cardBacks.Add(new Card(green[0], 0, Card.suit.BACK));
-                        break;
-                    case backDesign.OUTLINE:
-                        cardBacks.Add(new Card(green[1], 0, Card.suit.BACK));
-                        break;
-                    case backDesign.OUTLINE_PATTERN:
-                        cardBacks.Add(new Card(green[2], 0, Card.suit.BACK));
-                        break;
-                    case backDesign.OUTLINE_SIMPLE_PATTERN:
-                        cardBacks.Add(new Card(green[3], 0, Card.suit.BACK));
-                        break;
-                    case backDesign.PATTERN:
-                        cardBacks.Add(new Card(green[4], 0, Card.suit.BACK));
-                        break;
-                }
-            } else if (color == backColor.RED) {
-                switch (design) {
-                    case backDesign.PLAIN:
-                        cardBacks.Add(new Card(red[0], 0, Card.suit.BACK));
-                        break;
-                    case backDesign.OUTLINE:
-                        cardBacks.Add(new Card(red[1], 0, Card.suit.BACK));
-                        break;
-                    case backDesign.OUTLINE_PATTERN:
-                        cardBacks.Add(new Card(red[2], 0, Card.suit.BACK));
-                        break;
-                    case backDesign.OUTLINE_SIMPLE_PATTERN:
-                        cardBacks.Add(new Card(red[3], 0, Card.suit.BACK));
-                        break;
-                    case backDesign.PATTERN:
-                        cardBacks.Add(new Card(red[4], 0, Card.suit.BACK));
-                        break;
-                }
+        int index = -1;
+        switch (design)
+        {
+            case backDesign.PLAIN:
+                index = 0;
+                break;
+            case backDesign.OUTLINE:
+                index = 1;
+                break;
+            case backDesign.OUTLINE_PATTERN:
+                index = 2;
+                break;
+            case backDesign.OUTLINE_SIMPLE_PATTERN:
+                index = 3;
+                break;
+            case backDesign.PATTERN:
+                index = 4;
+                break;
+        }
+        
+        if (color == backColor.BLUE) {
+            for (int i = 0; i < count; i++) {
+                Card newCard = Instantiate(card) as Card;
+
+                newCard.GetComponent<SpriteRenderer>().sprite = blue[index];
+                newCard.numValue = 0;
+                newCard.suitValue = Card.suit.BACK;
+
+                cardBacks.Add(newCard);
+            }
+        } else if (color == backColor.GREEN) {
+            for (int i = 0; i < count; i++) {
+                Card newCard = Instantiate(card) as Card;
+
+                newCard.GetComponent<SpriteRenderer>().sprite = green[index];
+                newCard.numValue = 0;
+                newCard.suitValue = Card.suit.BACK;
+
+                cardBacks.Add(newCard);
+            }
+        } else if (color == backColor.RED) {
+            for (int i = 0; i < count; i++) {
+                Card newCard = Instantiate(card) as Card;
+
+                newCard.GetComponent<SpriteRenderer>().sprite = red[index];
+                newCard.numValue = 0;
+                newCard.suitValue = Card.suit.BACK;
+
+                cardBacks.Add(newCard);
             }
         }
 
@@ -175,21 +198,55 @@ public class CardDealer : MonoBehaviour
             switch (randomSuit)
             {
                 case 0:
-                    randomCards.Add(new Card(clubs[randomNum], randomNum + 1, Card.suit.CLUBS));
+                    if (!ContainsCard(randomCards, randomNum + 1, Card.suit.CLUBS)) {
+                        Card newCard = Instantiate(card) as Card;
+
+                        newCard.GetComponent<SpriteRenderer>().sprite = clubs[randomNum];
+                        newCard.numValue = randomNum + 1;
+                        newCard.suitValue = Card.suit.CLUBS;
+
+                        randomCards.Add(newCard);
+                    }
                     break;
                 case 1:
-                    randomCards.Add(new Card(hearts[randomNum], randomNum + 1, Card.suit.HEARTS));
+                    if (!ContainsCard(randomCards, randomNum + 1, Card.suit.HEARTS))
+                    {
+                        Card newCard = Instantiate(card) as Card;
+
+                        newCard.GetComponent<SpriteRenderer>().sprite = hearts[randomNum];
+                        newCard.numValue = randomNum + 1;
+                        newCard.suitValue = Card.suit.HEARTS;
+
+                        randomCards.Add(newCard);
+                    }
                     break;
                 case 2:
-                    randomCards.Add(new Card(spades[randomNum], randomNum + 1, Card.suit.SPADES));
+                    if (!ContainsCard(randomCards, randomNum + 1, Card.suit.SPADES))
+                    {
+                        Card newCard = Instantiate(card) as Card;
+
+                        newCard.GetComponent<SpriteRenderer>().sprite = spades[randomNum];
+                        newCard.numValue = randomNum + 1;
+                        newCard.suitValue = Card.suit.SPADES;
+
+                        randomCards.Add(newCard);
+                    }
                     break;
                 case 3:
-                    randomCards.Add(new Card(diamonds[randomNum], randomNum + 1, Card.suit.DIAMONDS));
+                    if (!ContainsCard(randomCards, randomNum + 1, Card.suit.DIAMONDS))
+                    {
+                        Card newCard = Instantiate(card) as Card;
+
+                        newCard.GetComponent<SpriteRenderer>().sprite = diamonds[randomNum];
+                        newCard.numValue = randomNum + 1;
+                        newCard.suitValue = Card.suit.DIAMONDS;
+
+                        randomCards.Add(newCard);
+                    }
                     break;
                 default:
-                    Debug.Log("Error...added joker card as a joke. Not really as a joke, but at least this will avoid an infinite loop in the case this error occurs, although it never should.");
-                    randomCards.Add(new Card(joker, 0, Card.suit.JOKER));
-                    break;
+                    Debug.Log("Error...this should never be reached.");
+                    return null;
             }
         }
 
@@ -261,21 +318,56 @@ public class CardDealer : MonoBehaviour
             switch (randomSuit)
             {
                 case 0:
-                    randomCards.Add(new Card(clubs[randomNum], randomNum + 1, Card.suit.CLUBS));
+                    if (!ContainsCard(randomCards, randomNum + 1, Card.suit.CLUBS))
+                    {
+                        Card newCard = Instantiate(card) as Card;
+
+                        newCard.GetComponent<SpriteRenderer>().sprite = clubs[randomNum];
+                        newCard.numValue = randomNum + 1;
+                        newCard.suitValue = Card.suit.CLUBS;
+
+                        randomCards.Add(newCard);
+                    }
                     break;
                 case 1:
-                    randomCards.Add(new Card(hearts[randomNum], randomNum + 1, Card.suit.HEARTS));
+                    if (!ContainsCard(randomCards, randomNum + 1, Card.suit.HEARTS))
+                    {
+                        Card newCard = Instantiate(card) as Card;
+
+                        newCard.GetComponent<SpriteRenderer>().sprite = hearts[randomNum];
+                        newCard.numValue = randomNum + 1;
+                        newCard.suitValue = Card.suit.HEARTS;
+
+                        randomCards.Add(newCard);
+                    }
                     break;
                 case 2:
-                    randomCards.Add(new Card(spades[randomNum], randomNum + 1, Card.suit.SPADES));
+                    if (!ContainsCard(randomCards, randomNum + 1, Card.suit.SPADES))
+                    {
+                        Card newCard = Instantiate(card) as Card;
+
+                        newCard.GetComponent<SpriteRenderer>().sprite = spades[randomNum];
+                        newCard.numValue = randomNum + 1;
+                        newCard.suitValue = Card.suit.SPADES;
+
+                        randomCards.Add(newCard);
+                    }
                     break;
                 case 3:
-                    randomCards.Add(new Card(diamonds[randomNum], randomNum + 1, Card.suit.DIAMONDS));
+                    if (!ContainsCard(randomCards, randomNum + 1, Card.suit.DIAMONDS))
+                    {
+                        Card newCard = Instantiate(card) as Card;
+
+                        newCard.GetComponent<SpriteRenderer>().sprite = diamonds[randomNum];
+                        newCard.numValue = randomNum + 1;
+                        newCard.suitValue = Card.suit.DIAMONDS;
+
+                        randomCards.Add(newCard);
+                    }
                     break;
                 default:
-                    Debug.Log("Error...added joker card as a joke. Not really as a joke, but at least this will avoid an infinite loop in the case this error occurs, although it never should.");
-                    randomCards.Add(new Card(joker, 0, Card.suit.JOKER));
-                    break;
+                    Debug.Log("Error...this should also never be reached.");
+                    return null;
             }
         }
 
@@ -294,30 +386,33 @@ public class CardDealer : MonoBehaviour
             Debug.Log("\"toShuffle\" must be of length 2 or greater in order to be shuffled.");
         }
 
-        // for (int i = 0; i < toShuffle.Length; i++) {
-        //     Debug.Log("old: " + toShuffle[i]);
-        // }
-
-        int currentIndex = 0;
         List<Card> shuffled = new List<Card>();
-        bool[] shuffleStatus = new bool[toShuffle.Count];
 
-        while (currentIndex < toShuffle.Count) {
-            int randomNewIndex = UnityEngine.Random.Range(0, toShuffle.Count);
+        while (toShuffle.Count > 0) {
+            int randomIndex = UnityEngine.Random.Range(0, toShuffle.Count);
 
-            if (shuffleStatus[randomNewIndex] == false) {
-                shuffled[randomNewIndex] = toShuffle[currentIndex];
+            shuffled.Add(toShuffle[randomIndex]);
+            toShuffle.RemoveAt(randomIndex);
 
-                shuffleStatus[randomNewIndex] = true;
+        }
 
-                currentIndex++;
+        return shuffled;
+    }
+
+    /*
+    to be used instead of List.Contains
+    
+    list - the list to search for card in
+    card - the card to check for in list
+    */
+    public bool ContainsCard(List<Card> list, int numValue, Card.suit suitValue) {
+        for (int i = 0; i < list.Count; i++) {
+            if (list[i].numValue == numValue
+            && list[i].suitValue == suitValue) {
+                return true;
             }
         }
 
-        // for (int i = 0; i < shuffled.Length; i++) {
-        //     Debug.Log("new:" + shuffled[i]);
-        // }
-
-        return shuffled;
+        return false;
     }
 }
