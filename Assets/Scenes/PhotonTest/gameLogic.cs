@@ -14,6 +14,7 @@ namespace com.CS307.CoolCardGames.gameLogic
     {
         int score = 0;
         int num_players = PhotonNetwork.PlayerList.Length;
+        
 
 
 
@@ -46,6 +47,7 @@ namespace com.CS307.CoolCardGames.gameLogic
         // Update is called once per frame
         void Update ()
         {
+            PhotonNetwork.AutomaticallySyncScene = true;
             
         }
 
