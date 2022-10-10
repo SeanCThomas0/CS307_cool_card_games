@@ -10,12 +10,10 @@ using System;
 namespace com.CS307.CoolCardGames.gameLogic
 {
 
-    public class gameLogic : MonoBehaviourPunCallbacks
+    public class gameLogic : MonoBehaviourPun
     {
         int score = 0;
         int num_players = PhotonNetwork.PlayerList.Length;
-        
-
 
 
 
@@ -38,6 +36,12 @@ namespace com.CS307.CoolCardGames.gameLogic
         [Tooltip("turn text")]
         [SerializeField]
         private TMP_Text turnText;
+
+        [Tooltip("updater")]
+        [SerializeField]
+        private GameObject updater;
+
+
              // Use this for initialization
         void Start ()
         {
@@ -66,32 +70,23 @@ namespace com.CS307.CoolCardGames.gameLogic
         }
 
 
+         
+
         public void switch_turn()
         {
             if(num_players > 0) {
                 Player cur_player =PhotonNetwork.PlayerList[0];
 
+
                 string guh =cur_player.NickName;
 
                 cur_player = cur_player.GetNext();
 
-
-                turnText.text = guh;
+                this.photonView.RPC("update_turn_text", RpcTarget.All,"guh");
 
 
             }
 
-
-
-            /*
-            if(turnText.text=="Player 1")
-            {
-                turnText.text ="Player 2";
-            }
-            else {
-                turnText.text ="Player 1";
-            }
-            */
 
 
         }
