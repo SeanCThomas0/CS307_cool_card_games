@@ -202,6 +202,7 @@ public class CardDealer : MonoBehaviour
                         Card newCard = Instantiate(card) as Card;
 
                         newCard.GetComponent<SpriteRenderer>().sprite = clubs[randomNum];
+
                         newCard.numValue = randomNum + 1;
                         newCard.suitValue = Card.suit.CLUBS;
 
@@ -214,6 +215,7 @@ public class CardDealer : MonoBehaviour
                         Card newCard = Instantiate(card) as Card;
 
                         newCard.GetComponent<SpriteRenderer>().sprite = hearts[randomNum];
+
                         newCard.numValue = randomNum + 1;
                         newCard.suitValue = Card.suit.HEARTS;
 
@@ -226,6 +228,7 @@ public class CardDealer : MonoBehaviour
                         Card newCard = Instantiate(card) as Card;
 
                         newCard.GetComponent<SpriteRenderer>().sprite = spades[randomNum];
+
                         newCard.numValue = randomNum + 1;
                         newCard.suitValue = Card.suit.SPADES;
 
@@ -238,6 +241,7 @@ public class CardDealer : MonoBehaviour
                         Card newCard = Instantiate(card) as Card;
 
                         newCard.GetComponent<SpriteRenderer>().sprite = diamonds[randomNum];
+
                         newCard.numValue = randomNum + 1;
                         newCard.suitValue = Card.suit.DIAMONDS;
 

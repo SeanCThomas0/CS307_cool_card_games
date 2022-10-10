@@ -22,8 +22,8 @@ public class CardClickDetection : MonoBehaviour
                 RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
                 Debug.Log("hit: " + hit);
                 if (hit.collider) {
-                    Debug.Log("Collided: " + hit.collider.gameObject.name);
-                    hit.collider.attachedRigidbody.AddForce(Vector2.up);
+                    Debug.Log("Collided: " + hit.collider.gameObject.GetComponent<Card>().numValue + ", " + hit.collider.gameObject.GetComponent<Card>().suitValue);
+                    // hit.collider.attachedRigidbody.AddForce(Vector2.up);
                 }
             }
         }
