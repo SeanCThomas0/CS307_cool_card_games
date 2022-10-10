@@ -13,6 +13,7 @@ namespace com.CS307.CoolCardGames.gameLogic
     public class gameLogic : MonoBehaviourPunCallbacks
     {
         int score = 0;
+        int num_players = PhotonNetwork.PlayerList.Length;
 
 
 
@@ -65,6 +66,19 @@ namespace com.CS307.CoolCardGames.gameLogic
 
         public void switch_turn()
         {
+            if(num_players > 0) {
+                Player cur_player =PhotonNetwork.PlayerList[0];
+
+                cur_player = cur_player.GetNext();
+
+                turnText.text = cur_player.NickName;
+
+                Debug.Log(cur_player.NickName);
+            }
+
+
+
+            /*
             if(turnText.text=="Player 1")
             {
                 turnText.text ="Player 2";
@@ -72,6 +86,7 @@ namespace com.CS307.CoolCardGames.gameLogic
             else {
                 turnText.text ="Player 1";
             }
+            */
 
 
         }
