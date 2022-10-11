@@ -36,6 +36,7 @@ public class SyncTestData : MonoBehaviourPun
     private void Update()
     {
         game_score = GameLogic.score;
+        Debug.Log(game_score);
         
     }
 
@@ -48,11 +49,13 @@ public class SyncTestData : MonoBehaviourPun
         {
             stream.SendNext(game_score);
             stream.SendNext(turn_text);
+            Debug.Log("STREAM WAS WROTE");
 
         }
         else if(stream.IsReading){
             
             game_score = (int)stream.ReceiveNext();
+            Debug.Log("STREAM WAS READ");
 
         }
     }
