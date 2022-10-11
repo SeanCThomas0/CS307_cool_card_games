@@ -1,0 +1,37 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class UIButton : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    public void ResetScene() {
+        UpdateSprite[] cards = FindObjectOfType<UpdateSprite>();
+        foreach (UpdateSprite card in cards) {
+            Destroy(card.gameObject);
+        }
+        ClearTopValues();
+        FindObjectOfType<Solitaire>().PlayCards();
+    }
+
+    void ClearTopValues() {
+        Selectable[] selectables = FindObjectOfType<Selectable>();
+        foreach (Selectable selectable in selectables) {
+            if (selectable.CompareTag("Top")) {
+                selectable.suit = null;
+                selectable.value = 0;
+            }
+        }
+    }
+}
