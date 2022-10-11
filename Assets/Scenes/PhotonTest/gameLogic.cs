@@ -3,17 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+
 using TMPro;
 using System;
 
 
-namespace com.CS307.CoolCardGames.gameLogic
-{
+
 
     public class gameLogic : MonoBehaviourPun
     {
-        int score = 0;
-        int num_players = PhotonNetwork.PlayerList.Length;
+
+        public  int score = 0;
+
+
+
+        //int num_players = PhotonNetwork.PlayerList.Length;
+
+
 
 
 
@@ -37,21 +43,19 @@ namespace com.CS307.CoolCardGames.gameLogic
         [SerializeField]
         private TMP_Text turnText;
 
-        [Tooltip("updater")]
-        [SerializeField]
-        private GameObject updater;
 
-
-             // Use this for initialization
+        // Use this for initialization
         void Start ()
         {
-            
+
+
         }
         
         // Update is called once per frame
         void Update ()
         {
-            PhotonNetwork.AutomaticallySyncScene = true;
+            //PhotonNetwork.AutomaticallySyncScene = true;
+
             
         }
 
@@ -74,7 +78,9 @@ namespace com.CS307.CoolCardGames.gameLogic
 
         public void switch_turn()
         {
+            /*
             if(num_players > 0) {
+                
                 Player cur_player =PhotonNetwork.PlayerList[0];
 
 
@@ -82,19 +88,44 @@ namespace com.CS307.CoolCardGames.gameLogic
 
                 cur_player = cur_player.GetNext();
 
-                this.photonView.RPC("update_turn_text", RpcTarget.All,guh);
-
+                //this.photonView.RPC("update_turn_text", RpcTarget.All,guh);
+                turnText.text=guh;
+                
 
 
             }
+            */
+        
 
 
 
+        }
+
+        public int get_score()
+        {
+            return score;
+        }
+
+        public void set_score(int val)
+        {
+            score =val;
+        }
+
+        public string get_turn_text()
+        {
+            return turnText.text;
+        }
+
+        public void set_turn_text(string new_text)
+        {
+            turnText.text=new_text;
         }
 
 
 
 
 
+
+
     }
-}
+

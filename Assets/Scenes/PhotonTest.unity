@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 126576003}
   - component: {fileID: 126576002}
   m_Layer: 0
-  m_Name: Launcher
+  m_Name: Server
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -560,7 +560,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1461435368}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: com.CS307.CoolCardGames.gameLogic.gameLogic, Assembly-CSharp
         m_MethodName: add_score
         m_Mode: 1
@@ -694,7 +694,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1461435368}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: com.CS307.CoolCardGames.gameLogic.gameLogic, Assembly-CSharp
         m_MethodName: sub_score
         m_Mode: 1
@@ -2336,55 +2336,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1375007186}
   m_CullTransparentMesh: 1
---- !u!1 &1461435367
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1461435369}
-  - component: {fileID: 1461435368}
-  m_Layer: 0
-  m_Name: gameLogic
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1461435368
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1461435367}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f897e19ee7e2909489ffe48a0542f42c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  add: {fileID: 848973418}
-  subtract: {fileID: 960575984}
-  passButton: {fileID: 1542796144}
-  counter: {fileID: 1348160823}
-  turnText: {fileID: 1329842917}
---- !u!4 &1461435369
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1461435367}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 549.2715, y: 319.20618, z: 0.32088757}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1542796144
 GameObject:
   m_ObjectHideFlags: 0
@@ -2469,7 +2420,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1461435368}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: com.CS307.CoolCardGames.gameLogic.gameLogic, Assembly-CSharp
         m_MethodName: switch_turn
         m_Mode: 1
@@ -2883,8 +2834,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 5.5415, y: -0.43854}
-  m_SizeDelta: {x: 99.5037, y: 103.98}
+  m_AnchoredPosition: {x: 0.012691, y: -0.43854}
+  m_SizeDelta: {x: 109.97, y: 103.98}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1994873684
 MonoBehaviour:

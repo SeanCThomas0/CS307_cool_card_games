@@ -115,7 +115,7 @@ namespace com.CS307.CoolCardGames.Launcher
             Debug.Log("PUN Bascis Tutorial/Launcher: OnConnectedToMaster() was called by PUN");
             // #Critical: The first we try to do is to join a potential existing room. If there is, good, else, we'll be called back with OnJoinRandomFailed()
             PhotonNetwork.JoinRandomRoom();
-            PhotonView photonView = PhotonView.Get(this);
+
 
 
 
@@ -146,6 +146,7 @@ namespace com.CS307.CoolCardGames.Launcher
         public override void OnJoinedRoom()
         {
             Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
+            
             for(int i = 0; i< PhotonNetwork.PlayerList.Length; i ++) {
                 Player temp_player =PhotonNetwork.PlayerList[i];
                 if (temp_player.IsLocal) {
@@ -154,6 +155,7 @@ namespace com.CS307.CoolCardGames.Launcher
                 }
             }
             PhotonNetwork.LoadLevel(1);
+
             //progressLabel.SetActive(false);
             //GameController.SetActive(true);
 
