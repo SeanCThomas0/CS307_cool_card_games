@@ -51,8 +51,8 @@ public class SyncTestData : MonoBehaviourPun
 
         }
         else if(stream.IsReading){
-            stream.SendNext(game_score);
-            stream.SendNext(turn_text);
+            
+            score = (int)stream.ReceiveNext();
 
         }
     }
