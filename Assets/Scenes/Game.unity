@@ -1898,6 +1898,7 @@ GameObject:
   - component: {fileID: 2008298342}
   - component: {fileID: 2008298340}
   - component: {fileID: 2008298343}
+  - component: {fileID: 2008298344}
   m_Layer: 0
   m_Name: PhotonViewObject
   m_TagString: Untagged
@@ -1922,7 +1923,7 @@ MonoBehaviour:
   prefixField: -1
   Synchronization: 3
   OwnershipTransfer: 0
-  observableSearch: 0
+  observableSearch: 2
   ObservedComponents:
   - {fileID: 2008298343}
   sceneViewId: 1
@@ -1959,6 +1960,19 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &2008298344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008298337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 706a7c71cc20c014dad9858c61fdc7a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameLogicController: {fileID: 1036067951}
 --- !u!1 &2117968417
 GameObject:
   m_ObjectHideFlags: 0
