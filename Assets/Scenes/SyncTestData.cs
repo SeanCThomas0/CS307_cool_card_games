@@ -65,6 +65,7 @@ public class SyncTestData : MonoBehaviourPun ,IPunObservable
             game_score = (int)stream.ReceiveNext();
             Debug.Log("STREAM WAS READ");
             Debug.Log(game_score);
+            GameLogic.counter.text=score.ToString;
 
         }
     }

@@ -37,7 +37,7 @@ using System;
 
         [Tooltip("score text")]
         [SerializeField]
-        private TMP_Text counter;
+        public TMP_Text counter;
 
         [Tooltip("turn text")]
         [SerializeField]
