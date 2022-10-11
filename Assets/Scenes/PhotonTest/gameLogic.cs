@@ -25,15 +25,15 @@ using System;
 
         [Tooltip("add button")]
         [SerializeField]
-        private GameObject add;
+        public GameObject add;
 
         [Tooltip("sub button")]
         [SerializeField]
-        private GameObject subtract;
+        public GameObject subtract;
 
         [Tooltip("pass button")]
         [SerializeField]
-        private GameObject passButton;
+        public GameObject passButton;
 
         [Tooltip("score text")]
         [SerializeField]
@@ -41,7 +41,7 @@ using System;
 
         [Tooltip("turn text")]
         [SerializeField]
-        private TMP_Text turnText;
+        public TMP_Text turnText;
 
 
         // Use this for initialization

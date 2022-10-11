@@ -13,6 +13,7 @@ public class SyncTestData : MonoBehaviourPun ,IPunObservable
 
     gameLogic GameLogic;
     [SerializeField] GameObject GameLogicController;
+    
 
     [SerializeField]
     public int game_score =0;
@@ -23,18 +24,27 @@ public class SyncTestData : MonoBehaviourPun ,IPunObservable
 
 
 
-
     // Start is called before the first frame update
     void Awake()
     {
         GameLogic = GameLogicController.GetComponent<gameLogic>();
+
     }
 
 
     private void Start()
     {  
-        
 
+        
+        if (photonView.IsMine ){
+            GameLogic.turnText.text =PhotonNetwork.LocalPlayer.NickName;
+            GameLogic.passButton.SetActive(false);
+        }
+        else {
+            GameLogic.add.SetActive(false);
+            GameLogic.subtract.SetActive(false);
+
+        }
 
     }
 
