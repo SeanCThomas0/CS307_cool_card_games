@@ -35,12 +35,16 @@ public class SyncTestData : MonoBehaviourPun ,IPunObservable
     {  
         
 
+
     }
 
     // Update is called once per frame
     private void Update()
     {
- 
+        if (photonView.IsMine ){
+                game_score = GameLogic.score;
+        }
+        GameLogic.score = game_score;
         
     }
 
