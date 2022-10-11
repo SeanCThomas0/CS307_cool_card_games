@@ -62,6 +62,7 @@ public class SolitaireUserInput : MonoBehaviour
         //deck click actions
         print("clicked on deck");
         solitaire.DealFromDeck();
+        slot1 = this.gameObject;
     }
     
     void Card(GameObject selected) {
@@ -253,7 +254,7 @@ public class SolitaireUserInput : MonoBehaviour
             Selectable stack = solitaire.topPos[i].GetComponent<Selectable>();
             if (selected.GetComponent<Selectable>().value == 1) {
                 if (solitaire.topPos[i].GetComponent<Selectable>().value == 0) {
-                    slot1 == selected;
+                    slot1 = selected;
                     Stack(stack.gameObject);
                     break;
                 }
