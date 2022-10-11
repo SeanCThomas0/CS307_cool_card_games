@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class PhontonServerTestGame : MonoBehaviourPun
+public class PhontonServerTestGame : MonoBehaviour
 {
 
 

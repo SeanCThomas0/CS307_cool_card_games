@@ -5,7 +5,8 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using System;
-public class SyncTestData : MonoBehaviourPun
+[RequireComponent(typeof(PhotonView))]
+public class SyncTestData : MonoBehaviourPun ,IPunObservable 
 {
     //PhotonView photonView = PhotonView.Get(this);
 
@@ -13,8 +14,12 @@ public class SyncTestData : MonoBehaviourPun
     gameLogic GameLogic;
     [SerializeField] GameObject GameLogicController;
 
-    private int game_score=0; 
-    private string turn_text ="";
+    [SerializeField]
+    public int game_score =0;
+
+    [SerializeField]
+    public string turn_text ="";
+
 
 
 
@@ -36,11 +41,11 @@ public class SyncTestData : MonoBehaviourPun
     private void Update()
     {
         game_score = GameLogic.score;
-        Debug.Log(game_score);
+
         
     }
 
-    private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         // writing if you are SETTING data
         // reading if you are GETTING data
@@ -48,17 +53,19 @@ public class SyncTestData : MonoBehaviourPun
         if(stream.IsWriting)
         {
             stream.SendNext(game_score);
-            stream.SendNext(turn_text);
             Debug.Log("STREAM WAS WROTE");
+            Debug.Log(game_score);
 
         }
-        else if(stream.IsReading){
+        else{
             
             game_score = (int)stream.ReceiveNext();
             Debug.Log("STREAM WAS READ");
+            Debug.Log(game_score);
 
         }
     }
+
 
 
 

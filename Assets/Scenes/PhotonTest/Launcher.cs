@@ -57,6 +57,8 @@ namespace com.CS307.CoolCardGames.Launcher
             //#Critical
             //this makes sure we can use PhotonNetwork.LoadLevel() on the master client and all clients in the same room sync their level automatically
             PhotonNetwork.AutomaticallySyncScene = true;
+            //PhotonNetwork.SendRate =40;
+            //PhotonNetwork.SerializationRate = 40;
 
 
         }
@@ -146,7 +148,7 @@ namespace com.CS307.CoolCardGames.Launcher
         public override void OnJoinedRoom()
         {
             Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
-            
+
             for(int i = 0; i< PhotonNetwork.PlayerList.Length; i ++) {
                 Player temp_player =PhotonNetwork.PlayerList[i];
                 if (temp_player.IsLocal) {
