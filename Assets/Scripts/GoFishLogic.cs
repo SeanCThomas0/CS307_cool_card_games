@@ -13,9 +13,9 @@ public class GoFishLogic : MonoBehaviour
         cardDealer = Square.GetComponent<CardDealer>();
 
         // GameObject jokerCard = cardDealer.jokerCard();
-        GameObject[] someCards = cardDealer.RandomCards(52);
+        List<GameObject> someCards = cardDealer.RandomCards(52, 1, 1, true, false, false, false);
 
-        for (int i = 0; i < someCards.Length; i++) {
+        for (int i = 0; i < someCards.Count; i++) {
             GameObject cardOne = Instantiate(someCards[i], new Vector3(0,0,0), Quaternion.identity);
         }
 
