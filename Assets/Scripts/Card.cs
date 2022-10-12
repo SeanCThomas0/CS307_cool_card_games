@@ -13,11 +13,7 @@ public class Card : MonoBehaviour
         BACK
     }
 
-    // public int index_ID;
     public int numValue;
     public suit suitValue;
-
-    public void setSprite(Sprite sprite) {
-        this.GetComponent<SpriteRenderer>().sprite = sprite;
-    }
+    public bool showingFront;
 }
