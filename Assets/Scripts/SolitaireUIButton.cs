@@ -41,4 +41,8 @@ public class SolitaireUIButton : MonoBehaviour
             }
         }
     }
+
+    public void ShowWinScreen() {
+        highScorePanel.SetActive(true);
+    }
 }
