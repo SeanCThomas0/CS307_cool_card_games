@@ -42,7 +42,7 @@ public class SolitaireUIButton : MonoBehaviour
         }
     }
 
-    public void ShowWinScreen() {
+    public void OneMoveFromWin() {
         highScorePanel.SetActive(true);
     }
 }
