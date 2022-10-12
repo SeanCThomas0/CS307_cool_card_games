@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class GoFishLogic : MonoBehaviour
 {
-    public GameObject cardDealerController;
+    public GameObject cardDealerController; // to get CardDealer
+
+    public int mostRecentNumValue;
+    public Card.suit mostRecentSuitValue;
 
     private CardDealer cardDealer;
-    private List<Card> pool;
+
+    private List<GameObject> pool;
+    
     private Player playerBot;
     private Player playerSingle;
 
@@ -17,68 +22,75 @@ public class GoFishLogic : MonoBehaviour
         // set up deck of cards
         cardDealer = cardDealerController.GetComponent<CardDealer>();
 
+        // get a randomized standard deck of cards
         pool = cardDealer.RandomCards(52);
-
-        for (int i = 0; i < pool.Count; i++) {
-            pool[i].transform.position = new Vector3(0 + i * 2, 0, 0);
-        }
         
         // create players
         playerBot = new Player("0");
         playerSingle = new Player("1");
 
         // distribute cards for beginning of game
-        distributeCards(playerBot, 5);
-        distributeCards(playerSingle, 5);
-
-        // for (int i = 0; i < playerBot.getHand().Count; i++) {
-        //     Debug.Log("Bot: " + playerBot.getHand()[i].getGameObject() + ", " + playerBot.getHand()[i].getNumValue() + ", " + playerBot.getHand()[i].getSuitValue());
-        // }
-
-        // for (int i = 0; i < playerSingle.getHand().Count; i++) {
-        //     Debug.Log("Player: " + playerSingle.getHand()[i].getGameObject() + ", " + playerSingle.getHand()[i].getNumValue() + ", " + playerSingle.getHand()[i].getSuitValue());
-        // }
+        DistributeCards(playerBot, 5);
+        DistributeCards(playerSingle, 5);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        // checks for clicking, detects what is clicked
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+
+                RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+
+                if (hit.collider)
+                {
+                    mostRecentNumValue = hit.collider.gameObject.GetComponent<Card>().numValue;
+                    mostRecentSuitValue = hit.collider.gameObject.GetComponent<Card>().suitValue;
+
+                    Debug.Log("newCollided: " + hit.collider.gameObject.GetComponent<Card>().numValue + ", " + hit.collider.gameObject.GetComponent<Card>().suitValue);
+                }
+            }
+        }
     }
 
     public class Player {
         private string userID;
-        private List<Card> hand;
+        private List<GameObject> hand;
 
         private int[] numOfValues;
-        // private List<Card> cardsOfFour;
+        // private List<GameObject> cardsOfFour;
 
         public Player(string userID) {
             this.userID = userID;
-            this.hand = new List<Card>();
+            this.hand = new List<GameObject>();
             this.numOfValues = new int[13];
-            // this.cardsOfFour = new List<Card>();
+            // this.cardsOfFour = new List<GameObject>();
         }
 
-        public string getUserID() {
+        public string GetUserID() {
             return userID;
         }
 
-        public void addToHand(Card card) {
+        public void AddToHand(GameObject card) {
             hand.Add(card);
             // numOfValues[card.getNumValue()]++;
         }
 
-        public void removeFromHand(Card card) {
+        public void RemoveFromHand(GameObject card) {
             hand.Remove(card);
             // numOfValues[card.getNumValue()]--;
         }
 
-        public int removeAllNumFromHand(int numValue) {
+        public int RemoveAllNumFromHand(int numValue) {
             int numRemoved = 0;
 
             for (int i = 0; i < hand.Count; i++) {
-                if (hand[i].numValue == numValue) {
+                if (hand[i].GetComponent<Card>().numValue == numValue) {
                     hand.RemoveAt(i);
                     numRemoved++;
                     i--;
@@ -88,13 +100,13 @@ public class GoFishLogic : MonoBehaviour
             return numRemoved;
         }
 
-        public int removeAllSuitFromHand(Card.suit suit)
+        public int RemoveAllSuitFromHand(Card.suit suit)
         {
             int numRemoved = 0;
 
             for (int i = 0; i < hand.Count; i++)
             {
-                if (hand[i].suitValue == suit)
+                if (hand[i].GetComponent<Card>().suitValue == suit)
                 {
                     hand.RemoveAt(i);
                     numRemoved++;
@@ -109,20 +121,21 @@ public class GoFishLogic : MonoBehaviour
         //     return numOfValues;
         // }
 
-        public List<Card> getHand() {
+        public List<GameObject> GetHand() {
             return hand;
         }
     }
 
     // add cards to hand and remove from pool
-    public void distributeCards(Player player, int count) {
+    public void DistributeCards(Player player, int count) {
         if (pool.Count < count) {
             Debug.Log("Cannot distribute more cards than are available in the pool.");
             return;
         }
 
         for (int i = 0; i < count; i++) {        
-            // player.addToHand(pool[i]);
+            player.AddToHand(pool[i]);
+            cardDealer.ToggleView(pool[i], true);
             pool.RemoveAt(i);
         }
     }
@@ -130,10 +143,10 @@ public class GoFishLogic : MonoBehaviour
     // remove cards from one player and give to another player
     // returns true if the player had the cards
     // false if the player did not have any cards
-    public bool requestCards(Player from, Player to, Card card) {
-        int numRemoved = from.removeAllNumFromHand(card.numValue);
+    public bool RequestCards(Player from, Player to, GameObject card) {
+        int numRemoved = from.RemoveAllNumFromHand(card.GetComponent<Card>().numValue);
         for (int i = 0; i < numRemoved; i++) {
-            to.addToHand(card);
+            to.AddToHand(card);
         }
 
         if (numRemoved > 0) {

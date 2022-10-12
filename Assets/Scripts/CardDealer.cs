@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CardDealer : MonoBehaviour
 {
-    public Card card;
+    public GameObject card;
     public Sprite[] clubs;
     public Sprite[] hearts;
     public Sprite[] spades;
@@ -44,46 +44,50 @@ public class CardDealer : MonoBehaviour
     /*
     returns a standard deck of 52 cards
     */
-    public List<Card> StandardDeck() {
-        List<Card> standardDeck = new List<Card>();
+    public List<GameObject> StandardDeck() {
+        List<GameObject> standardDeck = new List<GameObject>();
 
         // loops through each card, returning a standard 52 card deck
         for (int i = 0; i < clubs.Length; i++) {
-            Card newCard = Instantiate(card) as Card;
+            GameObject newCard = Instantiate(card) as GameObject;
+            newCard.SetActive(false);
 
             newCard.GetComponent<SpriteRenderer>().sprite = clubs[i];
-            newCard.numValue = i + 1;
-            newCard.suitValue = Card.suit.CLUBS;
+            newCard.GetComponent<Card>().numValue = i + 1;
+            newCard.GetComponent<Card>().suitValue = Card.suit.CLUBS;
 
             standardDeck.Add(newCard);
         }
 
         for (int i = 0; i < hearts.Length; i++) {
-            Card newCard = Instantiate(card) as Card;
+            GameObject newCard = Instantiate(card) as GameObject;
+            newCard.SetActive(false);
 
             newCard.GetComponent<SpriteRenderer>().sprite = hearts[i];
-            newCard.numValue = i + 1;
-            newCard.suitValue = Card.suit.HEARTS;
+            newCard.GetComponent<Card>().numValue = i + 1;
+            newCard.GetComponent<Card>().suitValue = Card.suit.HEARTS;
 
             standardDeck.Add(newCard);
         }
 
         for (int i = 0; i < spades.Length; i++) {
-            Card newCard = Instantiate(card) as Card;
+            GameObject newCard = Instantiate(card) as GameObject;
+            newCard.SetActive(false);
 
             newCard.GetComponent<SpriteRenderer>().sprite = spades[i];
-            newCard.numValue = i + 1;
-            newCard.suitValue = Card.suit.SPADES;
+            newCard.GetComponent<Card>().numValue = i + 1;
+            newCard.GetComponent<Card>().suitValue = Card.suit.SPADES;
 
             standardDeck.Add(newCard);
         }
 
         for (int i = 0; i < diamonds.Length; i++) {
-            Card newCard = Instantiate(card) as Card;
+            GameObject newCard = Instantiate(card) as GameObject;
+            newCard.SetActive(false);
 
             newCard.GetComponent<SpriteRenderer>().sprite = diamonds[i];
-            newCard.numValue = i + 1;
-            newCard.suitValue = Card.suit.DIAMONDS;
+            newCard.GetComponent<Card>().numValue = i + 1;
+            newCard.GetComponent<Card>().suitValue = Card.suit.DIAMONDS;
 
             standardDeck.Add(newCard);
         }
@@ -94,13 +98,14 @@ public class CardDealer : MonoBehaviour
     /*
     returns the joker card
     */
-    public Card JokerCard() {
+    public GameObject JokerCard() {
         // returns joker card
-        Card newCard = Instantiate(card) as Card;
+        GameObject newCard = Instantiate(card) as GameObject;
+        newCard.SetActive(false);
 
         newCard.GetComponent<SpriteRenderer>().sprite = joker;
-        newCard.numValue = 0;
-        newCard.suitValue = Card.suit.JOKER;
+        newCard.GetComponent<Card>().numValue = 0;
+        newCard.GetComponent<Card>().suitValue = Card.suit.JOKER;
         return newCard;
     }
 
@@ -111,8 +116,8 @@ public class CardDealer : MonoBehaviour
     color - color of card back (use by stating "CardDealer.backColor.COLOR" where COLOR is BLUE, GREEN, or RED)
     design - design of card back (use by stating "CardDealer.backDesign.DESIGN" where DESIGN is PLAIN, OUTLINE, OUTLINE_PATTERN, OUTLINE_SIMPLE_PATTERN, or PATTERN)
     */
-    public List<Card> CardBacks(int count, backColor color, backDesign design) {
-        List<Card> cardBacks = new List<Card>();
+    public List<GameObject> CardBacks(int count, backColor color, backDesign design) {
+        List<GameObject> cardBacks = new List<GameObject>();
 
         int index = -1;
         switch (design)
@@ -136,31 +141,34 @@ public class CardDealer : MonoBehaviour
         
         if (color == backColor.BLUE) {
             for (int i = 0; i < count; i++) {
-                Card newCard = Instantiate(card) as Card;
+                GameObject newCard = Instantiate(card) as GameObject;
+                newCard.SetActive(false);
 
                 newCard.GetComponent<SpriteRenderer>().sprite = blue[index];
-                newCard.numValue = 0;
-                newCard.suitValue = Card.suit.BACK;
+                newCard.GetComponent<Card>().numValue = 0;
+                newCard.GetComponent<Card>().suitValue = Card.suit.BACK;
 
                 cardBacks.Add(newCard);
             }
         } else if (color == backColor.GREEN) {
             for (int i = 0; i < count; i++) {
-                Card newCard = Instantiate(card) as Card;
+                GameObject newCard = Instantiate(card) as GameObject;
+                newCard.SetActive(false);
 
                 newCard.GetComponent<SpriteRenderer>().sprite = green[index];
-                newCard.numValue = 0;
-                newCard.suitValue = Card.suit.BACK;
+                newCard.GetComponent<Card>().numValue = 0;
+                newCard.GetComponent<Card>().suitValue = Card.suit.BACK;
 
                 cardBacks.Add(newCard);
             }
         } else if (color == backColor.RED) {
             for (int i = 0; i < count; i++) {
-                Card newCard = Instantiate(card) as Card;
+                GameObject newCard = Instantiate(card) as GameObject;
+                newCard.SetActive(false);
 
                 newCard.GetComponent<SpriteRenderer>().sprite = red[index];
-                newCard.numValue = 0;
-                newCard.suitValue = Card.suit.BACK;
+                newCard.GetComponent<Card>().numValue = 0;
+                newCard.GetComponent<Card>().suitValue = Card.suit.BACK;
 
                 cardBacks.Add(newCard);
             }
@@ -177,14 +185,14 @@ public class CardDealer : MonoBehaviour
 
     count - number of random cards to produce
     */
-    public List<Card> RandomCards(int count)
+    public List<GameObject> RandomCards(int count)
     {
         if (count <= 0) {
             Debug.Log("\"count\" must be 1 or greater.");
             return null;
         }
 
-        List<Card> randomCards = new List<Card>();
+        List<GameObject> randomCards = new List<GameObject>();
 
         // ensures number of returned cards is the requested size
         while(randomCards.Count < count) {
@@ -199,12 +207,12 @@ public class CardDealer : MonoBehaviour
             {
                 case 0:
                     if (!ContainsCard(randomCards, randomNum + 1, Card.suit.CLUBS)) {
-                        Card newCard = Instantiate(card) as Card;
+                        GameObject newCard = Instantiate(card) as GameObject;
+                        newCard.SetActive(false);
 
                         newCard.GetComponent<SpriteRenderer>().sprite = clubs[randomNum];
-
-                        newCard.numValue = randomNum + 1;
-                        newCard.suitValue = Card.suit.CLUBS;
+                        newCard.GetComponent<Card>().numValue = randomNum + 1;
+                        newCard.GetComponent<Card>().suitValue = Card.suit.CLUBS;
 
                         randomCards.Add(newCard);
                     }
@@ -212,12 +220,12 @@ public class CardDealer : MonoBehaviour
                 case 1:
                     if (!ContainsCard(randomCards, randomNum + 1, Card.suit.HEARTS))
                     {
-                        Card newCard = Instantiate(card) as Card;
+                        GameObject newCard = Instantiate(card) as GameObject;
+                        newCard.SetActive(false);
 
                         newCard.GetComponent<SpriteRenderer>().sprite = hearts[randomNum];
-
-                        newCard.numValue = randomNum + 1;
-                        newCard.suitValue = Card.suit.HEARTS;
+                        newCard.GetComponent<Card>().numValue = randomNum + 1;
+                        newCard.GetComponent<Card>().suitValue = Card.suit.HEARTS;
 
                         randomCards.Add(newCard);
                     }
@@ -225,12 +233,12 @@ public class CardDealer : MonoBehaviour
                 case 2:
                     if (!ContainsCard(randomCards, randomNum + 1, Card.suit.SPADES))
                     {
-                        Card newCard = Instantiate(card) as Card;
+                        GameObject newCard = Instantiate(card) as GameObject;
+                        newCard.SetActive(false);
 
                         newCard.GetComponent<SpriteRenderer>().sprite = spades[randomNum];
-
-                        newCard.numValue = randomNum + 1;
-                        newCard.suitValue = Card.suit.SPADES;
+                        newCard.GetComponent<Card>().numValue = randomNum + 1;
+                        newCard.GetComponent<Card>().suitValue = Card.suit.SPADES;
 
                         randomCards.Add(newCard);
                     }
@@ -238,12 +246,12 @@ public class CardDealer : MonoBehaviour
                 case 3:
                     if (!ContainsCard(randomCards, randomNum + 1, Card.suit.DIAMONDS))
                     {
-                        Card newCard = Instantiate(card) as Card;
+                        GameObject newCard = Instantiate(card) as GameObject;
+                        newCard.SetActive(false);
 
                         newCard.GetComponent<SpriteRenderer>().sprite = diamonds[randomNum];
-
-                        newCard.numValue = randomNum + 1;
-                        newCard.suitValue = Card.suit.DIAMONDS;
+                        newCard.GetComponent<Card>().numValue = randomNum + 1;
+                        newCard.GetComponent<Card>().suitValue = Card.suit.DIAMONDS;
 
                         randomCards.Add(newCard);
                     }
@@ -272,7 +280,7 @@ public class CardDealer : MonoBehaviour
     inclSpades - boolean to specify whether to include spades suit
     inclDiamonds - boolean to specify whether to include diamonds suit
     */
-    public List<Card> RandomCards(int count, int minCardNum, int maxCardNum, bool inclClubs, bool inclHearts, bool inclSpades, bool inclDiamonds)
+    public List<GameObject> RandomCards(int count, int minCardNum, int maxCardNum, bool inclClubs, bool inclHearts, bool inclSpades, bool inclDiamonds)
     {
         if (count <= 0) {
             Debug.Log("\"count\" must be 1 or greater.");
@@ -284,7 +292,7 @@ public class CardDealer : MonoBehaviour
             return null;
         }
 
-        List<Card> randomCards = new List<Card>();
+        List<GameObject> randomCards = new List<GameObject>();
 
         // add suits to array to enable randomness later
         List<string> suits = new List<string>();
@@ -324,11 +332,12 @@ public class CardDealer : MonoBehaviour
                 case 0:
                     if (!ContainsCard(randomCards, randomNum + 1, Card.suit.CLUBS))
                     {
-                        Card newCard = Instantiate(card) as Card;
+                        GameObject newCard = Instantiate(card) as GameObject;
+                        newCard.SetActive(false);
 
                         newCard.GetComponent<SpriteRenderer>().sprite = clubs[randomNum];
-                        newCard.numValue = randomNum + 1;
-                        newCard.suitValue = Card.suit.CLUBS;
+                        newCard.GetComponent<Card>().numValue = randomNum + 1;
+                        newCard.GetComponent<Card>().suitValue = Card.suit.CLUBS;
 
                         randomCards.Add(newCard);
                     }
@@ -336,11 +345,12 @@ public class CardDealer : MonoBehaviour
                 case 1:
                     if (!ContainsCard(randomCards, randomNum + 1, Card.suit.HEARTS))
                     {
-                        Card newCard = Instantiate(card) as Card;
+                        GameObject newCard = Instantiate(card) as GameObject;
+                        newCard.SetActive(false);
 
                         newCard.GetComponent<SpriteRenderer>().sprite = hearts[randomNum];
-                        newCard.numValue = randomNum + 1;
-                        newCard.suitValue = Card.suit.HEARTS;
+                        newCard.GetComponent<Card>().numValue = randomNum + 1;
+                        newCard.GetComponent<Card>().suitValue = Card.suit.HEARTS;
 
                         randomCards.Add(newCard);
                     }
@@ -348,11 +358,12 @@ public class CardDealer : MonoBehaviour
                 case 2:
                     if (!ContainsCard(randomCards, randomNum + 1, Card.suit.SPADES))
                     {
-                        Card newCard = Instantiate(card) as Card;
+                        GameObject newCard = Instantiate(card) as GameObject;
+                        newCard.SetActive(false);
 
                         newCard.GetComponent<SpriteRenderer>().sprite = spades[randomNum];
-                        newCard.numValue = randomNum + 1;
-                        newCard.suitValue = Card.suit.SPADES;
+                        newCard.GetComponent<Card>().numValue = randomNum + 1;
+                        newCard.GetComponent<Card>().suitValue = Card.suit.SPADES;
 
                         randomCards.Add(newCard);
                     }
@@ -360,11 +371,12 @@ public class CardDealer : MonoBehaviour
                 case 3:
                     if (!ContainsCard(randomCards, randomNum + 1, Card.suit.DIAMONDS))
                     {
-                        Card newCard = Instantiate(card) as Card;
+                        GameObject newCard = Instantiate(card) as GameObject;
+                        newCard.SetActive(false);
 
                         newCard.GetComponent<SpriteRenderer>().sprite = diamonds[randomNum];
-                        newCard.numValue = randomNum + 1;
-                        newCard.suitValue = Card.suit.DIAMONDS;
+                        newCard.GetComponent<Card>().numValue = randomNum + 1;
+                        newCard.GetComponent<Card>().suitValue = Card.suit.DIAMONDS;
 
                         randomCards.Add(newCard);
                     }
@@ -385,12 +397,12 @@ public class CardDealer : MonoBehaviour
 
     toShuffle - array of GameObject cards to shuffle
     */
-    public List<Card> ShuffleCards(List<Card> toShuffle) {
+    public List<GameObject> ShuffleCards(List<GameObject> toShuffle) {
         if (toShuffle.Count <= 1 || toShuffle == null) {
             Debug.Log("\"toShuffle\" must be of length 2 or greater in order to be shuffled.");
         }
 
-        List<Card> shuffled = new List<Card>();
+        List<GameObject> shuffled = new List<GameObject>();
 
         while (toShuffle.Count > 0) {
             int randomIndex = UnityEngine.Random.Range(0, toShuffle.Count);
@@ -409,14 +421,22 @@ public class CardDealer : MonoBehaviour
     list - the list to search for card in
     card - the card to check for in list
     */
-    public bool ContainsCard(List<Card> list, int numValue, Card.suit suitValue) {
+    public bool ContainsCard(List<GameObject> list, int numValue, Card.suit suitValue) {
         for (int i = 0; i < list.Count; i++) {
-            if (list[i].numValue == numValue
-            && list[i].suitValue == suitValue) {
+            if (list[i].GetComponent<Card>().numValue == numValue
+            && list[i].GetComponent<Card>().suitValue == suitValue) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public void ToggleView(GameObject card, bool toggle) {
+        card.SetActive(toggle);
+    }
+
+    public void ChangeSprite() {
+        
     }
 }

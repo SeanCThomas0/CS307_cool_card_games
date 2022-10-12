@@ -153,6 +153,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardDealerController: {fileID: 1033690096}
+  mostRecentNumValue: 0
+  mostRecentSuitValue: 0
 --- !u!4 &780356557
 Transform:
   m_ObjectHideFlags: 0
@@ -352,7 +354,6 @@ GameObject:
   - component: {fileID: 1958733820}
   - component: {fileID: 1958733819}
   - component: {fileID: 1958733818}
-  - component: {fileID: 1958733821}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -426,18 +427,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1958733821
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1958733817}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bd1c8239550b43b68f791ebe47ba399, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &721050325219356295
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -489,6 +478,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 721050325665838454, guid: b4bb549f8488f472ea7a94fb1c151106, type: 3}
+      propertyPath: card
+      value: 
+      objectReference: {fileID: 4994407739428068693, guid: c81a5e7c73e804cdbae75f39d8f3c7b7, type: 3}
     - target: {fileID: 721050325665838455, guid: b4bb549f8488f472ea7a94fb1c151106, type: 3}
       propertyPath: m_Name
       value: CardDealerController
