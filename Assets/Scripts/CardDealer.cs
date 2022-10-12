@@ -110,13 +110,13 @@ public class CardDealer : MonoBehaviour
     }
 
     /*
-    returns a list of specified card backs
 
-    count - number of cards to return
+
+    
     color - color of card back (use by stating "CardDealer.backColor.COLOR" where COLOR is BLUE, GREEN, or RED)
     design - design of card back (use by stating "CardDealer.backDesign.DESIGN" where DESIGN is PLAIN, OUTLINE, OUTLINE_PATTERN, OUTLINE_SIMPLE_PATTERN, or PATTERN)
     */
-    public List<GameObject> CardBacks(int count, backColor color, backDesign design) {
+    public void ShowBacksKeepValues(GameObject card, backColor color, backDesign design) {
         List<GameObject> cardBacks = new List<GameObject>();
 
         int index = -1;
@@ -140,41 +140,43 @@ public class CardDealer : MonoBehaviour
         }
         
         if (color == backColor.BLUE) {
-            for (int i = 0; i < count; i++) {
-                GameObject newCard = Instantiate(card) as GameObject;
-                newCard.SetActive(false);
+            card.GetComponent<SpriteRenderer>().sprite = blue[index];
+            // for (int i = 0; i < count; i++) {
+                // GameObject newCard = Instantiate(card) as GameObject;
+                // newCard.SetActive(false);
 
-                newCard.GetComponent<SpriteRenderer>().sprite = blue[index];
-                newCard.GetComponent<Card>().numValue = 0;
-                newCard.GetComponent<Card>().suitValue = Card.suit.BACK;
+                // newCard.GetComponent<SpriteRenderer>().sprite = blue[index];
+                // newCard.GetComponent<Card>().numValue = 0;
+                // newCard.GetComponent<Card>().suitValue = Card.suit.BACK;
 
-                cardBacks.Add(newCard);
-            }
+                // cardBacks.Add(newCard);
+                
+            // }
         } else if (color == backColor.GREEN) {
-            for (int i = 0; i < count; i++) {
-                GameObject newCard = Instantiate(card) as GameObject;
-                newCard.SetActive(false);
+            card.GetComponent<SpriteRenderer>().sprite = green[index];
+            // for (int i = 0; i < count; i++) {
+            //     GameObject newCard = Instantiate(card) as GameObject;
+            //     newCard.SetActive(false);
 
-                newCard.GetComponent<SpriteRenderer>().sprite = green[index];
-                newCard.GetComponent<Card>().numValue = 0;
-                newCard.GetComponent<Card>().suitValue = Card.suit.BACK;
+            //     newCard.GetComponent<SpriteRenderer>().sprite = green[index];
+            //     newCard.GetComponent<Card>().numValue = 0;
+            //     newCard.GetComponent<Card>().suitValue = Card.suit.BACK;
 
-                cardBacks.Add(newCard);
-            }
+            //     cardBacks.Add(newCard);
+            // }
         } else if (color == backColor.RED) {
-            for (int i = 0; i < count; i++) {
-                GameObject newCard = Instantiate(card) as GameObject;
-                newCard.SetActive(false);
+            card.GetComponent<SpriteRenderer>().sprite = red[index];
+            // for (int i = 0; i < count; i++) {
+            //     GameObject newCard = Instantiate(card) as GameObject;
+            //     newCard.SetActive(false);
 
-                newCard.GetComponent<SpriteRenderer>().sprite = red[index];
-                newCard.GetComponent<Card>().numValue = 0;
-                newCard.GetComponent<Card>().suitValue = Card.suit.BACK;
+            //     newCard.GetComponent<SpriteRenderer>().sprite = red[index];
+            //     newCard.GetComponent<Card>().numValue = 0;
+            //     newCard.GetComponent<Card>().suitValue = Card.suit.BACK;
 
-                cardBacks.Add(newCard);
-            }
+            //     cardBacks.Add(newCard);
+            // }
         }
-
-        return cardBacks;
     }
 
     /*
@@ -430,10 +432,6 @@ public class CardDealer : MonoBehaviour
         }
 
         return false;
-    }
-
-    public void ToggleView(GameObject card, bool toggle) {
-        card.SetActive(toggle);
     }
 
     public void ChangeSprite() {

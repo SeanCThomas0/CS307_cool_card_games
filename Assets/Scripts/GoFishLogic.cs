@@ -13,6 +13,7 @@ public class GoFishLogic : MonoBehaviour
 
     private List<GameObject> pool;
     
+    // private Queue<Player> queue;
     private Player playerBot;
     private Player playerSingle;
 
@@ -29,9 +30,19 @@ public class GoFishLogic : MonoBehaviour
         playerBot = new Player("0");
         playerSingle = new Player("1");
 
+        // create queue of players
+        // queue = new Queue<Player>();
+        // queue.Enqueue(playerSingle);
+        // queue.Enqueue(playerBot);
+
         // distribute cards for beginning of game
-        DistributeCards(playerBot, 5);
         DistributeCards(playerSingle, 5);
+        DisplayHand(playerSingle, -8, -3.5f);
+
+        DistributeCards(playerBot, 5);
+        DisplayHand(playerBot, -8, 3.5f);
+        
+        DisplayPool();
     }
 
     // Update is called once per frame
@@ -40,20 +51,19 @@ public class GoFishLogic : MonoBehaviour
         // checks for clicking, detects what is clicked
         if (Input.GetMouseButtonDown(0))
         {
-            if (Input.GetMouseButtonDown(0))
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+
+            RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+
+            if (hit.collider)
             {
-                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+                mostRecentNumValue = hit.collider.gameObject.GetComponent<Card>().numValue;
+                mostRecentSuitValue = hit.collider.gameObject.GetComponent<Card>().suitValue;
 
-                RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+                TakeTurn(hit.collider.gameObject);
 
-                if (hit.collider)
-                {
-                    mostRecentNumValue = hit.collider.gameObject.GetComponent<Card>().numValue;
-                    mostRecentSuitValue = hit.collider.gameObject.GetComponent<Card>().suitValue;
-
-                    Debug.Log("newCollided: " + hit.collider.gameObject.GetComponent<Card>().numValue + ", " + hit.collider.gameObject.GetComponent<Card>().suitValue);
-                }
+                // Debug.Log("newCollided: " + hit.collider.gameObject.GetComponent<Card>().numValue + ", " + hit.collider.gameObject.GetComponent<Card>().suitValue);
             }
         }
     }
@@ -63,13 +73,11 @@ public class GoFishLogic : MonoBehaviour
         private List<GameObject> hand;
 
         private int[] numOfValues;
-        // private List<GameObject> cardsOfFour;
 
         public Player(string userID) {
             this.userID = userID;
             this.hand = new List<GameObject>();
             this.numOfValues = new int[13];
-            // this.cardsOfFour = new List<GameObject>();
         }
 
         public string GetUserID() {
@@ -78,12 +86,10 @@ public class GoFishLogic : MonoBehaviour
 
         public void AddToHand(GameObject card) {
             hand.Add(card);
-            // numOfValues[card.getNumValue()]++;
         }
 
         public void RemoveFromHand(GameObject card) {
             hand.Remove(card);
-            // numOfValues[card.getNumValue()]--;
         }
 
         public int RemoveAllNumFromHand(int numValue) {
@@ -113,13 +119,8 @@ public class GoFishLogic : MonoBehaviour
                     i--;
                 }
             }
-            // numOfValues[numValue] = numOfValues[numValue] - numRemoved;
             return numRemoved;
         }
-
-        // public int[] getNumOfValues() {
-        //     return numOfValues;
-        // }
 
         public List<GameObject> GetHand() {
             return hand;
@@ -127,7 +128,7 @@ public class GoFishLogic : MonoBehaviour
     }
 
     // add cards to hand and remove from pool
-    public void DistributeCards(Player player, int count) {
+    private void DistributeCards(Player player, int count) {
         if (pool.Count < count) {
             Debug.Log("Cannot distribute more cards than are available in the pool.");
             return;
@@ -135,7 +136,6 @@ public class GoFishLogic : MonoBehaviour
 
         for (int i = 0; i < count; i++) {        
             player.AddToHand(pool[i]);
-            cardDealer.ToggleView(pool[i], true);
             pool.RemoveAt(i);
         }
     }
@@ -143,7 +143,7 @@ public class GoFishLogic : MonoBehaviour
     // remove cards from one player and give to another player
     // returns true if the player had the cards
     // false if the player did not have any cards
-    public bool RequestCards(Player from, Player to, GameObject card) {
+    private bool RequestCards(Player from, Player to, GameObject card) {
         int numRemoved = from.RemoveAllNumFromHand(card.GetComponent<Card>().numValue);
         for (int i = 0; i < numRemoved; i++) {
             to.AddToHand(card);
@@ -166,4 +166,65 @@ public class GoFishLogic : MonoBehaviour
 
     //     return false;
     // }
+
+    private void TakeTurn(GameObject card) {
+        Debug.Log("numValue: " + card.GetComponent<Card>().numValue + ", suitValue: " + card.GetComponent<Card>().suitValue);
+
+        // Player currentPlayer = queue.Dequeue();
+        // queue.Enqueue(currentPlayer);
+
+        RequestCards(playerBot, playerSingle, card);
+    }
+
+    private void DisplayHand(Player player, float xStart, float yStart) {
+        float x = xStart;
+        float y = yStart;
+        float z = 0;
+
+        for (int i = 0; i < player.GetHand().Count; i++) {
+            player.GetHand()[i].transform.position = new Vector3(x, y, z);
+            player.GetHand()[i].SetActive(true);
+            
+            x = x + 0.35f;
+            z = z - 0.1f;
+        }
+    }
+
+    private void DisplayPool() {
+        System.Random randomGenerator = new System.Random();
+
+        for (int i = 0; i < pool.Count; i++) {
+                int negative = 1;
+
+                int randomToNegative = UnityEngine.Random.Range(0, 2);
+                if (randomToNegative == 0)
+                {
+                    negative = -1;
+                }
+                float xOffset = (float)randomGenerator.NextDouble() * 3 * negative;
+
+                randomToNegative = UnityEngine.Random.Range(0, 2);
+                if (randomToNegative == 0)
+                {
+                    negative = -1;
+                } else {
+                    negative = 1;
+                }
+                float yOffset = (float)randomGenerator.NextDouble() * negative;
+
+                randomToNegative = UnityEngine.Random.Range(0, 2);
+                if (randomToNegative == 0)
+                {
+                    negative = -1;
+                } else
+                {
+                    negative = 1;
+                }
+                float zOffset = (float)randomGenerator.NextDouble() * negative;
+
+                pool[i].transform.position = new Vector3(0 + xOffset, 0 + yOffset, 0 + zOffset);
+                cardDealer.ShowBacksKeepValues(pool[i], CardDealer.backColor.BLUE, CardDealer.backDesign.OUTLINE_SIMPLE_PATTERN);
+                pool[i].SetActive(true);
+        }
+    }
 }
