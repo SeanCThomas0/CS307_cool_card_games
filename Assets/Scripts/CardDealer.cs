@@ -412,7 +412,7 @@ public class CardDealer : MonoBehaviour
     color - color of card back (use by stating "CardDealer.backColor.COLOR" where COLOR is BLUE, GREEN, or RED)
     design - design of card back (use by stating "CardDealer.backDesign.DESIGN" where DESIGN is PLAIN, OUTLINE, OUTLINE_PATTERN, OUTLINE_SIMPLE_PATTERN, or PATTERN)
     */
-    public void ShowBacksKeepValues(GameObject card, backColor color, backDesign design)
+    public void ShowBackKeepValue(GameObject card, backColor color, backDesign design)
     {
         List<GameObject> cardBacks = new List<GameObject>();
 
