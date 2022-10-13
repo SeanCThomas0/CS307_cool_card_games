@@ -21,13 +21,37 @@ public class SyncTestData : MonoBehaviourPun ,IPunObservable
     [SerializeField]
     public string turn_text ="";
 
+    [Tooltip("pass button")]
+    [SerializeField]
+    public GameObject passButton;
+
+    Player localPlayerVar = PhotonNetwork.LocalPlayer;
+    bool isMasterPlayer;
+
+    Player[] playerListArr = PhotonNetwork.PlayerList;
+
+    int next_player =0;
+
+
 
 
 
     // Start is called before the first frame update
     void Awake()
     {
+        
         GameLogic = GameLogicController.GetComponent<gameLogic>();
+        
+        for (int i = 0; i < playerListArr.Length;i++) {
+            if (playerListArr[i] == localPlayerVar) {
+                next_player = ((i+1)%4);
+            }
+        }
+        
+
+        
+
+
 
     }
 
@@ -35,7 +59,7 @@ public class SyncTestData : MonoBehaviourPun ,IPunObservable
     private void Start()
     {  
 
-        
+        isMasterPlayer = photonView.IsMine;
         if (photonView.IsMine ){
             GameLogic.turnText.text =PhotonNetwork.LocalPlayer.NickName;
             GameLogic.passButton.SetActive(false);
@@ -51,10 +75,15 @@ public class SyncTestData : MonoBehaviourPun ,IPunObservable
     // Update is called once per frame
     private void Update()
     {
+        isMasterPlayer = photonView.IsMine;
         if (photonView.IsMine ){
                 game_score = GameLogic.score;
         }
         GameLogic.score = game_score;
+
+        isMasterPlayer = photonView.IsMine;
+
+
         
     }
 
@@ -79,6 +108,16 @@ public class SyncTestData : MonoBehaviourPun ,IPunObservable
 
         }
     }
+
+    public void OnPassButton () {
+
+
+        photonView.TransferOwnership(playerListArr[next_player].ActorNumber);
+
+    }
+
+
+
 
 
 

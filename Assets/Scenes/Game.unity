@@ -485,6 +485,7 @@ MonoBehaviour:
   GameLogicController: {fileID: 1036067951}
   game_score: 0
   turn_text: 
+  passButton: {fileID: 1971724876}
 --- !u!114 &549030251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -501,7 +502,7 @@ MonoBehaviour:
   Group: 0
   prefixField: -1
   Synchronization: 3
-  OwnershipTransfer: 0
+  OwnershipTransfer: 1
   observableSearch: 2
   ObservedComponents:
   - {fileID: 549030250}
@@ -1876,19 +1877,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1971724879}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1036067952}
-        m_TargetAssemblyTypeName: gameLogic, Assembly-CSharp
-        m_MethodName: switch_turn
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1971724879
 MonoBehaviour:
   m_ObjectHideFlags: 0
