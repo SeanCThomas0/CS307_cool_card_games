@@ -75,6 +75,15 @@ public class SyncTestData : MonoBehaviourPun ,IPunObservable
     // Update is called once per frame
     private void Update()
     {
+        if (photonView.IsMine ){
+            GameLogic.turnText.text =PhotonNetwork.LocalPlayer.NickName;
+            GameLogic.passButton.SetActive(false);
+        }
+        else {
+            GameLogic.add.SetActive(false);
+            GameLogic.subtract.SetActive(false);
+
+        }
         isMasterPlayer = photonView.IsMine;
         if (photonView.IsMine ){
                 game_score = GameLogic.score;
