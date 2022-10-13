@@ -12,6 +12,9 @@ public class Player : MonoBehaviour
 
     public bool active;
 
+    public int numOfSetsOfFour;
+    public GameObject text;
+
     // public Player(string userID)
     // {
     //     this.userID = userID;
@@ -64,9 +67,4 @@ public class Player : MonoBehaviour
         }
         return numRemoved;
     }
-
-    // public List<GameObject> GetHand()
-    // {
-    //     return hand;
-    // }
 }

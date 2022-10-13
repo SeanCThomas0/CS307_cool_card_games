@@ -58,7 +58,6 @@ public class CardDealer : MonoBehaviour
 
             newCard.GetComponent<Card>().numValue = i + 1;
             newCard.GetComponent<Card>().suitValue = Card.suit.CLUBS;
-            newCard.GetComponent<Card>().showingFront = true;
             SetSprite(newCard);
 
             standardDeck.Add(newCard);
@@ -71,7 +70,6 @@ public class CardDealer : MonoBehaviour
 
             newCard.GetComponent<Card>().numValue = i + 1;
             newCard.GetComponent<Card>().suitValue = Card.suit.HEARTS;
-            newCard.GetComponent<Card>().showingFront = true;
             SetSprite(newCard);
 
             standardDeck.Add(newCard);
@@ -84,7 +82,6 @@ public class CardDealer : MonoBehaviour
 
             newCard.GetComponent<Card>().numValue = i + 1;
             newCard.GetComponent<Card>().suitValue = Card.suit.SPADES;
-            newCard.GetComponent<Card>().showingFront = true;
             SetSprite(newCard);
 
             standardDeck.Add(newCard);
@@ -97,7 +94,6 @@ public class CardDealer : MonoBehaviour
 
             newCard.GetComponent<Card>().numValue = i + 1;
             newCard.GetComponent<Card>().suitValue = Card.suit.DIAMONDS;
-            newCard.GetComponent<Card>().showingFront = true;
             SetSprite(newCard);
 
             standardDeck.Add(newCard);
@@ -144,7 +140,6 @@ public class CardDealer : MonoBehaviour
 
                         newCard.GetComponent<Card>().numValue = randomNum + 1;
                         newCard.GetComponent<Card>().suitValue = Card.suit.CLUBS;
-                        newCard.GetComponent<Card>().showingFront = true;
                         SetSprite(newCard);
 
                         randomCards.Add(newCard);
@@ -158,7 +153,6 @@ public class CardDealer : MonoBehaviour
 
                         newCard.GetComponent<Card>().numValue = randomNum + 1;
                         newCard.GetComponent<Card>().suitValue = Card.suit.HEARTS;
-                        newCard.GetComponent<Card>().showingFront = true;
                         SetSprite(newCard);
 
                         randomCards.Add(newCard);
@@ -172,7 +166,6 @@ public class CardDealer : MonoBehaviour
 
                         newCard.GetComponent<Card>().numValue = randomNum + 1;
                         newCard.GetComponent<Card>().suitValue = Card.suit.SPADES;
-                        newCard.GetComponent<Card>().showingFront = true;
                         SetSprite(newCard);
 
                         randomCards.Add(newCard);
@@ -186,7 +179,6 @@ public class CardDealer : MonoBehaviour
 
                         newCard.GetComponent<Card>().numValue = randomNum + 1;
                         newCard.GetComponent<Card>().suitValue = Card.suit.DIAMONDS;
-                        newCard.GetComponent<Card>().showingFront = true;
                         SetSprite(newCard);
 
                         randomCards.Add(newCard);
@@ -280,7 +272,6 @@ public class CardDealer : MonoBehaviour
 
                         newCard.GetComponent<Card>().numValue = randomNum + 1;
                         newCard.GetComponent<Card>().suitValue = Card.suit.CLUBS;
-                        newCard.GetComponent<Card>().showingFront = true;
                         SetSprite(newCard);
 
                         randomCards.Add(newCard);
@@ -294,7 +285,6 @@ public class CardDealer : MonoBehaviour
 
                         newCard.GetComponent<Card>().numValue = randomNum + 1;
                         newCard.GetComponent<Card>().suitValue = Card.suit.HEARTS;
-                        newCard.GetComponent<Card>().showingFront = true;
                         SetSprite(newCard);
 
                         randomCards.Add(newCard);
@@ -308,7 +298,6 @@ public class CardDealer : MonoBehaviour
 
                         newCard.GetComponent<Card>().numValue = randomNum + 1;
                         newCard.GetComponent<Card>().suitValue = Card.suit.SPADES;
-                        newCard.GetComponent<Card>().showingFront = true;
                         SetSprite(newCard);
 
                         randomCards.Add(newCard);
@@ -322,7 +311,6 @@ public class CardDealer : MonoBehaviour
 
                         newCard.GetComponent<Card>().numValue = randomNum + 1;
                         newCard.GetComponent<Card>().suitValue = Card.suit.DIAMONDS;
-                        newCard.GetComponent<Card>().showingFront = true;
                         SetSprite(newCard);
 
                         randomCards.Add(newCard);
@@ -401,8 +389,6 @@ public class CardDealer : MonoBehaviour
                 card.GetComponent<SpriteRenderer>().sprite = joker;
                 break;
         }
-
-        card.GetComponent<Card>().showingFront = true;
     }
 
     /*
@@ -448,8 +434,23 @@ public class CardDealer : MonoBehaviour
         {
             card.GetComponent<SpriteRenderer>().sprite = red[index];
         }
+    }
 
-        card.GetComponent<Card>().showingFront = false;
+    public void SortCards(List<GameObject> cards)
+    {
+        // referred to https://www.geeksforgeeks.org/bubble-sort/ to recall bubble sort
+        for (int i = 0; i < cards.Count - 1; i++)
+        {
+            for (int j = 0; j < cards.Count - i - 1; j++)
+            {
+                if (cards[j].GetComponent<Card>().numValue > cards[j + 1].GetComponent<Card>().numValue)
+                {
+                    GameObject temp = cards[j];
+                    cards[j] = cards[j + 1];
+                    cards[j + 1] = temp;
+                }
+            }
+        }
     }
 
     /*

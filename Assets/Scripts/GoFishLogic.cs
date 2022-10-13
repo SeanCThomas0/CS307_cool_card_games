@@ -20,23 +20,40 @@ public class GoFishLogic : MonoBehaviour
     public bool playerTwoIsBot;
 
     public GameObject guideText;
+    public GameObject quitButton;
+    public GameObject exitButton;
 
     private enum gameStates
     {
         PICK_FROM_POOL,
         PICK_NUM_TO_REQEUST,
+        PICK_NUM_TO_REQEUST_AGAIN,
         PICK_PLAYER_TO_REQUEST,
         BOT_PLAYING,
-        BOT_REQUESTING
+        BOT_REQUESTING,
+        END_GAME,
+        DEMO_POOL_RAPID_FIRE
+    }
+
+    private enum gameAlerts
+    {
+        NONE,
+        PICK_PLAYER,
+        PICK_NUM,
+        PICK_POOL,
+        SATISFY_REQUEST,
     }
 
     private gameStates gameState;
+    private gameAlerts gameAlert;
     private GameObject turn;
 
     private GameObject requestingFrom;
     private int requestingNumValue;
 
+    public bool diffiBot;
     private bool gaveToBot;
+    private List<int> botRequestHistory;
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +61,11 @@ public class GoFishLogic : MonoBehaviour
         // get a randomized standard deck of cards
         cardDealer = cardDealerController.GetComponent<CardDealer>();
         pool = cardDealer.RandomCards(52);
+
+        for (int i = 0; i < pool.Count; i++)
+        {
+            pool[i].GetComponent<Card>().inPool = true;
+        }
 
         // create queue of players and distribute cards
         numOfPlayers = 2;
@@ -54,13 +76,13 @@ public class GoFishLogic : MonoBehaviour
                 queue.Enqueue(playerOne);
                 playerOne.GetComponent<Player>().active = true;
                 DistributeCards(playerOne, 5);
-                DisplayHand(playerOne, false);
+                DisplayHand(playerOne);
 
                 queue.Enqueue(playerTwo);
                 playerTwo.GetComponent<Player>().active = true;
                 playerTwoIsBot = true;
                 DistributeCards(playerTwo, 5);
-                DisplayHand(playerTwo, false);
+                DisplayHand(playerTwo);
 
                 playerThree.SetActive(false);
                 playerFour.SetActive(false);
@@ -70,15 +92,17 @@ public class GoFishLogic : MonoBehaviour
                 queue.Enqueue(playerOne);
                 playerOne.GetComponent<Player>().active = true;
                 DistributeCards(playerOne, 5);
-                DisplayHand(playerOne, true);
+                DisplayHand(playerOne);
 
                 queue.Enqueue(playerTwo);
                 playerTwo.GetComponent<Player>().active = true;
                 DistributeCards(playerTwo, 5);
+                DisplayHand(playerTwo);
 
                 queue.Enqueue(playerThree);
                 playerThree.GetComponent<Player>().active = true;
                 DistributeCards(playerThree, 5);
+                DisplayHand(playerThree);
 
                 playerFour.SetActive(false);
 
@@ -87,27 +111,37 @@ public class GoFishLogic : MonoBehaviour
                 queue.Enqueue(playerOne);
                 playerOne.GetComponent<Player>().active = true;
                 DistributeCards(playerOne, 5);
-                DisplayHand(playerOne, true);
+                DisplayHand(playerOne);
 
                 queue.Enqueue(playerTwo);
                 playerTwo.GetComponent<Player>().active = true;
                 DistributeCards(playerTwo, 5);
+                DisplayHand(playerTwo);
 
                 queue.Enqueue(playerThree);
                 playerThree.GetComponent<Player>().active = true;
                 DistributeCards(playerThree, 5);
+                DisplayHand(playerThree);
 
                 queue.Enqueue(playerFour);
                 playerFour.GetComponent<Player>().active = true;
                 DistributeCards(playerFour, 5);
+                DisplayHand(playerFour);
                 break;
         }
 
         // set initial states
         turn = queue.Dequeue();
         queue.Enqueue(turn);
+
         gameState = gameStates.PICK_PLAYER_TO_REQUEST;
+        // gameState = gameStates.DEMO_POOL_RAPID_FIRE; // to demonstrate win conditions
+        gameAlert = gameAlerts.NONE;
+
         gaveToBot = false;
+        botRequestHistory = new List<int>();
+
+        exitButton.SetActive(false);
 
         // display pool
         DisplayPool();
@@ -119,23 +153,81 @@ public class GoFishLogic : MonoBehaviour
         // updates text
         bool containBotRequest = false;
 
+        string requestingNumValueAsString;
+        switch (requestingNumValue)
+        {
+            case 1:
+                requestingNumValueAsString = "Ace";
+                break;
+            case 11:
+                requestingNumValueAsString = "Jack";
+                break;
+            case 12:
+                requestingNumValueAsString = "Queen";
+                break;
+            case 13:
+                requestingNumValueAsString = "King";
+                break;
+            default:
+                requestingNumValueAsString = requestingNumValue.ToString();
+                break;
+        }
+
         switch (gameState)
         {
             case gameStates.PICK_PLAYER_TO_REQUEST:
-                guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Select a player to request a rank from.";
+                if (gameAlert == gameAlerts.PICK_PLAYER)
+                {
+                    guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Please select a player other than yourself.";
+                }
+                else
+                {
+                    guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Select a player to request a rank from.";
+                }
                 break;
             case gameStates.PICK_NUM_TO_REQEUST:
-                guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Select a rank from your deck to request from " + requestingFrom.GetComponent<Player>().userID + ".";
+                if (gameAlert == gameAlerts.PICK_NUM)
+                {
+                    guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Please select a rank from your own deck.";
+                }
+                else
+                {
+                    guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Select a rank from your deck to request from " + requestingFrom.GetComponent<Player>().userID + ".";
+                }
+                break;
+            case gameStates.PICK_NUM_TO_REQEUST_AGAIN:
+                if (gameAlert == gameAlerts.PICK_NUM)
+                {
+                    guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Please select another rank from your own deck.";
+                }
+                else
+                {
+                    guideText.GetComponent<TMPro.TextMeshProUGUI>().text = requestingFrom.GetComponent<Player>().userID + " gave you their cards of rank " + requestingNumValueAsString + ". Select another rank from your deck to request from " + requestingFrom.GetComponent<Player>().userID + ".";
+                }
                 break;
             case gameStates.PICK_FROM_POOL:
-                guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Player " + requestingFrom.GetComponent<Player>().userID + " told you to Go Fish. Pick from the pool.";
+                if (gameAlert == gameAlerts.PICK_POOL)
+                {
+                    guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Please select a card from the pool.";
+                }
+                else
+                {
+                    guideText.GetComponent<TMPro.TextMeshProUGUI>().text = requestingFrom.GetComponent<Player>().userID + " told you to Go Fish. Pick from the pool.";
+                }
                 break;
             case gameStates.BOT_PLAYING:
-                guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Player 2 (bot) is playing.";
+                guideText.GetComponent<TMPro.TextMeshProUGUI>().text = turn.GetComponent<Player>().userID + " is playing.";
                 BotPlay();
                 break;
             case gameStates.BOT_REQUESTING:
-                guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Player 2 (bot) is requesting " + requestingNumValue + " from player " + requestingFrom.GetComponent<Player>().userID + ".";
+                if (gameAlert == gameAlerts.SATISFY_REQUEST)
+                {
+                    guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Please select all cards of rank " + requestingNumValueAsString + " from your own deck or select Go Fish.";
+                }
+                else
+                {
+                    guideText.GetComponent<TMPro.TextMeshProUGUI>().text = turn.GetComponent<Player>().userID + " is requesting rank " + requestingNumValueAsString + " from " + requestingFrom.GetComponent<Player>().userID + ".";
+                }
 
                 containBotRequest = false;
                 for (int i = 0; i < requestingFrom.GetComponent<Player>().hand.Count; i++)
@@ -151,6 +243,24 @@ public class GoFishLogic : MonoBehaviour
                     gameState = gameStates.BOT_PLAYING;
                     gaveToBot = false;
                 }
+
+                break;
+            case gameStates.END_GAME:
+                GameObject[] players = queue.ToArray();
+                GameObject winningPlayer = players[0];
+
+                for (int i = 1; i < players.Length; i++)
+                {
+                    if (players[i].GetComponent<Player>().numOfSetsOfFour > winningPlayer.GetComponent<Player>().numOfSetsOfFour)
+                    {
+                        winningPlayer = players[i];
+                    }
+                }
+
+                guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Game over. " + winningPlayer.GetComponent<Player>().userID + " wins!";
+
+                quitButton.SetActive(false);
+                exitButton.SetActive(true);
 
                 break;
         }
@@ -173,47 +283,73 @@ public class GoFishLogic : MonoBehaviour
                             Debug.Log("Player " + hit.collider.gameObject.GetComponent<Player>().userID + " clicked.");
                             requestingFrom = hit.collider.gameObject;
                             gameState = gameStates.PICK_NUM_TO_REQEUST;
+                            gameAlert = gameAlerts.NONE;
+                        }
+                        else
+                        {
+                            gameAlert = gameAlerts.PICK_PLAYER;
                         }
                         break;
 
                     case gameStates.PICK_NUM_TO_REQEUST:
-                        if (hit.collider.gameObject.GetComponent<Card>() != null && cardDealer.ContainsCard(turn.GetComponent<Player>().hand, hit.collider.gameObject.GetComponent<Card>().numValue, hit.collider.gameObject.GetComponent<Card>().suitValue) && hit.collider.gameObject.GetComponent<Card>().showingFront)
+                    case gameStates.PICK_NUM_TO_REQEUST_AGAIN:
+                        if (hit.collider.gameObject.GetComponent<Card>() != null && cardDealer.ContainsCard(turn.GetComponent<Player>().hand, hit.collider.gameObject.GetComponent<Card>().numValue, hit.collider.gameObject.GetComponent<Card>().suitValue))
                         {
-                            Debug.Log("Card: " + hit.collider.gameObject.GetComponent<Card>().numValue + ", " + hit.collider.gameObject.GetComponent<Card>().suitValue + " clicked.");
                             requestingNumValue = hit.collider.gameObject.GetComponent<Card>().numValue;
+                            gameAlert = gameAlerts.NONE;
 
                             if (RequestAllCards())
                             {
-                                Debug.Log("Hooray");
+                                gameState = gameStates.PICK_NUM_TO_REQEUST_AGAIN;
                             }
                             else
                             {
                                 gameState = gameStates.PICK_FROM_POOL;
                             }
                         }
+                        else
+                        {
+                            gameAlert = gameAlerts.PICK_NUM;
+                        }
                         break;
 
                     case gameStates.PICK_FROM_POOL:
-                        if (hit.collider.gameObject.GetComponent<Card>() != null && !hit.collider.gameObject.GetComponent<Card>().showingFront)
+                        if (hit.collider.gameObject.GetComponent<Card>() != null && hit.collider.GetComponent<Card>().inPool)
                         {
-                            Debug.Log("PoolCard: " + hit.collider.gameObject.GetComponent<Card>().numValue + ", " + hit.collider.gameObject.GetComponent<Card>().suitValue + " clicked.");
                             PickFromPool(hit.collider.gameObject);
                             DetermineNextPlayer();
+                            gameAlert = gameAlerts.NONE;
+                        }
+                        else
+                        {
+                            gameAlert = gameAlerts.PICK_POOL;
                         }
                         break;
 
                     case gameStates.BOT_REQUESTING:
-                        if (hit.collider.gameObject.GetComponent<Card>() != null && cardDealer.ContainsCard(requestingFrom.GetComponent<Player>().hand, hit.collider.gameObject.GetComponent<Card>().numValue, hit.collider.gameObject.GetComponent<Card>().suitValue) && hit.collider.gameObject.GetComponent<Card>().showingFront && hit.collider.gameObject.GetComponent<Card>().numValue == requestingNumValue && containBotRequest)
+                        if (hit.collider.gameObject.GetComponent<Card>() != null && cardDealer.ContainsCard(requestingFrom.GetComponent<Player>().hand, hit.collider.gameObject.GetComponent<Card>().numValue, hit.collider.gameObject.GetComponent<Card>().suitValue) && hit.collider.gameObject.GetComponent<Card>().numValue == requestingNumValue && containBotRequest)
                         {
                             RequestCards(hit.collider.gameObject);
                             gaveToBot = true;
+                            gameAlert = gameAlerts.NONE;
                         }
                         else if (!containBotRequest && hit.collider.gameObject.name == "Fish")
                         {
                             PickFromPool(pool[UnityEngine.Random.Range(0, pool.Count)]);
                             DetermineNextPlayer();
+                            gameAlert = gameAlerts.NONE;
+                        }
+                        else
+                        {
+                            gameAlert = gameAlerts.SATISFY_REQUEST;
                         }
 
+                        break;
+                    case gameStates.DEMO_POOL_RAPID_FIRE:
+                        if (hit.collider.gameObject.GetComponent<Card>() != null && hit.collider.GetComponent<Card>().inPool)
+                        {
+                            PickFromPool(hit.collider.gameObject);
+                        }
                         break;
                 }
 
@@ -224,26 +360,55 @@ public class GoFishLogic : MonoBehaviour
 
     private void BotPlay()
     {
-        int playerIndex = UnityEngine.Random.Range(1, numOfPlayers + 1);
-        while (playerIndex == 2)
+        int newRequestingNumValue = turn.GetComponent<Player>().hand[UnityEngine.Random.Range(0, turn.GetComponent<Player>().hand.Count)].GetComponent<Card>().numValue;
+
+        if (diffiBot)
         {
-            playerIndex = UnityEngine.Random.Range(1, numOfPlayers + 1);
+            int[] numOfNumValues = new int[13];
+
+            for (int i = 0; i < turn.GetComponent<Player>().hand.Count; i++)
+            {
+                numOfNumValues[turn.GetComponent<Player>().hand[i].GetComponent<Card>().numValue - 1]++;
+            }
+
+            newRequestingNumValue = numOfNumValues[0];
+            for (int i = 1; i < numOfNumValues.Length; i++)
+            {
+                if (numOfNumValues[i] > newRequestingNumValue && !botRequestHistory.Contains(numOfNumValues[i]))
+                {
+                    newRequestingNumValue = i + 1;
+                }
+            }
+        }
+        else
+        {
+            int playerIndex = UnityEngine.Random.Range(1, numOfPlayers + 1);
+            while (playerIndex == 2)
+            {
+                playerIndex = UnityEngine.Random.Range(1, numOfPlayers + 1);
+            }
+
+            switch (playerIndex)
+            {
+                case 1:
+                    requestingFrom = playerOne;
+                    break;
+                case 3:
+                    requestingFrom = playerThree;
+                    break;
+                case 4:
+                    requestingFrom = playerFour;
+                    break;
+            }
+
+            while (botRequestHistory.Contains(newRequestingNumValue))
+            {
+                newRequestingNumValue = turn.GetComponent<Player>().hand[UnityEngine.Random.Range(0, turn.GetComponent<Player>().hand.Count)].GetComponent<Card>().numValue;
+            }
         }
 
-        switch (playerIndex)
-        {
-            case 1:
-                requestingFrom = playerOne;
-                break;
-            case 3:
-                requestingFrom = playerThree;
-                break;
-            case 4:
-                requestingFrom = playerFour;
-                break;
-        }
-
-        requestingNumValue = turn.GetComponent<Player>().hand[UnityEngine.Random.Range(0, turn.GetComponent<Player>().hand.Count)].GetComponent<Card>().numValue;
+        requestingNumValue = newRequestingNumValue;
+        botRequestHistory.Add(requestingNumValue);
 
         gameState = gameStates.BOT_REQUESTING;
     }
@@ -255,6 +420,7 @@ public class GoFishLogic : MonoBehaviour
 
         requestingFrom = null;
         requestingNumValue = -1;
+        botRequestHistory.RemoveRange(0, botRequestHistory.Count);
 
         if (turn == playerTwo && playerTwoIsBot)
         {
@@ -279,6 +445,7 @@ public class GoFishLogic : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             player.GetComponent<Player>().AddToHand(pool[i]);
+            pool[i].GetComponent<Card>().inPool = false;
             pool.RemoveAt(i);
         }
     }
@@ -291,13 +458,14 @@ public class GoFishLogic : MonoBehaviour
         List<GameObject> removed = requestingFrom.GetComponent<Player>().RemoveAllNumFromHand(requestingNumValue);
         for (int i = 0; i < removed.Count; i++)
         {
+            removed[i].GetComponent<Card>().inPool = false;
             turn.GetComponent<Player>().AddToHand(removed[i]);
         }
 
         if (removed.Count > 0)
         {
-            DisplayHand(requestingFrom, false);
-            DisplayHand(turn, false);
+            DisplayHand(requestingFrom);
+            DisplayHand(turn);
             return true;
         }
         else
@@ -316,8 +484,9 @@ public class GoFishLogic : MonoBehaviour
 
         if (removed)
         {
-            DisplayHand(requestingFrom, false);
-            DisplayHand(turn, false);
+            card.GetComponent<Card>().inPool = false;
+            DisplayHand(requestingFrom);
+            DisplayHand(turn);
             return true;
         }
         else
@@ -326,8 +495,12 @@ public class GoFishLogic : MonoBehaviour
         }
     }
 
-    private void DisplayHand(GameObject player, bool back)
+    private void DisplayHand(GameObject player)
     {
+        CheckForFour(player);
+
+        cardDealer.SortCards(player.GetComponent<Player>().hand);
+
         float x = player.GetComponent<Player>().xStartPos;
         float z = 0;
 
@@ -335,7 +508,11 @@ public class GoFishLogic : MonoBehaviour
         {
             player.GetComponent<Player>().hand[i].transform.position = new Vector3(x, player.GetComponent<Player>().yPos, z);
 
-            if (back)
+            if (player == playerOne)
+            {
+                cardDealer.SetSprite(player.GetComponent<Player>().hand[i]);
+            }
+            else
             {
                 cardDealer.ShowBackKeepValue(player.GetComponent<Player>().hand[i], CardDealer.backColor.BLUE, CardDealer.backDesign.OUTLINE_SIMPLE_PATTERN);
             }
@@ -393,10 +570,53 @@ public class GoFishLogic : MonoBehaviour
     private void PickFromPool(GameObject card)
     {
         cardDealer.SetSprite(card);
-        turn.GetComponent<Player>().AddToHand(card);
-        DisplayHand(turn, false);
 
+        turn.GetComponent<Player>().AddToHand(card);
+        DisplayHand(turn);
+
+        card.GetComponent<Card>().inPool = false;
         pool.Remove(card);
-        DisplayPool();
+
+        if (pool.Count == 0)
+        {
+            gameState = gameStates.END_GAME;
+            return;
+        }
+    }
+
+    private void CheckForFour(GameObject player)
+    {
+        int[] numOfNumValues = new int[13];
+
+        for (int i = 0; i < player.GetComponent<Player>().hand.Count; i++)
+        {
+            numOfNumValues[player.GetComponent<Player>().hand[i].GetComponent<Card>().numValue - 1]++;
+        }
+
+        for (int i = 0; i < numOfNumValues.Length; i++)
+        {
+            if (numOfNumValues[i] >= 4)
+            {
+                List<GameObject> removed = player.GetComponent<Player>().RemoveAllNumFromHand(i + 1);
+
+                if (removed.Count == 4)
+                {
+                    for (int j = 0; j < removed.Count; j++)
+                    {
+                        removed[j].SetActive(false);
+                    }
+                    player.GetComponent<Player>().numOfSetsOfFour++;
+
+                    if (player.GetComponent<Player>().numOfSetsOfFour == 1)
+                    {
+                        player.GetComponent<Player>().text.GetComponent<TMPro.TextMeshProUGUI>().text = player.GetComponent<Player>().numOfSetsOfFour + " set of four";
+                    }
+                    else
+                    {
+                        player.GetComponent<Player>().text.GetComponent<TMPro.TextMeshProUGUI>().text = player.GetComponent<Player>().numOfSetsOfFour + " sets of four";
+                    }
+                }
+            }
+        }
     }
 }

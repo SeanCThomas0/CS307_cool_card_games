@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Card : MonoBehaviour
 {
-    public enum suit {
+    public enum suit
+    {
         CLUBS,
         HEARTS,
         SPADES,
@@ -15,5 +16,5 @@ public class Card : MonoBehaviour
 
     public int numValue;
     public suit suitValue;
-    public bool showingFront;
+    public bool inPool;
 }
