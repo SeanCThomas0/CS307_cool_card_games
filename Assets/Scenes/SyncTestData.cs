@@ -44,7 +44,7 @@ public class SyncTestData : MonoBehaviourPun ,IPunObservable
         
         for (int i = 0; i < playerListArr.Length;i++) {
             if (playerListArr[i] == localPlayerVar) {
-                next_player = ((i+1)%4);
+                next_player = ((i+1)%2);
             }
         }
         
