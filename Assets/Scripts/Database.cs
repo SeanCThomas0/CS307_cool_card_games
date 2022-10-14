@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,6 +41,44 @@ public class Database : MonoBehaviour
         userRef.Child("game_statistics").Child("solitaire").Child("win_count").SetValueAsync(0);
 
 
+    }
+
+    public void SetUserScore(Firebase.Auth.FirebaseUser user, string game, string statistic, int value)
+    {
+        DatabaseReference userRef = databaseReference.Child("users").Child(user.UserId);
+
+        userRef.Child("game_statistics").Child(game).Child(statistic).SetValueAsync(value);
+    }
+
+    public string GetUserScore(Firebase.Auth.FirebaseUser user, string game, string statistic)
+    {
+        DatabaseReference userRef = databaseReference.Child("users").Child(user.UserId);
+
+
+        userRef.Child("game_statistics").Child(game).Child(statistic).GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCompleted)
+            {
+                if (task.Result.Value == null)
+                {
+                    Debug.Log("GetUserScore Null");
+                    return null;
+                }
+                else
+                {
+                    Debug.Log("GetUserScore Success");
+                    Debug.Log(task.Result.Value.ToString());
+                    return task.Result.Value.ToString();
+                }
+                
+            }
+            else
+            {
+                Debug.Log("GetUserScore Fail");
+                return null;
+            }
+        });
+        return null;
     }
 
     public void LoadData()
