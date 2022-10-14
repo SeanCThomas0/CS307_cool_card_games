@@ -24,7 +24,7 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 
-    public void ChangeScenese(string scene)
+    public void ChangeScenes(string scene)
     {
         Debug.Log("Change to " + scene);
         SceneManager.LoadScene(scene);

@@ -431,3 +431,30 @@ Assets/Editor Default Resources/Firebase/fb_analytics_dark.png
 Assets/Editor Default Resources/Firebase/fb_analytics.png.meta
 Assets/Editor Default Resources/Firebase/fb_analytics.png
 Assets/Editor Default Resources/Firebase.meta
+Assets/firebase_unity_sdk/dotnet4/FirebaseStorage.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet4/FirebaseRemoteConfig.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet4/FirebaseMessaging.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet4/FirebaseInstallations.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet4/FirebaseFunctions.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet4/FirebaseFirestore.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet4/FirebaseDynamicLinks.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet4/FirebaseDatabase.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet4/FirebaseCrashlytics.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet4/FirebaseAuth.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet4/FirebaseAnalytics.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet4.meta
+Assets/firebase_unity_sdk/dotnet3/FirebaseStorage.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet3/FirebaseRemoteConfig.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet3/FirebaseMessaging.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet3/FirebaseInstallations.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet3/FirebaseFunctions.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet3/FirebaseFirestore.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet3/FirebaseDynamicLinks.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet3/FirebaseDatabase.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet3/FirebaseCrashlytics.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet3/FirebaseAuth.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet3/FirebaseAnalytics.unitypackage.meta
+Assets/firebase_unity_sdk/dotnet3.meta
+Assets/firebase_unity_sdk.meta
+Assets/Scripts/.DS_Store
+Assets/firebase_unity_sdk/.DS_Store

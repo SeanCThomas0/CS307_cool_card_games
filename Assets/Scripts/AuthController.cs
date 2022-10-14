@@ -15,8 +15,10 @@ public class AuthController : MonoBehaviour
     private void Start()
     {
         textMeshPro_LoginMessage = loginMessage.GetComponent<TextMeshProUGUI>();
+        FirebaseAuth.DefaultInstance.SignOut();
+        Debug.Log(FirebaseAuth.DefaultInstance.CurrentUser);
+        Debug.Log(FirebaseAuth.DefaultInstance);
     }
-
     
 
     private void Update()
@@ -183,6 +185,9 @@ public class AuthController : MonoBehaviour
                 break;
             case AuthError.MissingEmail:
                 loginMessageString = "Please enter in a valid email address";
+                break;
+            case AuthError.UserNotFound:
+                loginMessageString = "Account does not exist. Please enter a valid email address";
                 break;
         }
 

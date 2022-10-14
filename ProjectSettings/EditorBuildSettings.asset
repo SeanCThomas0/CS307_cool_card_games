@@ -5,9 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: ac956d3ce0cbf774c909f77fe505e8f1
@@ -20,4 +17,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Solitaire.unity
     guid: ded32abff809b764ab83bf5aa4dd0d70
+  - enabled: 1
+    path: Assets/Scenes/LoginPage.unity
+    guid: f9f99a741b5d29f4f935171605e798d1
+  - enabled: 1
+    path: Assets/Scenes/EuchreTestScene.unity
+    guid: ca0c616aab1663a419b14d0de99f70d9
+  - enabled: 1
+    path: Assets/Scenes/GoFish.unity
+    guid: 520c40cae671245d3a80c6ffcdbe8b0f
   m_configObjects: {}

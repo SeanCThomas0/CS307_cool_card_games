@@ -1554,14 +1554,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1493853608}
         m_TargetAssemblyTypeName: MainMenu, Scripts
-        m_MethodName: ChangeScenese
+        m_MethodName: ChangeScenes
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Scene/GoFish
+          m_StringArgument: Scenes/GoFish
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &638597163
@@ -3775,14 +3775,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1493853608}
         m_TargetAssemblyTypeName: MainMenu, Scripts
-        m_MethodName: ChangeScenese
+        m_MethodName: ChangeScenes
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Scene/EuchreTestScene
+          m_StringArgument: Scenes/EuchreTestScene
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1235303075
@@ -4163,7 +4163,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1493853606}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 093437b6ce42aca4cb8ea9d13ac5585a, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c9c78106375949cfb301fe71a48c52c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1538738425
@@ -5842,14 +5842,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1493853608}
         m_TargetAssemblyTypeName: MainMenu, Scripts
-        m_MethodName: ChangeScenese
+        m_MethodName: ChangeScenes
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Scene/Solitaire
+          m_StringArgument: Scenes/Solitaire
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1876651571
