@@ -91,6 +91,7 @@ public class SyncTestData : MonoBehaviourPun ,IPunObservable
         GameLogic.score = game_score;
 
         isMasterPlayer = photonView.IsMine;
+        Debug.Log(isMasterPlayer);
 
 
         
@@ -121,7 +122,7 @@ public class SyncTestData : MonoBehaviourPun ,IPunObservable
     public void OnPassButton () {
 
 
-        photonView.TransferOwnership(playerListArr[next_player].ActorNumber);
+        photonView.TransferOwnership(localPlayerVar.ActorNumber);
 
     }
 
