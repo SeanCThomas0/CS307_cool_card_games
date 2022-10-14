@@ -2091,7 +2091,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1026797063}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fe8ac2fe62224b1c8aeac56add9e7f5, type: 3}
+  m_Script: {fileID: 11500000, guid: b691f66892e8a40dbaeabadfaeb40b70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1095292578
@@ -2725,7 +2725,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Button
+  m_text: Join Chat
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2886,9 +2886,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1003608396}
+      - m_Target: {fileID: 1003608395}
         m_TargetAssemblyTypeName: ChatManager, Scripts
-        m_MethodName: DisconnectFromServer
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2899,8 +2899,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 1026797065}
-        m_TargetAssemblyTypeName: FriendSceneManager, Assembly-CSharp
-        m_MethodName: changeFriendListScene
+        m_TargetAssemblyTypeName: FriendSceneManager, Scripts
+        m_MethodName: changeFriendScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3338,7 +3338,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Enter text...
+  m_text: Enter username...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
