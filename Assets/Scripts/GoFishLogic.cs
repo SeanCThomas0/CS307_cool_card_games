@@ -10,7 +10,7 @@ public class GoFishLogic : MonoBehaviourPun
     public GameObject cardDealerController; // to get CardDealer
     private CardDealer cardDealer;
 
-    private List<GameObject> pool;
+    public List<GameObject> pool;
     private Queue<GameObject> queue;
 
     int numOfPlayers;

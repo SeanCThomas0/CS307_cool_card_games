@@ -20,7 +20,11 @@ public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
     int next_player =0;
     int cur_player =0;
 
-    
+
+    public List<GameObject> pool2;
+
+
+
 
 
 
@@ -30,6 +34,7 @@ public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
     // Start is called before the first frame update
     void Start()
     {
+        pool2 =goFishLogic.pool;
 
         isMasterPlayer = photonView.IsMine;
         if (photonView.IsMine ){
@@ -44,6 +49,12 @@ public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
     void Awake() {
         goFishLogic = LogicController.GetComponent<GoFishLogic>();
 
+        for (int i = 0; i < playerListArr.Length;i++) {
+            if (playerListArr[i] == localPlayerVar) {
+                next_player = ((i+1)%4);
+            }
+
+        }
     }
 
     // Update is called once per frame
@@ -60,14 +71,14 @@ public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
         // MUST SET AND GET in same order
         if(stream.IsWriting)
         {
-            //stream.SendNext(game_score);
+            stream.SendNext(pool2);
             Debug.Log("STREAM WAS WROTE");
             //Debug.Log(game_score);
 
         }
         else{
             
-            //game_score = (int)stream.ReceiveNext();
+            pool2 = (List<GameObject>)stream.ReceiveNext();
             Debug.Log("STREAM WAS READ");
             //Debug.Log(game_score);
             //GameLogic.counter.text=game_score.ToString();
