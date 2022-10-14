@@ -187,7 +187,8 @@ public class AuthController : MonoBehaviour
                 loginMessageString = "Please enter in a valid email address";
                 break;
             case AuthError.UserNotFound:
-                loginMessageString = "Account does not exist. Please enter a valid email address"
+                loginMessageString = "Account does not exist. Please enter a valid email address";
+                break;
         }
 
         print(loginMessageString);
