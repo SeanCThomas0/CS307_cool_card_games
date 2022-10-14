@@ -17,4 +17,8 @@ public class Card : MonoBehaviour
     public int numValue;
     public suit suitValue;
     public bool inPool;
+
+    public bool showingFront;
+    public string faceValue;
+    public string suitValueString;
 }

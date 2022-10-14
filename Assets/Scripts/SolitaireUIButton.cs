@@ -5,11 +5,14 @@ using UnityEngine;
 public class SolitaireUIButton : MonoBehaviour
 {
     public GameObject highScorePanel;
-    private Solitaire solitaire;
+    public Solitaire solitaire;
+    public SolitaireUserInput solitaireUserInput;
+    public bool clicked = false;
     // Start is called before the first frame update
     void Start()
     {
         solitaire = FindObjectOfType<Solitaire>();
+        solitaireUserInput = FindObjectOfType<SolitaireUserInput>();
     }
 
     // Update is called once per frame
@@ -44,6 +47,22 @@ public class SolitaireUIButton : MonoBehaviour
     }
 
     public void OneMoveFromWin() {
-        highScorePanel.SetActive(true);
+        // solitaire.topPos[0].value = 12;
+        // solitaire.topPos[1].value = 13;
+        // solitaire.topPos[2].value = 13;
+        // solitaire.topPos[3].value = 13;
+        // solitaire.topPos[0].suit = "S";
+        // solitaire.topPos[1].suit = "D";
+        // solitaire.topPos[2].suit = "H";
+        // solitaire.topPos[3].suit = "C";
+        clicked = true;
+        solitaire.topPos[0].GetComponent<Selectable>().value = 12;
+        solitaire.topPos[1].GetComponent<Selectable>().value = 13;
+        solitaire.topPos[2].GetComponent<Selectable>().value = 13;
+        solitaire.topPos[3].GetComponent<Selectable>().value = 13;
+        solitaire.topPos[0].GetComponent<Selectable>().suit = "S";
+        solitaire.topPos[1].GetComponent<Selectable>().suit = "D";
+        solitaire.topPos[2].GetComponent<Selectable>().suit = "H";
+        solitaire.topPos[3].GetComponent<Selectable>().suit = "C";
     }
 }

@@ -9,16 +9,18 @@ public class MainMenu : MonoBehaviour
     public void Logout()
     {
         Debug.Log("Logout");
+        Debug.Log(FirebaseAuth.DefaultInstance.CurrentUser.Email);
         FirebaseAuth.DefaultInstance.SignOut();
+        Debug.Log(FirebaseAuth.DefaultInstance.CurrentUser == null);
         SceneManager.LoadScene("Scenes/LoginPage");
     }
 
     public void ExitGame()
     {
         Debug.Log("QUIT");
-        print(FirebaseAuth.DefaultInstance.CurrentUser.Email);
+        Debug.Log(FirebaseAuth.DefaultInstance.CurrentUser.Email);
         FirebaseAuth.DefaultInstance.SignOut();
-        print(FirebaseAuth.DefaultInstance.CurrentUser == null);
+        Debug.Log(FirebaseAuth.DefaultInstance.CurrentUser == null);
         Application.Quit();
     }
 
