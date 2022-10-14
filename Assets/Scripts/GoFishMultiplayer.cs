@@ -103,7 +103,8 @@ public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
     [PunRPC]
     void updateCards(List<GameObject> poolOfCards)
     {
-        goFishLogic.pool = pool2;
+        pool2 = poolOfCards;
+        Debug.Log("RPC THINGY");
 
         
     }

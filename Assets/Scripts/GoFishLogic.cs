@@ -26,6 +26,7 @@ public class GoFishLogic : MonoBehaviourPun
     public GameObject guideText;
     public GameObject quitButton;
     public GameObject exitButton;
+    
 
     private enum gameStates
     {
@@ -58,9 +59,17 @@ public class GoFishLogic : MonoBehaviourPun
     public bool diffiBot;
     private bool gaveToBot;
 
+    //SEAN STUFF
+    PhotonView photonView;
+
     // Start is called before the first frame update
     void Start()
     {
+
+        photonView = PhotonView.Get(this);
+
+
+
         // get a randomized standard deck of cards
         cardDealer = cardDealerController.GetComponent<CardDealer>();
         pool = cardDealer.RandomCards(52);
@@ -671,6 +680,8 @@ public class GoFishLogic : MonoBehaviourPun
 
         card.GetComponent<Card>().inPool = false;
         pool.Remove(card);
+        photonView.RPC("updateCards", RpcTarget.All, pool);
+
     }
 
     private void CheckForFour(GameObject player)
