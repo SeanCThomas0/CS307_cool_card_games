@@ -9,6 +9,8 @@ using System;
 public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
 {
 
+    PhotonView photonView;
+
     GoFishLogic goFishLogic;
     [SerializeField] GameObject LogicController;
 
@@ -23,21 +25,11 @@ public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
 
     public List<GameObject> pool2;
 
-
-    public 
-
-
-
-
-
-
-
-
-
     // Start is called before the first frame update
     void Start()
     {
-        //pool2 =goFishLogic.pool;
+        pool2 =goFishLogic.pool;
+        photonView = PhotonView.Get(this);
 
         isMasterPlayer = photonView.IsMine;
         if (photonView.IsMine ){
@@ -65,11 +57,11 @@ public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
     {
 
         if (photonView.IsMine ){
-
+            pool2 =goFishLogic.pool;
 
         }
         else {
-
+        
 
         }
         isMasterPlayer = photonView.IsMine;
@@ -92,19 +84,28 @@ public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
         // MUST SET AND GET in same order
         if(stream.IsWriting)
         {
-            stream.SendNext(pool2);
+            //stream.SendNext(coolInt);
             Debug.Log("STREAM WAS WROTE");
             //Debug.Log(game_score);
 
         }
         else{
             
-            pool2 = (List<GameObject>)stream.ReceiveNext();
+            //coolInt = (int)stream.ReceiveNext();
             Debug.Log("STREAM WAS READ");
             //Debug.Log(game_score);
             //GameLogic.counter.text=game_score.ToString();
 
         }
+    }
+
+
+    [PunRPC]
+    void updateCards(List<GameObject> poolOfCards)
+    {
+        goFishLogic.pool = pool2;
+
+        
     }
 
 

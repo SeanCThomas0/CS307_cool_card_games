@@ -23,12 +23,6 @@ public class AuthController : MonoBehaviourPun
     */
 
 
-
-
-
- 
-
-
     private void Start()
     {
         textMeshPro_LoginMessage = loginMessage.GetComponent<TextMeshProUGUI>();
