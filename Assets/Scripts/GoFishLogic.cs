@@ -349,8 +349,6 @@ public class GoFishLogic : MonoBehaviour
         // checks for clicking, detects what is clicked
         if (Input.GetKeyDown(KeyCode.RightArrow) && (turn == playerOne || requestingFrom == playerOne))
         {
-            Debug.Log("Right arrow clicked");
-
             if (indexInHand + 1 < playerOne.GetComponent<Player>().hand.Count)
             {
                 indexInHand++;
@@ -371,8 +369,6 @@ public class GoFishLogic : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftArrow) && (turn == playerOne || requestingFrom == playerOne))
         {
-            Debug.Log("Left arrow clicked");
-
             if (indexInHand - 1 >= 0)
             {
                 indexInHand--;
