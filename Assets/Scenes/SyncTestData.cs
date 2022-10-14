@@ -78,10 +78,15 @@ public class SyncTestData : MonoBehaviourPun ,IPunObservable
         if (photonView.IsMine ){
             GameLogic.turnText.text =PhotonNetwork.LocalPlayer.NickName;
             GameLogic.passButton.SetActive(false);
+            GameLogic.add.SetActive(true);
+            GameLogic.subtract.SetActive(true);
+
+
         }
         else {
             GameLogic.add.SetActive(false);
             GameLogic.subtract.SetActive(false);
+            GameLogic.passButton.SetActive(true);
 
         }
         isMasterPlayer = photonView.IsMine;
@@ -91,7 +96,7 @@ public class SyncTestData : MonoBehaviourPun ,IPunObservable
         GameLogic.score = game_score;
 
         isMasterPlayer = photonView.IsMine;
-        Debug.Log(isMasterPlayer);
+        //Debug.Log(isMasterPlayer);
 
 
         
