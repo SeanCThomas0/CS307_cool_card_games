@@ -12,11 +12,12 @@ public class AuthController : MonoBehaviour
     TextMeshProUGUI textMeshPro_LoginMessage;
     private string loginMessageString;
 
-
     private void Start()
     {
         textMeshPro_LoginMessage = loginMessage.GetComponent<TextMeshProUGUI>();
     }
+
+    
 
     private void Update()
     {
@@ -24,6 +25,8 @@ public class AuthController : MonoBehaviour
 
         if (FirebaseAuth.DefaultInstance.CurrentUser != null)
         {
+            Debug.Log(FirebaseAuth.DefaultInstance.CurrentUser);
+
             SceneManager.LoadScene("Scenes/MainMenu");
         }
     }
@@ -123,6 +126,12 @@ public class AuthController : MonoBehaviour
 
             // Firebase user has been created.
             Firebase.Auth.FirebaseUser newUser = task.Result;
+
+            //Add account to database
+            Database database = new Database();
+            database.CreateAccountData(newUser);
+
+            //FirebaseDatabase.DefaultInstance.RootReference.
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
 
