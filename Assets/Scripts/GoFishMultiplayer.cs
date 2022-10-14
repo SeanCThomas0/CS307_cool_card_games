@@ -24,6 +24,9 @@ public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
     public List<GameObject> pool2;
 
 
+    public 
+
+
 
 
 
@@ -34,7 +37,7 @@ public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
     // Start is called before the first frame update
     void Start()
     {
-        pool2 =goFishLogic.pool;
+        //pool2 =goFishLogic.pool;
 
         isMasterPlayer = photonView.IsMine;
         if (photonView.IsMine ){
@@ -60,6 +63,24 @@ public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
     // Update is called once per frame
     void Update()
     {
+
+        if (photonView.IsMine ){
+
+
+        }
+        else {
+
+
+        }
+        isMasterPlayer = photonView.IsMine;
+        if (photonView.IsMine ){
+
+        }
+
+        isMasterPlayer = photonView.IsMine;
+        //Debug.Log(isMasterPlayer);
+
+
         
     }
 
