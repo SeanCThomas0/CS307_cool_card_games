@@ -4,19 +4,40 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Firebase.Auth;
+using Photon.Pun;
+using Photon.Realtime;
+
+
 using TMPro;
 
-public class AuthController : MonoBehaviour
+public class AuthController : MonoBehaviourPun
 {
     public GameObject loginMessage;
+    public GameObject PhotonServerObj;
+    PhotonServerMaster temp;
     TextMeshProUGUI textMeshPro_LoginMessage;
     private string loginMessageString;
+
+    /*
+    / SEAN SERVER STUFF I HOPE IT DONT MESS THIS UP
+    */
+
+
+
+
+
+ 
 
 
     private void Start()
     {
         textMeshPro_LoginMessage = loginMessage.GetComponent<TextMeshProUGUI>();
+        temp= PhotonServerObj.GetComponent<PhotonServerMaster>();
+
+
+
     }
+    
 
     private void Update()
     {
@@ -25,6 +46,7 @@ public class AuthController : MonoBehaviour
         if (FirebaseAuth.DefaultInstance.CurrentUser != null)
         {
             SceneManager.LoadScene("Scenes/MainMenu");
+            temp.Connect();
         }
     }
 
@@ -185,5 +207,6 @@ public class AuthController : MonoBehaviour
     {
         Debug.Log("QUIT");
         Application.Quit();
+
     }
 }

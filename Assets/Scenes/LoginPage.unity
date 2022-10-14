@@ -452,7 +452,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 272730513}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02d955f39a8e3465ba716c616c617ab5, type: 3}
+  m_Script: {fileID: 11500000, guid: e03aeb25fe765614eb206ac97247f40b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   username: {fileID: 0}
@@ -542,7 +542,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1853743485}
-        m_TargetAssemblyTypeName: AuthController, Assembly-CSharp
+        m_TargetAssemblyTypeName: AuthController, Scripts
         m_MethodName: Login
         m_Mode: 1
         m_Arguments:
@@ -1159,7 +1159,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1853743485}
-        m_TargetAssemblyTypeName: AuthController, Assembly-CSharp
+        m_TargetAssemblyTypeName: AuthController, Scripts
         m_MethodName: ExitGame
         m_Mode: 1
         m_Arguments:
@@ -1446,7 +1446,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1853743485}
-        m_TargetAssemblyTypeName: AuthController, Assembly-CSharp
+        m_TargetAssemblyTypeName: AuthController, Scripts
         m_MethodName: ReadEmailString
         m_Mode: 0
         m_Arguments:
@@ -1769,7 +1769,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1853743485}
-        m_TargetAssemblyTypeName: AuthController, Assembly-CSharp
+        m_TargetAssemblyTypeName: AuthController, Scripts
         m_MethodName: ReadPasswordString
         m_Mode: 0
         m_Arguments:
@@ -1854,6 +1854,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1231985426}
   m_CullTransparentMesh: 1
+--- !u!1 &1398340893
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1398340895}
+  - component: {fileID: 1398340894}
+  m_Layer: 0
+  m_Name: PhotonServerObj
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1398340894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1398340893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 851021f4b972a5641a512d62cfe73371, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxPlayersFish: 4
+  maxPlayersSolitare: 1
+  maxPlayersEucher: 1
+--- !u!4 &1398340895
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1398340893}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 478.251, y: 297.03214, z: -7.653207}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1610013948
 GameObject:
   m_ObjectHideFlags: 0
@@ -2386,7 +2433,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1853743485}
-        m_TargetAssemblyTypeName: AuthController, Assembly-CSharp
+        m_TargetAssemblyTypeName: AuthController, Scripts
         m_MethodName: CreateAccount
         m_Mode: 1
         m_Arguments:
@@ -2476,10 +2523,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1853743483}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac84645e89dc34149aea85caf014f722, type: 3}
+  m_Script: {fileID: 11500000, guid: b8866f09a05cee948b84f96af5d4fb4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   loginMessage: {fileID: 1131754468}
+  PhotonServerObj: {fileID: 1398340893}
 --- !u!1 &2042020202
 GameObject:
   m_ObjectHideFlags: 0
