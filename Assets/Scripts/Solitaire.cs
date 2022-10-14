@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+
 public class Solitaire : MonoBehaviour
 {
     public Sprite[] cardFaces;

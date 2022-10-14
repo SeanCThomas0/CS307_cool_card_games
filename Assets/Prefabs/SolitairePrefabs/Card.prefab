@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2576563628224410867}
   - component: {fileID: 2576563628224410868}
-  - component: {fileID: 2576563628224410869}
+  - component: {fileID: 7794532525359854157}
   - component: {fileID: 7374881207724796105}
   - component: {fileID: 2936602920190107625}
   - component: {fileID: -2370539231250483717}
@@ -88,7 +88,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2576563628224410869
+--- !u!114 &7794532525359854157
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2576563628224410870}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3050dbad7dd84145966efd4c3ce9b33, type: 3}
+  m_Script: {fileID: 11500000, guid: 5c70b584c78424e49afe60d9f7b57eef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cardFace: {fileID: 0}
@@ -114,7 +114,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abd87214370894342b67161b03b2aacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  top: 0
+  suit: 
+  value: 0
+  row: 0
   faceUp: 0
+  inDeckPile: 0
 --- !u!61 &2936602920190107625
 BoxCollider2D:
   m_ObjectHideFlags: 0
