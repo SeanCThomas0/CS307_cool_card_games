@@ -57,10 +57,11 @@ public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
     {
 
         if (photonView.IsMine ){
-            pool2 =goFishLogic.pool;
+            //pool2 =goFishLogic.pool;
 
         }
         else {
+            //goFishLogic.pool = pool2;
         
 
         }
@@ -99,15 +100,6 @@ public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
         }
     }
 
-
-    [PunRPC]
-    void updateCards(List<GameObject> poolOfCards)
-    {
-        pool2 = poolOfCards;
-        Debug.Log("RPC THINGY");
-
-        
-    }
 
 
 

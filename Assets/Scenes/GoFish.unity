@@ -552,6 +552,7 @@ MonoBehaviour:
   guideText: {fileID: 1001943163}
   quitButton: {fileID: 1564771131}
   exitButton: {fileID: 766570421}
+  GoFishSync: {fileID: 2003607044}
   diffiBot: 0
 --- !u!4 &780356557
 Transform:

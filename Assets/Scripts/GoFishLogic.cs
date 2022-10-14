@@ -26,6 +26,9 @@ public class GoFishLogic : MonoBehaviourPun
     public GameObject guideText;
     public GameObject quitButton;
     public GameObject exitButton;
+
+
+    public GameObject GoFishSync;
     
 
     private enum gameStates
@@ -233,6 +236,7 @@ public class GoFishLogic : MonoBehaviourPun
                 {
                     PickFromPool(pool[UnityEngine.Random.Range(0, pool.Count)]);
                     DetermineNextPlayer();
+                    photonView.RPC("updateCards", RpcTarget.All, pool );
                 }
 
                 break;
@@ -256,6 +260,7 @@ public class GoFishLogic : MonoBehaviourPun
                 {
                     PickFromPool(pool[UnityEngine.Random.Range(0, pool.Count)]);
                     gameState = gameStates.BOT_PLAYING;
+                    photonView.RPC("updateCards", RpcTarget.All, pool );
                 }
 
                 break;
@@ -402,6 +407,7 @@ public class GoFishLogic : MonoBehaviourPun
                             PickFromPool(hit.collider.gameObject);
                             DetermineNextPlayer();
                             gameAlert = gameAlerts.NONE;
+                            photonView.RPC("updateCards", RpcTarget.All, pool );
                         }
                         else
                         {
@@ -415,6 +421,7 @@ public class GoFishLogic : MonoBehaviourPun
                             PickFromPool(hit.collider.gameObject);
                             gameState = gameStates.PICK_NUM_TO_REQEUST;
                             gameAlert = gameAlerts.NONE;
+                            photonView.RPC("updateCards", RpcTarget.All, pool );
                         }
                         else
                         {
@@ -439,6 +446,7 @@ public class GoFishLogic : MonoBehaviourPun
                             PickFromPool(pool[UnityEngine.Random.Range(0, pool.Count)]);
                             DetermineNextPlayer();
                             gameAlert = gameAlerts.NONE;
+                            photonView.RPC("updateCards", RpcTarget.All, pool );
                         }
                         else
                         {
@@ -450,6 +458,7 @@ public class GoFishLogic : MonoBehaviourPun
                         if (hit.collider.gameObject.GetComponent<Card>() != null && hit.collider.GetComponent<Card>().inPool)
                         {
                             PickFromPool(hit.collider.gameObject);
+                            photonView.RPC("updateCards", RpcTarget.All, pool );
                         }
 
                         if (pool.Count <= 0)
@@ -680,7 +689,7 @@ public class GoFishLogic : MonoBehaviourPun
 
         card.GetComponent<Card>().inPool = false;
         pool.Remove(card);
-        photonView.RPC("updateCards", RpcTarget.All, pool);
+        
 
     }
 
@@ -719,4 +728,17 @@ public class GoFishLogic : MonoBehaviourPun
             }
         }
     }
+
+
+    
+    [PunRPC]
+    public void updateCards(List<GameObject> poolOfCards)
+    {
+        
+        Debug.Log("RPC THINGY");
+        GoFishSync.GetComponent<GoFishMultiplayer>().pool2 = poolOfCards;
+
+        
+    }
+
 }
