@@ -14,11 +14,14 @@ public class GameManagerEuchre : MonoBehaviour
     public GameObject TrumpHolder;
     public GameObject DealerHolder;
     public GameObject QuitButton;
+    public GameObject ExperiencedButton;
+    public GameObject EasyButton;
     private CardDealer cardDealer;
 
     /*Temporary card class for testing to be replaced with CardDealer script*/
     public float userXPos = -7;
     public float userYPos = -124;
+    public static bool experienced = false;
 
     public class CardTest {
         private int numbValue;
@@ -162,6 +165,7 @@ public class GameManagerEuchre : MonoBehaviour
             avgCardValue[index] = totalCardValue[index]/suits[index];
         }
 
+        //have computer decide to pick up card
         public string pickUpDecision(GameObject topCard, CardPlayer dealer) {
             string topSuit = topCard.GetComponent<Card>().suitValueString;
             bool dealingTeam;
@@ -212,6 +216,19 @@ public class GameManagerEuchre : MonoBehaviour
                     decisionScore--;
                 }
             }
+            System.Random rand = new System.Random();
+            int easyIndex = rand.Next(0, 8);
+            Debug.Log(easyIndex);
+            Debug.Log(experienced);
+            if(experienced == false) {
+                if(easyIndex < 2) {
+                    Debug.Log("Pick ran");
+                    return "Pick";
+                } else {
+                    Debug.Log("pass ran");
+                    return "Pass";
+                }
+            }
 
             if (decisionScore >= 12.5 && suits[trumpIndex] >= 3) {
                 return "Pick";
@@ -259,7 +276,11 @@ public class GameManagerEuchre : MonoBehaviour
         //method to have a computer choose whether to choose trump or not
         public string suitOrPass(CardPlayer dealer) {
             int decisionScore = 0;
-            string wouldBeSuit;
+            string wouldBeSuit = "";
+            System.Random rand = new System.Random();
+            int easyIndex = rand.Next(0, 7);
+            Debug.Log(easyIndex);
+            Debug.Log(experienced);
 
             //0 is clubs, 1 diamonds, 2 hearts, 3 spades
             int[] suits = new int[4];
@@ -276,6 +297,17 @@ public class GameManagerEuchre : MonoBehaviour
                     adjustDecision(suits, totalCardValue, avgCardValue, currCard, 3);
                 }
             }
+            if(experienced == false && easyIndex == 0) {
+                wouldBeSuit = "Clubs";
+            } else if(experienced == false && easyIndex == 1) {
+                wouldBeSuit = "Diamonds";
+            }else if(experienced == false && easyIndex == 2) {
+                wouldBeSuit = "Hearts";
+            }else if(experienced == false && easyIndex == 3) {
+                wouldBeSuit = "Spades";
+            }else {
+                wouldBeSuit = "Pass";
+            }
 
             int maxTotal = 0;
             int trumpIndex = 0;
@@ -286,11 +318,26 @@ public class GameManagerEuchre : MonoBehaviour
                     trumpIndex = i;
                 }
             }
-
-            wouldBeSuit = suitValue(trumpIndex);
+            if(experienced == true) {
+                wouldBeSuit = suitValue(trumpIndex);
+            }
             if (dealer.getUserID().Equals(userID)) {
+                if(experienced == false) {
+                    if(easyIndex < 2) {
+                        wouldBeSuit = "Clubs";
+                    } else if(easyIndex < 4) {
+                        wouldBeSuit = "Hearts";
+                    } else if(easyIndex >= 6) {
+                        wouldBeSuit = "Diamonds";
+                    } else {
+                        wouldBeSuit = "Spades";
+                    }
+                }
                 return wouldBeSuit;
             } else {
+                if(experienced == false) {
+                    return wouldBeSuit;
+                }
                 if (decisionScore >= 12 && suits[trumpIndex] >= 3) {
                     return wouldBeSuit;
                 } else {
@@ -555,11 +602,11 @@ public class GameManagerEuchre : MonoBehaviour
         pool2 = cardDealer.RandomCards(20, 9, 13, true, true, true, true);
         foreach(GameObject cards in pool1) {
             cards.GetComponent<Card>().numValue = 14;
-            Debug.Log(cards.GetComponent<Card>().numValue + " of " + cards.GetComponent<Card>().suitValue);
+            //Debug.Log(cards.GetComponent<Card>().numValue + " of " + cards.GetComponent<Card>().suitValue);
             cards.GetComponent<Card>().faceValue = "Ace";
             //convert enums
-            Debug.Log(cards.GetComponent<Card>().suitValue);
-            Debug.Log(cards.GetComponent<Card>().suitValue == Card.suit.CLUBS);
+            //Debug.Log(cards.GetComponent<Card>().suitValue);
+            //Debug.Log(cards.GetComponent<Card>().suitValue == Card.suit.CLUBS);
             if(cards.GetComponent<Card>().suitValue == Card.suit.CLUBS) {
                 cards.GetComponent<Card>().suitValueString = "Clubs";
             } else if(cards.GetComponent<Card>().suitValue == Card.suit.HEARTS) {
@@ -573,7 +620,7 @@ public class GameManagerEuchre : MonoBehaviour
             pool.Add(cards);
         }
         foreach(GameObject cards in pool2) {
-            Debug.Log(cards.GetComponent<Card>().numValue + " of " + cards.GetComponent<Card>().suitValue);
+            //Debug.Log(cards.GetComponent<Card>().numValue + " of " + cards.GetComponent<Card>().suitValue);
             if(cards.GetComponent<Card>().numValue == 9) {
                 cards.GetComponent<Card>().faceValue = "9";
             } else if(cards.GetComponent<Card>().numValue == 10) {
@@ -642,7 +689,7 @@ public class GameManagerEuchre : MonoBehaviour
                 twoCount++;
             }
         }
-        
+        currentState = -1;
     }
 
     private bool getJackValue(string trumpSuit, GameObject jack) {
@@ -704,6 +751,16 @@ public class GameManagerEuchre : MonoBehaviour
         bool finished = checkForWinner();
         if(!finished) {
             //if the game does not have a winner
+            if(currentState == -1) {
+                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Select a difficulty button";
+                if(currentInput.Equals("Button")) {
+                    EasyButton.SetActive(false);
+                    ExperiencedButton.SetActive(false);
+                    currentState = 0; 
+                    currentInput = "empty";
+                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Game Starting";
+                }
+            }
             if(currentState == 0) { //shuffle cards and deal them out
                 pool = cardDealer.ShuffleCards(pool);
                 currentInput = "empty";
@@ -808,18 +865,16 @@ public class GameManagerEuchre : MonoBehaviour
                 } else {
                     printed = false;
                     if(pickCount == 20) {
-                        if(!dealer.getIsHuman()) {
-                            flipCard(topCard);
-                        }
                         currentState = 3;
-                        pickCount = 0;
                     } else {
-                        flipCard(topCard);
                         currentState = 2;
-                        pickCount = 0;
                     }
                 }
             } if(currentState == 2) { //have players choose trump (dealer has to if no one else will) 
+                if(pickCount != 0) {
+                    flipCard(topCard);
+                    pickCount = 0;
+                }
                 if(trumpCount < 4) {
                     if(currentPlayer.getIsHuman() == true) {
                         if(printed == false) {
@@ -885,6 +940,12 @@ public class GameManagerEuchre : MonoBehaviour
                     trumpCount = 0;
                 }
             } if(currentState == 3) { //have players play their cards 
+                if(pickCount != 0) {
+                    if(!dealer.getIsHuman()) {
+                        flipCard(topCard);
+                    }
+                    pickCount = 0;
+                }
                 if(cardCount < 4) {
                     if(currentPlayer.getIsHuman() == true) {
                         //wait for user input
@@ -1094,7 +1155,16 @@ public class GameManagerEuchre : MonoBehaviour
         Debug.Log("User entered " + userInput); 
         currentInput = userInput;
     }
+
+    public void ExperiencedMode() {
+        experienced = true;
+        currentInput = "Button";
+    }
     
+    public void EasyMode() {
+        experienced = false;
+        currentInput = "Button";
+    }
 
     public void OnClick() {
         Debug.Log("Deal button clicked");
