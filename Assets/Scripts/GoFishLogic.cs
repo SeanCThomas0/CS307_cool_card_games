@@ -25,6 +25,7 @@ public class GoFishLogic : MonoBehaviour
     public GameObject guideText;
     public GameObject quitButton;
     public GameObject exitButton;
+    public GameObject botDiffButtonText;
 
     private enum gameStates
     {
@@ -137,7 +138,7 @@ public class GoFishLogic : MonoBehaviour
         gameAlert = gameAlerts.NONE;
 
         gaveToBot = false;
-        diffiBot = true;
+        diffiBot = false;
 
         exitButton.SetActive(false);
 
@@ -459,6 +460,28 @@ public class GoFishLogic : MonoBehaviour
     {
         int newRequestingNumValue = turn.GetComponent<Player>().hand[UnityEngine.Random.Range(0, turn.GetComponent<Player>().hand.Count)].GetComponent<Card>().numValue;
 
+        int playerIndex = UnityEngine.Random.Range(1, numOfPlayers + 1);
+        while (playerIndex.ToString().Equals(turn.GetComponent<Player>().userID))
+        {
+            playerIndex = UnityEngine.Random.Range(1, numOfPlayers + 1);
+        }
+
+        switch (playerIndex)
+        {
+            case 1:
+                requestingFrom = playerOne;
+                break;
+            case 2:
+                requestingFrom = playerTwo;
+                break;
+            case 3:
+                requestingFrom = playerThree;
+                break;
+            case 4:
+                requestingFrom = playerFour;
+                break;
+        }
+
         if (diffiBot)
         {
             int[] numOfNumValues = new int[13];
@@ -479,32 +502,11 @@ public class GoFishLogic : MonoBehaviour
         }
         else
         {
-            int playerIndex = UnityEngine.Random.Range(1, numOfPlayers + 1);
-            while (playerIndex.ToString().Equals(turn.GetComponent<Player>().userID))
-            {
-                playerIndex = UnityEngine.Random.Range(1, numOfPlayers + 1);
-            }
-
-            switch (playerIndex)
-            {
-                case 1:
-                    requestingFrom = playerOne;
-                    break;
-                case 2:
-                    requestingFrom = playerTwo;
-                    break;
-                case 3:
-                    requestingFrom = playerThree;
-                    break;
-                case 4:
-                    requestingFrom = playerFour;
-                    break;
-            }
-
             newRequestingNumValue = turn.GetComponent<Player>().hand[UnityEngine.Random.Range(0, turn.GetComponent<Player>().hand.Count)].GetComponent<Card>().numValue;
         }
 
         requestingNumValue = newRequestingNumValue;
+
         Debug.Log(turn.GetComponent<Player>().userID + " requesting " + requestingNumValue + " from " + requestingFrom.GetComponent<Player>().userID);
 
         gameState = gameStates.BOT_REQUESTING;
@@ -712,5 +714,11 @@ public class GoFishLogic : MonoBehaviour
     public void Exit()
     {
         SceneManager.LoadScene("Scenes/MainMenu");
+    }
+
+    public void ChangeBotDIfficulty()
+    {
+        diffiBot = !diffiBot;
+        botDiffButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Bot Mode: Hard";
     }
 }
