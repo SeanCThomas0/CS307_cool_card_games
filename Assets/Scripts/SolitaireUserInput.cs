@@ -6,6 +6,7 @@ using System.Linq;
 public class SolitaireUserInput : MonoBehaviour
 {
     public GameObject slot1;
+    public GameObject wrongMove;
     
     private Solitaire solitaire;
     private float timer;
@@ -155,9 +156,11 @@ public class SolitaireUserInput : MonoBehaviour
             if (s2.top) { // if in the top pile must stack suited Ace to King
                 if (s1.suit == s2.suit || (s1.value == 1 && s2.suit == null)) {
                     if (s1.value == s2.value + 1) {
+                        wrongMove.SetActive(false);
                         return true;
                     }
                 } else {
+                    wrongMove.SetActive(true);
                     return false;
                 }
             } else { // if in the bottom pile must stack alternate colors King to Ace
@@ -174,13 +177,16 @@ public class SolitaireUserInput : MonoBehaviour
                     }
 
                     if (card1Red == card2Red) {
+                        wrongMove.SetActive(true);
                         return false;
                     } else {
+                        wrongMove.SetActive(false);
                         return true;
                     }
                 }
             }
         }
+        wrongMove.SetActive(true);
         return false;
     }
 
@@ -212,10 +218,43 @@ public class SolitaireUserInput : MonoBehaviour
         s1.inDeckPile = false;
         s1.row = s2.row;
 
-        if (s2.top) {
-            solitaire.topPos[s1.row].GetComponent<Selectable>().value = s1.value;
-            solitaire.topPos[s1.row].GetComponent<Selectable>().suit = s1.suit;
-            s1.top = true;
+        if (s2.top && s2.suit == s1.suit) {
+            if (solitaire.topPos[0].GetComponent<Selectable>().suit == s1.suit) {
+                solitaire.topPos[0].GetComponent<Selectable>().value = s1.value;
+                solitaire.topPos[0].GetComponent<Selectable>().suit = s1.suit;
+                s1.top = true;
+            } else if (solitaire.topPos[1].GetComponent<Selectable>().suit == s1.suit) {
+                solitaire.topPos[1].GetComponent<Selectable>().value = s1.value;
+                solitaire.topPos[1].GetComponent<Selectable>().suit = s1.suit;
+                s1.top = true;
+            } else if (solitaire.topPos[2].GetComponent<Selectable>().suit == s1.suit) {
+                solitaire.topPos[2].GetComponent<Selectable>().value = s1.value;
+                solitaire.topPos[2].GetComponent<Selectable>().suit = s1.suit;
+                s1.top = true;
+            } else if (solitaire.topPos[3].GetComponent<Selectable>().suit == s1.suit) {
+                solitaire.topPos[3].GetComponent<Selectable>().value = s1.value;
+                solitaire.topPos[3].GetComponent<Selectable>().suit = s1.suit;
+                s1.top = true;
+            }
+        }
+        else if (s2.top) {
+            if (solitaire.topPos[0].GetComponent<Selectable>().value == 0) {
+                solitaire.topPos[0].GetComponent<Selectable>().value = s1.value;
+                solitaire.topPos[0].GetComponent<Selectable>().suit = s1.suit;
+                s1.top = true;
+            } else if (solitaire.topPos[1].GetComponent<Selectable>().value == 0) {
+                solitaire.topPos[1].GetComponent<Selectable>().value = s1.value;
+                solitaire.topPos[1].GetComponent<Selectable>().suit = s1.suit;
+                s1.top = true;
+            } else if (solitaire.topPos[2].GetComponent<Selectable>().value == 0) {
+                solitaire.topPos[2].GetComponent<Selectable>().value = s1.value;
+                solitaire.topPos[2].GetComponent<Selectable>().suit = s1.suit;
+                s1.top = true;
+            } else if (solitaire.topPos[3].GetComponent<Selectable>().value == 0) {
+                solitaire.topPos[3].GetComponent<Selectable>().value = s1.value;
+                solitaire.topPos[3].GetComponent<Selectable>().suit = s1.suit;
+                s1.top = true;
+            }
         } else {
             s1.top = false;
         }
@@ -227,14 +266,18 @@ public class SolitaireUserInput : MonoBehaviour
         Selectable s2 = selected.GetComponent<Selectable>();
         if (s2.inDeckPile == true) {
             if (s2.name == solitaire.tripsOnDisplay.Last()) {
+                wrongMove.SetActive(false);
                 return false;
             } else {
+                wrongMove.SetActive(true);
                 return true;
             }
         } else {
             if (s2.name == solitaire.playSpaces[s2.row].Last()) {
+                wrongMove.SetActive(false);
                 return false;
             } else {
+                wrongMove.SetActive(true);
                 return true;
             }
         }
@@ -290,8 +333,10 @@ public class SolitaireUserInput : MonoBehaviour
             i++;
         }
         if (i == 0) {
+            wrongMove.SetActive(false);
             return true;
         } else {
+            wrongMove.SetActive(true);
             return false;
         }
     }

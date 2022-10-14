@@ -5,10 +5,11 @@ using UnityEngine;
 public class SolitaireUIButton : MonoBehaviour
 {
     public GameObject highScorePanel;
+    private Solitaire solitaire;
     // Start is called before the first frame update
     void Start()
     {
-        
+        solitaire = FindObjectOfType<Solitaire>();
     }
 
     // Update is called once per frame
