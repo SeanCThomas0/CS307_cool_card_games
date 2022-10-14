@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class GoFishLogic : MonoBehaviour
+public class GoFishLogic : MonoBehaviourPun
 {
     public GameObject cardDealerController; // to get CardDealer
     private CardDealer cardDealer;
