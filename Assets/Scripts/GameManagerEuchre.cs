@@ -8,14 +8,20 @@ public class GameManagerEuchre : MonoBehaviour
 {
     public GameObject UserPlayer;
     public GameObject GameManager;
+    public GameObject GameMessages;
+    public GameObject CardDealer;
+    private CardDealer cardDealer;
 
     /*Temporary card class for testing to be replaced with CardDealer script*/
-    public class Card {
+    public float userXPos = -7;
+    public float userYPos = -134;
+
+    public class CardTest {
         private int numbValue;
         private string faceValue;
         private string suit;
 
-        public Card(int numbValue, int suit) {
+        public CardTest(int numbValue, int suit) {
             this.numbValue = numbValue;
             if(numbValue == 11) {
                 this.faceValue = "Jack";
@@ -40,7 +46,7 @@ public class GameManagerEuchre : MonoBehaviour
             }
         }
 
-        public int getNumbValue() {
+        public int numValue() {
             return numbValue;
         }
 
@@ -48,7 +54,7 @@ public class GameManagerEuchre : MonoBehaviour
             return faceValue;
         }
         
-        public string getSuit() {
+        public string suitValue() {
             return suit;
         }
 
@@ -56,19 +62,19 @@ public class GameManagerEuchre : MonoBehaviour
 
     /*CardPlayer class for individual game players*/
     public class CardPlayer {
-        private List<Card> hand;
+        private List<GameObject> hand;
         private string userID;
         private int teamNumber;
         private bool isHuman;
 
         public CardPlayer(string userID, int teamNumber, bool isHuman) {
-            hand = new List<Card>();
+            hand = new List<GameObject>();
             this.userID = userID;
             this.teamNumber = teamNumber;
             this.isHuman = isHuman;
         }
 
-        public List<Card> getHandList() {
+        public List<GameObject> getHandList() {
             return hand;
         }
         
@@ -87,30 +93,30 @@ public class GameManagerEuchre : MonoBehaviour
         public void printHand() {
             int count = 1;
             Debug.Log("\n" + userID + "Current hand:");
-            foreach (Card currentCard in hand) {
-                Debug.Log(count + ": " + currentCard.getFaceValue() + " of " + currentCard.getSuit());
+            foreach (GameObject currentCard in hand) {
+                Debug.Log(count + ": " + currentCard.GetComponent<Card>().faceValue + " of " + currentCard.GetComponent<Card>().suitValueString);
                 count++;
             }
         }
 
-        public void addToHand(Card cardToAdd) {
+        public void addToHand(GameObject cardToAdd) {
             hand.Add(cardToAdd);
         }
 
-        public Card removeFromHand(int indexInHand) {
-            Card returnCard = (Card) hand[indexInHand];
+        public GameObject removeFromHand(int indexInHand) {
+            GameObject returnCard = (GameObject) hand[indexInHand];
             hand.RemoveAt(indexInHand);
             return returnCard;
         }
 
-        private bool getJackPair(string trumpSuit, Card possibleJack) {
-            if (trumpSuit.Equals("Clubs") && possibleJack.getSuit().Equals("Spades")) {
+        private bool getJackPair(string trumpSuit, GameObject possibleJack) {
+            if (trumpSuit.Equals("Clubs") && possibleJack.GetComponent<Card>().suitValueString.Equals("Spades")) {
                 return true;
-            } else if (trumpSuit.Equals("Spades") && possibleJack.getSuit().Equals("Clubs")) {
+            } else if (trumpSuit.Equals("Spades") && possibleJack.GetComponent<Card>().suitValueString.Equals("Clubs")) {
                 return true;
-            } else if (trumpSuit.Equals("Hearts") && possibleJack.getSuit().Equals("Diamonds")) {
+            } else if (trumpSuit.Equals("Hearts") && possibleJack.GetComponent<Card>().suitValueString.Equals("Diamonds")) {
                 return true;
-            } else if (trumpSuit.Equals("Diamonds") && possibleJack.getSuit().Equals("Hearts")) {
+            } else if (trumpSuit.Equals("Diamonds") && possibleJack.GetComponent<Card>().suitValueString.Equals("Hearts")) {
                 return true;
             } else {
                 return false;
@@ -120,8 +126,8 @@ public class GameManagerEuchre : MonoBehaviour
         public bool hasLeadSuit(string leadSuit, string trumpSuit) {
             bool leadSuitFound = false;
             for (int i = 0; i < hand.Count; i++) {
-                Card currentCard = (Card) hand[i];
-                if (currentCard.getSuit().Equals(leadSuit)) {
+                GameObject currentCard = (GameObject) hand[i];
+                if (currentCard.GetComponent<Card>().suitValueString.Equals(leadSuit)) {
                     leadSuitFound = true;
                 } else if (leadSuit.Equals(trumpSuit) && getJackPair(trumpSuit, currentCard)) {
                     leadSuitFound = true;
@@ -130,30 +136,30 @@ public class GameManagerEuchre : MonoBehaviour
             return leadSuitFound;
         }
 
-        public Card peekAtCard(int indexInHand) {
-            Card returnCard = (Card) hand[indexInHand];
+        public GameObject peekAtCard(int indexInHand) {
+            GameObject returnCard = (GameObject) hand[indexInHand];
             return returnCard;
         }
 
         /*gets card value and removes it from the User's hand*/
-        public Card playCard(int indexInHand) {
-            Card returnCard = (Card) hand[indexInHand];
+        public GameObject playCard(int indexInHand) {
+            GameObject returnCard = (GameObject) hand[indexInHand];
             removeFromHand(indexInHand);
             return returnCard;
         }
 
-        private void adjustDecision(int[] suits, int[] totalCardValue, int[] avgCardValue, Card currCard, int index) {
+        private void adjustDecision(int[] suits, int[] totalCardValue, int[] avgCardValue, GameObject currCard, int index) {
             suits[index]++;
-            if (currCard.getNumbValue() == 11) {
+            if (currCard.GetComponent<Card>().numValue == 11) {
                 totalCardValue[index] += 15;
             } else {
-                totalCardValue[index] += currCard.getNumbValue();
+                totalCardValue[index] += currCard.GetComponent<Card>().numValue;
             }
             avgCardValue[index] = totalCardValue[index]/suits[index];
         }
 
-        public string pickUpCard(Card topCard, CardPlayer dealer) {
-            string topSuit = topCard.getSuit();
+        public string pickUpCard(GameObject topCard, CardPlayer dealer) {
+            string topSuit = topCard.GetComponent<Card>().suitValueString;
             bool dealingTeam;
             double decisionScore = 0;
 
@@ -168,34 +174,34 @@ public class GameManagerEuchre : MonoBehaviour
             int[] avgCardValue = new int[4];
 
             for (int i = 0; i < 5; i++) {
-                Card currCard = (Card) hand[i];
-                if (currCard.getSuit().Equals("Clubs")) {
+                GameObject currCard = (GameObject) hand[i];
+                if (currCard.GetComponent<Card>().suitValueString.Equals("Clubs")) {
                     adjustDecision(suits, totalCardValue, avgCardValue, currCard, 0);
-                } else if (currCard.getSuit().Equals("Diamonds")) {
+                } else if (currCard.GetComponent<Card>().suitValueString.Equals("Diamonds")) {
                     adjustDecision(suits, totalCardValue, avgCardValue, currCard, 1);
-                } else if (currCard.getSuit().Equals("Hearts")) {
+                } else if (currCard.GetComponent<Card>().suitValueString.Equals("Hearts")) {
                     adjustDecision(suits, totalCardValue, avgCardValue, currCard, 2);
-                } else if (currCard.getSuit().Equals("Spades")) {
+                } else if (currCard.GetComponent<Card>().suitValueString.Equals("Spades")) {
                     adjustDecision(suits, totalCardValue, avgCardValue, currCard, 3);
                 }
             }
             int trumpIndex = 0;
-            if (topCard.getSuit().Equals("Clubs")) {
+            if (topCard.GetComponent<Card>().suitValueString.Equals("Clubs")) {
                 decisionScore = avgCardValue[0] + 1;
                 trumpIndex = 0;
-            } else if (topCard.getSuit().Equals("Diamonds")) {
+            } else if (topCard.GetComponent<Card>().suitValueString.Equals("Diamonds")) {
                 decisionScore = avgCardValue[1] + 1;
                 trumpIndex = 1;
-            } else if (topCard.getSuit().Equals("Hearts")) {
+            } else if (topCard.GetComponent<Card>().suitValueString.Equals("Hearts")) {
                 decisionScore = avgCardValue[2] + 1;
                 trumpIndex = 2;
-            } else if (topCard.getSuit().Equals("Spades")) {
+            } else if (topCard.GetComponent<Card>().suitValueString.Equals("Spades")) {
                 decisionScore = avgCardValue[3] + 1;
                 trumpIndex = 3;
             }
             suits[trumpIndex]++;
 
-            if (topCard.getNumbValue() == 11 || topCard.getNumbValue() == 13 || topCard.getNumbValue() == 14) {
+            if (topCard.GetComponent<Card>().numValue == 11 || topCard.GetComponent<Card>().numValue == 13 || topCard.GetComponent<Card>().numValue == 14) {
                 if (dealingTeam) {
                     decisionScore++;
                 } else {
@@ -210,7 +216,7 @@ public class GameManagerEuchre : MonoBehaviour
             }
         }
 
-        private String getSuit(int place) {
+        private String suitValue(int place) {
             //0 is clubs, 1 diamonds, 2 hearts, 3 spades
             if (place == 0) {
                 return "Clubs";
@@ -226,15 +232,15 @@ public class GameManagerEuchre : MonoBehaviour
         }
 
         //method to have the user pick up the card if they are a dealer
-        public void pickUpCard (Card topCard, string trumpSuit) {
+        public void pickUpCard (GameObject topCard, string trumpSuit) {
             int[] handScores = new int[5];
             int count = 0;
             int currentWorst = 0;
-            foreach(Card currCard in hand) {
-                if (currCard.getSuit().Equals(trumpSuit)) {
-                    handScores[count] += 15 + currCard.getNumbValue();
+            foreach(GameObject currCard in hand) {
+                if (currCard.GetComponent<Card>().suitValueString.Equals(trumpSuit)) {
+                    handScores[count] += 15 + currCard.GetComponent<Card>().numValue;
                 } else {
-                    handScores[count] += currCard.getNumbValue();
+                    handScores[count] += currCard.GetComponent<Card>().numValue;
                 }
                 if (handScores[count] < handScores[currentWorst]) {
                     currentWorst = count;
@@ -254,14 +260,14 @@ public class GameManagerEuchre : MonoBehaviour
             int[] suits = new int[4];
             int[] totalCardValue = new int[4];
             int[] avgCardValue = new int[4];
-            foreach(Card currCard in hand) {
-                if (currCard.getSuit().Equals("Clubs")) {
+            foreach(GameObject currCard in hand) {
+                if (currCard.GetComponent<Card>().suitValueString.Equals("Clubs")) {
                     adjustDecision(suits, totalCardValue, avgCardValue, currCard, 0);
-                } else if (currCard.getSuit().Equals("Diamonds")) {
+                } else if (currCard.GetComponent<Card>().suitValueString.Equals("Diamonds")) {
                     adjustDecision(suits, totalCardValue, avgCardValue, currCard, 1);
-                } else if (currCard.getSuit().Equals("Hearts")) {
+                } else if (currCard.GetComponent<Card>().suitValueString.Equals("Hearts")) {
                     adjustDecision(suits, totalCardValue, avgCardValue, currCard, 2);
-                } else if (currCard.getSuit().Equals("Spades")) {
+                } else if (currCard.GetComponent<Card>().suitValueString.Equals("Spades")) {
                     adjustDecision(suits, totalCardValue, avgCardValue, currCard, 3);
                 }
             }
@@ -276,7 +282,7 @@ public class GameManagerEuchre : MonoBehaviour
                 }
             }
 
-            wouldBeSuit = getSuit(trumpIndex);
+            wouldBeSuit = suitValue(trumpIndex);
             if (dealer.getUserID().Equals(userID)) {
                 return wouldBeSuit;
             } else {
@@ -290,7 +296,7 @@ public class GameManagerEuchre : MonoBehaviour
         }
 
         //have computer choose to which card to play
-        public Card chooseCardToPlay(Card[] cardsPlayed, string trumpSuit, int numbPlayed) {
+        public GameObject chooseCardToPlay(GameObject[] cardsPlayed, string trumpSuit, int numbPlayed) {
             int playedCardIndex = 0;
             int bestCardIndex = 0;
             int worstCardIndex = 0;
@@ -306,11 +312,11 @@ public class GameManagerEuchre : MonoBehaviour
             }
 
             if (numbPlayed == 0) {
-                foreach(Card currCard in hand) {
-                    if (currCard.getSuit().Equals(trumpSuit)) {
-                        handScores[count] += currCard.getNumbValue();
+                foreach(GameObject currCard in hand) {
+                    if (currCard.GetComponent<Card>().suitValueString.Equals(trumpSuit)) {
+                        handScores[count] += currCard.GetComponent<Card>().numValue;
                     } else {
-                        handScores[count] += 4 + currCard.getNumbValue();
+                        handScores[count] += 4 + currCard.GetComponent<Card>().numValue;
                     }
                     if (handScores[count] > handScores[bestCardIndex]) {
                         bestCardIndex = count;
@@ -321,25 +327,25 @@ public class GameManagerEuchre : MonoBehaviour
             } else {
                 int[] playedCardsValue = new int[4];
                 int topCard = 0;
-                Card leadCard = cardsPlayed[0];
+                GameObject leadCard = cardsPlayed[0];
 
-                if (leadCard.getFaceValue().Equals("Jack")) {
+                if (leadCard.GetComponent<Card>().faceValue.Equals("Jack")) {
                     if (getJackPair(trumpSuit, leadCard)) {
                         leadSuit = trumpSuit;
                     }
                 } else {
-                    leadSuit = cardsPlayed[0].getSuit();
+                    leadSuit = cardsPlayed[0].GetComponent<Card>().suitValueString;
                 }
                 bool leadSuitFound = false;
 
-                foreach(Card playedCard in cardsPlayed) {
+                foreach(GameObject playedCard in cardsPlayed) {
                     if (playedCard == null) {
                         break;
                     }
-                    if (playedCard.getSuit().Equals(trumpSuit)) {
-                        playedCardsValue[count] += 15 + playedCard.getNumbValue();
+                    if (playedCard.GetComponent<Card>().suitValueString.Equals(trumpSuit)) {
+                        playedCardsValue[count] += 15 + playedCard.GetComponent<Card>().numValue;
                     } else {
-                        playedCardsValue[count] += playedCard.getNumbValue();
+                        playedCardsValue[count] += playedCard.GetComponent<Card>().numValue;
                     }
                     if (playedCardsValue[count] > playedCardsValue[topCard]) {
                         topCard = count;
@@ -348,15 +354,15 @@ public class GameManagerEuchre : MonoBehaviour
                 }
 
                 count = 0;
-                foreach(Card currCard in hand) {
-                    if (currCard.getSuit().Equals(leadSuit)) {
+                foreach(GameObject currCard in hand) {
+                    if (currCard.GetComponent<Card>().suitValueString.Equals(leadSuit)) {
                         handScores[count] += 100;
                         leadSuitFound = true;
                     }
-                    if (currCard.getSuit().Equals(trumpSuit)) {
-                        handScores[count] += 15 + currCard.getNumbValue();
+                    if (currCard.GetComponent<Card>().suitValueString.Equals(trumpSuit)) {
+                        handScores[count] += 15 + currCard.GetComponent<Card>().numValue;
                     } else {
-                        handScores[count] += currCard.getNumbValue();
+                        handScores[count] += currCard.GetComponent<Card>().numValue;
                     }
 
                     if (handScores[count] > handScores[bestCardIndex]) {
@@ -381,14 +387,14 @@ public class GameManagerEuchre : MonoBehaviour
         }
     }
     
-    private static bool getJackPair(string trumpSuit, Card possibleJack) {
-        if (trumpSuit.Equals("Clubs") && possibleJack.getSuit().Equals("Spades")) {
+    private static bool getJackPair(string trumpSuit, GameObject possibleJack) {
+        if (trumpSuit.Equals("Clubs") && possibleJack.GetComponent<Card>().suitValueString.Equals("Spades")) {
             return true;
-        } else if (trumpSuit.Equals("Spades") && possibleJack.getSuit().Equals("Clubs")) {
+        } else if (trumpSuit.Equals("Spades") && possibleJack.GetComponent<Card>().suitValueString.Equals("Clubs")) {
             return true;
-        } else if (trumpSuit.Equals("Hearts") && possibleJack.getSuit().Equals("Diamonds")) {
+        } else if (trumpSuit.Equals("Hearts") && possibleJack.GetComponent<Card>().suitValueString.Equals("Diamonds")) {
             return true;
-        } else if (trumpSuit.Equals("Diamonds") && possibleJack.getSuit().Equals("Hearts")) {
+        } else if (trumpSuit.Equals("Diamonds") && possibleJack.GetComponent<Card>().suitValueString.Equals("Hearts")) {
             return true;
         } else {
             return false;
@@ -397,13 +403,31 @@ public class GameManagerEuchre : MonoBehaviour
 
     
 
-    public bool followSuitCheck (string leadSuit, Card cardPlayed, string trumpSuit) {
+    public bool followSuitCheck (string leadSuit, GameObject cardPlayed, string trumpSuit) {
         if (getCardSuit(cardPlayed, trumpSuit).Equals(leadSuit)) {
             return true;
         }
         return false;
     }
 
+    //visually show cards 
+    private void DisplayHand(CardPlayer currentPlayer)
+    {
+        float x = userXPos;
+        float z = 0;
+
+        for (int i = 0; i < currentPlayer.getHandList().Count; i++)
+        {
+            currentPlayer.peekAtCard(i).transform.position = new Vector3(x, userYPos, z);
+
+            currentPlayer.peekAtCard(i).SetActive(true);
+
+            x = x + 0.35f;
+            z = z - 0.1f;
+        }
+    }
+
+    /*
     public List<Card> shuffle(List<Card> deck)
     {
         List<Card> randomCards = new List<Card>();
@@ -416,6 +440,7 @@ public class GameManagerEuchre : MonoBehaviour
         }
         return randomCards;
     }
+    */
 
     public string currentInput = "empty";
     //public bool notEmpty = false;
@@ -446,32 +471,89 @@ public class GameManagerEuchre : MonoBehaviour
     public int trickCount = 0; //count how many tricks out of 5 have been played
     public int trumpChosingTeam = 1; //track who chose trump
     int cardCount = 0; //used to track how many cards have been played in a trick
-    public Card[] trickCards = new Card[4]; //array for cards played in a given trick
-    public Card topCard = null;
+    public GameObject[] trickCards = new GameObject[4]; //array for cards played in a given trick
+    public GameObject topCard = null;
     public int[] teamID = new int[4];
     public bool printed = false;
-    
+    public bool sleeping = false;
+    public bool sleepRunning = false;
+    public List<GameObject> pool;
+    public List<GameObject> pool1;
+    public List<GameObject> pool2;
     
 
     // Start is called before the first frame update
     void Start()
     {
+        cardDealer = CardDealer.GetComponent<CardDealer>();
+        
         Debug.Log("Euchre Game Starting");
+        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Euchre Game Starting";
+        pool1 = cardDealer.RandomCards(4, 1, 1, true, true, true, true);
+        pool2 = cardDealer.RandomCards(20, 9, 13, true, true, true, true);
+        foreach(GameObject cards in pool1) {
+            cards.GetComponent<Card>().numValue = 14;
+            Debug.Log(cards.GetComponent<Card>().numValue + " of " + cards.GetComponent<Card>().suitValue);
+            cards.GetComponent<Card>().faceValue = "Ace";
+            //convert enums
+            Debug.Log(cards.GetComponent<Card>().suitValue);
+            Debug.Log(cards.GetComponent<Card>().suitValue == Card.suit.CLUBS);
+            if(cards.GetComponent<Card>().suitValue == Card.suit.CLUBS) {
+                cards.GetComponent<Card>().suitValueString = "Clubs";
+            } else if(cards.GetComponent<Card>().suitValue == Card.suit.HEARTS) {
+                cards.GetComponent<Card>().suitValueString = "Hearts";
+            } else if(cards.GetComponent<Card>().suitValue == Card.suit.DIAMONDS) {
+                cards.GetComponent<Card>().suitValueString = "Diamonds";
+            } else if(cards.GetComponent<Card>().suitValue == Card.suit.SPADES) {
+                cards.GetComponent<Card>().suitValueString = "Spades";
+            }
+
+            pool.Add(cards);
+        }
+        foreach(GameObject cards in pool2) {
+            Debug.Log(cards.GetComponent<Card>().numValue + " of " + cards.GetComponent<Card>().suitValue);
+            if(cards.GetComponent<Card>().numValue == 9) {
+                cards.GetComponent<Card>().faceValue = "9";
+            } else if(cards.GetComponent<Card>().numValue == 10) {
+                cards.GetComponent<Card>().faceValue = "10";
+            } else if(cards.GetComponent<Card>().numValue == 11) {
+                cards.GetComponent<Card>().faceValue = "Jack";
+            } else if(cards.GetComponent<Card>().numValue == 12) {
+                cards.GetComponent<Card>().faceValue = "Queen";
+            } else if(cards.GetComponent<Card>().numValue == 13) {
+                cards.GetComponent<Card>().faceValue = "King";
+            }
+
+            if(cards.GetComponent<Card>().suitValue == Card.suit.CLUBS) {
+                cards.GetComponent<Card>().suitValueString = "Clubs";
+            } else if(cards.GetComponent<Card>().suitValue == Card.suit.HEARTS) {
+                cards.GetComponent<Card>().suitValueString = "Hearts";
+            } else if(cards.GetComponent<Card>().suitValue == Card.suit.DIAMONDS) {
+                cards.GetComponent<Card>().suitValueString = "Diamonds";
+            } else if(cards.GetComponent<Card>().suitValue == Card.suit.SPADES) {
+                cards.GetComponent<Card>().suitValueString = "Spades";
+            }
+            pool.Add(cards);
+        }
 
         /*create cards needed for game*/
+        /*
         for(int i = 9; i <= 14; i++) {
             for(int j = 1; j <= 4; j++) {
                 cardDeck.Add(new Card(i, j));
             }
         }
+        
         cardDeck = shuffle(cardDeck);
         foreach(Card addedCard in cardDeck) {
-            string tempFace = addedCard.getFaceValue();
-            string tempSuit = addedCard.getSuit();
+            string tempFace = addedCard.faceValue;
+            string tempSuit = addedCard.suitValue;
             string message = "Added card: " + tempFace + " of " + tempSuit + "\n" ; 
             //Debug.Log(message);
         }
+        */
         //Debug.Log(cardDeck.Count);
+        pool = cardDealer.ShuffleCards(pool);
         
         int oneCount = 0;
         int twoCount = 0;
@@ -498,52 +580,52 @@ public class GameManagerEuchre : MonoBehaviour
                 twoCount++;
             }
         }
+        
     }
 
-    /* functions to calculate winner of a given trick refactored from a previous personal project authored by Isaac Stephan*/
-    private bool getJackValue(string trumpSuit, Card jack) {
-        if (trumpSuit.Equals("clubs") && jack.getSuit().Equals("spades")) {
+    private bool getJackValue(string trumpSuit, GameObject jack) {
+        if (trumpSuit.Equals("Clubs") && jack.GetComponent<Card>().suitValueString.Equals("Spades")) {
             return true;
-        } else if (trumpSuit.Equals("spades") && jack.getSuit().Equals("clubs")) {
+        } else if (trumpSuit.Equals("Spades") && jack.GetComponent<Card>().suitValueString.Equals("Clubs")) {
             return true;
-        } else if (trumpSuit.Equals("hearts") && jack.getSuit().Equals("diamonds")) {
+        } else if (trumpSuit.Equals("Hearts") && jack.GetComponent<Card>().suitValueString.Equals("Diamonds")) {
             return true;
-        } else if (trumpSuit.Equals("diamonds") && jack.getSuit().Equals("hearts")) {
+        } else if (trumpSuit.Equals("Diamonds") && jack.GetComponent<Card>().suitValueString.Equals("Hearts")) {
             return true;
         } else {
             return false;
         }
     }
 
-    private string getCardSuit(Card firstCard, string trumpSuit) {
-        if (firstCard.getFaceValue().Equals("jack") && getJackValue(trumpSuit, firstCard)) {
+    private string getCardSuit(GameObject firstCard, string trumpSuit) {
+        if (firstCard.GetComponent<Card>().faceValue.Equals("Jack") && getJackValue(trumpSuit, firstCard)) {
             return trumpSuit;
         } else {
-            return firstCard.getSuit();
+            return firstCard.GetComponent<Card>().suitValueString;
         }
     }
 
-    private int getTrickWinner (string trumpSuit, Card[] playedCards) {
+    private int getTrickWinner (string trumpSuit, GameObject[] playedCards) {
         int maxScore = 0;
         int maxIndex = 0;
         string leadSuit = getCardSuit(playedCards[0], trumpSuit);
 
         for (int cardIndex = 0; cardIndex < 4; cardIndex++) {
             int currentScore = 0;
-            if (playedCards[cardIndex].getSuit().Equals(leadSuit)) {
+            if (playedCards[cardIndex].GetComponent<Card>().suitValueString.Equals(leadSuit)) {
                 currentScore += 16;
             }
-            if (playedCards[cardIndex].getSuit().Equals(trumpSuit)) {
+            if (playedCards[cardIndex].GetComponent<Card>().suitValueString.Equals(trumpSuit)) {
                 currentScore += 32;
-                if (playedCards[cardIndex].getFaceValue().Equals("jack")) {
+                if (playedCards[cardIndex].GetComponent<Card>().faceValue.Equals("Jack")) {
                     currentScore += 16;
                 } else {
-                    currentScore += playedCards[cardIndex].getNumbValue();
+                    currentScore += playedCards[cardIndex].GetComponent<Card>().numValue;
                 }
-            } else if (playedCards[cardIndex].getFaceValue().Equals("jack") && getJackValue(trumpSuit, playedCards[cardIndex])) {
+            } else if (playedCards[cardIndex].GetComponent<Card>().faceValue.Equals("Jack") && getJackValue(trumpSuit, playedCards[cardIndex])) {
                 currentScore += 47; 
             } else {
-                currentScore += playedCards[cardIndex].getNumbValue();
+                currentScore += playedCards[cardIndex].GetComponent<Card>().numValue;
             }
             if (currentScore > maxScore) {
                 maxIndex = cardIndex;
@@ -560,7 +642,7 @@ public class GameManagerEuchre : MonoBehaviour
         if(!finished) {
             //if the game does not have a winner
             if(currentState == 0) { //shuffle cards and deal them out
-                cardDeck = shuffle(cardDeck);
+                pool = cardDealer.ShuffleCards(pool);
                 currentInput = "empty";
 
                 dealer = playerQueue.Dequeue();
@@ -572,13 +654,13 @@ public class GameManagerEuchre : MonoBehaviour
                 for(int dealNumb = 0; dealNumb < 4; dealNumb++) {
                     currentPlayer = playerQueue.Dequeue();
                     for(int handCount = 0; handCount < 5; handCount++) {
-                        currentPlayer.addToHand(cardDeck[deckCount]);
+                        currentPlayer.addToHand(pool[deckCount]);
                         deckCount++;
                     }
                     playerQueue.Enqueue(currentPlayer);
                 }
-                topCard = cardDeck[deckCount];
-                Debug.Log("top card is: " + topCard.getFaceValue() + " of " + topCard.getSuit());
+                topCard = pool[deckCount];
+                Debug.Log("top card is: " + topCard.GetComponent<Card>().faceValue + " of " + topCard.GetComponent<Card>().suitValueString);
                 currentPlayer = playerQueue.Dequeue();
                 currentState = 1;
 
@@ -587,6 +669,7 @@ public class GameManagerEuchre : MonoBehaviour
                     if(currentPlayer.getIsHuman() == true) {
                         if(printed == false) {
                             currentPlayer.printHand();
+                            DisplayHand(currentPlayer);
                             printed = true;
                             Debug.Log("Choose to pick up top card or pass");
                         }
@@ -598,7 +681,7 @@ public class GameManagerEuchre : MonoBehaviour
                                 currentInput = "empty";
                             } else if(currentInput.Equals("pick") || currentInput.Equals("pick up")) {
                                 pickCount++;
-                                trumpSuit = topCard.getSuit();
+                                trumpSuit = topCard.GetComponent<Card>().suitValueString;
                                 dealer.pickUpCard(topCard, dealer);
                                 //Debug.Log("current move " + currentPlayer.getUserID());
                                 Debug.Log("GameManager recieved User pick/pass: " + currentInput);
@@ -630,7 +713,7 @@ public class GameManagerEuchre : MonoBehaviour
                         currentPlayer = playerQueue.Dequeue();
                         if(computerChoice.Equals("Pick")) {
                             Debug.Log("pick ran" );
-                            trumpSuit = topCard.getSuit();
+                            trumpSuit = topCard.GetComponent<Card>().suitValueString;
                             dealer.pickUpCard(topCard, dealer);
                             while (!currentPlayer.getUserID().Equals(dealer.getUserID())) {
                                 playerQueue.Enqueue(currentPlayer);
@@ -657,6 +740,7 @@ public class GameManagerEuchre : MonoBehaviour
                     if(currentPlayer.getIsHuman() == true) {
                         if(printed == false) {
                             currentPlayer.printHand();
+                            DisplayHand(currentPlayer);
                             Debug.Log("Pick a trump suit or pass");
                             printed = true;
                         }
@@ -715,6 +799,7 @@ public class GameManagerEuchre : MonoBehaviour
                         //wait for user input
                         if(printed == false) {
                             currentPlayer.printHand();
+                            DisplayHand(currentPlayer);
                             printed = true;
                             Debug.Log("Pick a card to play");
                         }
@@ -726,15 +811,15 @@ public class GameManagerEuchre : MonoBehaviour
                                 Debug.Log("not a valid index please enter an index of a card in your hand between 1-5");
                                 currentInput = "empty";
                             } else {
-                                if(cardCount != 0 && currentPlayer.hasLeadSuit(trickCards[0].getSuit(), trumpSuit)) { //check to see if we have followed suit
+                                if(cardCount != 0 && currentPlayer.hasLeadSuit(trickCards[0].GetComponent<Card>().suitValueString, trumpSuit)) { //check to see if we have followed suit
                                     int intInput = int.Parse(currentInput);
                                     if(intInput <= currentPlayer.getHandList().Count) {
-                                        bool followedSuit = followSuitCheck(trickCards[0].getSuit(), currentPlayer.peekAtCard(intInput - 1), trumpSuit);
+                                        bool followedSuit = followSuitCheck(trickCards[0].GetComponent<Card>().suitValueString, currentPlayer.peekAtCard(intInput - 1), trumpSuit);
                                         if(followedSuit) { //if player did follow suit
                                             trickCards[cardCount] = currentPlayer.playCard(intInput - 1);
                                             teamID[cardCount] = currentPlayer.getTeamNumber();
                                             Debug.Log("GameManager recieved user index play " + currentInput);
-                                            Debug.Log("GameManager recieved User card play " + trickCards[cardCount].getFaceValue() + " of " + trickCards[cardCount].getSuit());
+                                            Debug.Log("GameManager recieved User card play " + trickCards[cardCount].GetComponent<Card>().faceValue + " of " + trickCards[cardCount].GetComponent<Card>().suitValueString);
                                             cardCount++;
                                             currentInput = "empty";
                                             playerQueue.Enqueue(currentPlayer);
@@ -753,7 +838,7 @@ public class GameManagerEuchre : MonoBehaviour
                                         trickCards[cardCount] = currentPlayer.playCard(intInput - 1);
                                         teamID[cardCount] = currentPlayer.getTeamNumber();
                                         Debug.Log("GameManager recieved user index play " + currentInput);
-                                        Debug.Log("GameManager recieved User card play " + trickCards[cardCount].getFaceValue() + " of " + trickCards[cardCount].getSuit());
+                                        Debug.Log("GameManager recieved User card play " + trickCards[cardCount].GetComponent<Card>().faceValue + " of " + trickCards[cardCount].GetComponent<Card>().suitValueString);
                                         cardCount++;
                                         currentInput = "empty";
                                         playerQueue.Enqueue(currentPlayer);
@@ -769,10 +854,10 @@ public class GameManagerEuchre : MonoBehaviour
                     } else {
                         //Debug.Log("card count: " + cardCount);
                         //have computer choose what card to play
-                        Card playedCard = currentPlayer.chooseCardToPlay(trickCards, trumpSuit, cardCount);
+                        GameObject playedCard = currentPlayer.chooseCardToPlay(trickCards, trumpSuit, cardCount);
                         trickCards[cardCount] = playedCard;
                         teamID[cardCount] = currentPlayer.getTeamNumber();
-                        Debug.Log("GameManager recieved Computer " + currentPlayer.getUserID() + " card play " + playedCard.getFaceValue() + " of " + playedCard.getSuit());
+                        Debug.Log("GameManager recieved Computer " + currentPlayer.getUserID() + " card play " + playedCard.GetComponent<Card>().faceValue + " of " + playedCard.GetComponent<Card>().suitValueString);
                         cardCount++;
                         playerQueue.Enqueue(currentPlayer);
                         currentPlayer = playerQueue.Dequeue();
@@ -784,7 +869,6 @@ public class GameManagerEuchre : MonoBehaviour
                 }
             } if(currentState == 4) { //calculate winner of the trick
                 //Debug.Log("Trick count: " + trickCount);
-                Debug.Log("Trick Score, team one: " + oneTrickScore + " team two: " + twoTrickScore);
                 if(trickCount < 5) {
                     int trickTeamWinner = getTrickWinner(trumpSuit, trickCards);
                     trickCount++;
@@ -811,6 +895,8 @@ public class GameManagerEuchre : MonoBehaviour
                 } else {
                     currentState = 5;
                 }
+                Debug.Log("Trick Score, team one: " + oneTrickScore + " team two: " + twoTrickScore);
+
             } if(currentState == 5) { //calculate the winner of hand and scores
                 playerQueue.Enqueue(currentPlayer);
                 trickCount = 0;
@@ -837,8 +923,15 @@ public class GameManagerEuchre : MonoBehaviour
                 currentState = 0;
             }
         }
+        //yield return null;
 
-
+    }
+    
+    IEnumerator  sleepFunction() {
+        sleeping = true;
+        yield return new WaitForSeconds(2);
+        sleeping = false;
+        sleepRunning = false;
     }
 
     public bool checkForWinner() {
@@ -857,7 +950,16 @@ public class GameManagerEuchre : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameDecision();
+        //Debug.Log("sleep value: " + sleeping);
+        if(sleeping == false) {
+            //Debug.Log("Game decision run");
+            gameDecision();
+        } 
+        if(sleepRunning == false){
+            sleepRunning = true;
+            StartCoroutine(sleepFunction());
+            //Debug.Log("sleep running set to true");
+        }
     }
 
     
