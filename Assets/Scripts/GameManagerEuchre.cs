@@ -10,6 +10,7 @@ public class GameManagerEuchre : MonoBehaviour
     public GameObject GameManager;
     public GameObject GameMessages;
     public GameObject CardDealer;
+    public GameObject TrumpHolder;
     private CardDealer cardDealer;
 
     /*Temporary card class for testing to be replaced with CardDealer script*/
@@ -411,7 +412,7 @@ public class GameManagerEuchre : MonoBehaviour
     }
 
     //visually show cards 
-    private void DisplayHand(CardPlayer currentPlayer)
+    private void DisplayOneHand(CardPlayer currentPlayer)
     {
         float x = userXPos;
         float z = 0;
@@ -427,6 +428,49 @@ public class GameManagerEuchre : MonoBehaviour
         }
     }
 
+    private void DisplayOnePlay(GameObject currentCard)
+    {
+        float x = userXPos;
+        float z = 0;
+
+        
+        currentCard.transform.position = new Vector3(x + 1, userYPos + 2, z);
+
+        currentCard.SetActive(true);
+    }
+
+    private void DisplayTwoHand(GameObject currentCard)
+    {
+        float x = userXPos;
+        float z = 0;
+
+        
+        currentCard.transform.position = new Vector3(x - 5, -4, z);
+
+        currentCard.SetActive(true);
+        
+    }
+
+    private void DisplayThreeHand(GameObject currentCard)
+    {
+        float x = userXPos - 5;
+        float z = 0;
+
+        currentCard.transform.position = new Vector3(x + 6, -2, z);
+
+        currentCard.SetActive(true);
+    }
+
+    private void DisplayFourHand(GameObject currentCard)
+    {
+        float x = userXPos;
+        float z = 0;
+
+        currentCard.transform.position = new Vector3(x + 7, -4, z);
+
+        currentCard.SetActive(true);
+    }
+
     private void DisplayTopCard(GameObject currentCard)
     {
         float x = userXPos + 2;
@@ -435,7 +479,8 @@ public class GameManagerEuchre : MonoBehaviour
         currentCard.transform.position = new Vector3(x, -4, z);
         currentCard.SetActive(true);   
     }
-    private void flipTopCard(GameObject currentCard) {
+
+    private void flipCard(GameObject currentCard) {
         currentCard.SetActive(false);
     }
 
@@ -624,6 +669,7 @@ public class GameManagerEuchre : MonoBehaviour
 
         for (int cardIndex = 0; cardIndex < 4; cardIndex++) {
             int currentScore = 0;
+            flipCard(playedCards[cardIndex]);
             if (playedCards[cardIndex].GetComponent<Card>().suitValueString.Equals(leadSuit)) {
                 currentScore += 16;
             }
@@ -684,7 +730,7 @@ public class GameManagerEuchre : MonoBehaviour
                     if(currentPlayer.getIsHuman() == true) {
                         if(printed == false) {
                             currentPlayer.printHand();
-                            DisplayHand(currentPlayer);
+                            DisplayOneHand(currentPlayer);
                             printed = true;
                             Debug.Log("Choose to pick up top card or pass");
                             GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Choose to pick up top card or pass";
@@ -699,6 +745,7 @@ public class GameManagerEuchre : MonoBehaviour
                             } else if(currentInput.Equals("pick") || currentInput.Equals("pick up")) {
                                 pickCount++;
                                 trumpSuit = topCard.GetComponent<Card>().suitValueString;
+                                TrumpHolder.GetComponent<TMPro.TextMeshProUGUI>().text = trumpSuit;
                                 dealer.pickUpCard(topCard, dealer);
                                 //Debug.Log("current move " + currentPlayer.getUserID());
                                 Debug.Log("GameManager recieved User pick/pass: " + currentInput);
@@ -733,6 +780,7 @@ public class GameManagerEuchre : MonoBehaviour
                         if(computerChoice.Equals("Pick")) {
                             Debug.Log("pick ran" );
                             trumpSuit = topCard.GetComponent<Card>().suitValueString;
+                            TrumpHolder.GetComponent<TMPro.TextMeshProUGUI>().text = trumpSuit;
                             dealer.pickUpCard(topCard, dealer);
                             while (!currentPlayer.getUserID().Equals(dealer.getUserID())) {
                                 playerQueue.Enqueue(currentPlayer);
@@ -745,7 +793,7 @@ public class GameManagerEuchre : MonoBehaviour
                         //yield return new WaitForSeconds(2);
                     }
                 } else {
-                    flipTopCard(topCard);
+                    flipCard(topCard);
                     printed = false;
                     if(pickCount == 20) {
                         currentState = 3;
@@ -760,7 +808,7 @@ public class GameManagerEuchre : MonoBehaviour
                     if(currentPlayer.getIsHuman() == true) {
                         if(printed == false) {
                             currentPlayer.printHand();
-                            DisplayHand(currentPlayer);
+                            DisplayOneHand(currentPlayer);
                             Debug.Log("Pick a trump suit or pass");
                             GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Pick a trump suit or pass";
                             printed = true;
@@ -779,6 +827,7 @@ public class GameManagerEuchre : MonoBehaviour
                             } else {
                                 trumpCount++;
                                 trumpSuit = currentInput;
+                                TrumpHolder.GetComponent<TMPro.TextMeshProUGUI>().text = trumpSuit;
                                 Debug.Log("GameManager recieved trump pick " + currentInput + " from user: " + currentPlayer.getUserID());
                                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "GameManager recieved trump pick " + currentInput + " from user: " + currentPlayer.getUserID();
                                 currentInput = "empty";
@@ -801,6 +850,7 @@ public class GameManagerEuchre : MonoBehaviour
                         trumpCount++;
                         if(!trumpChoice.Equals("Pass")) {
                             trumpSuit = trumpChoice;
+                            TrumpHolder.GetComponent<TMPro.TextMeshProUGUI>().text = trumpSuit;
                             while (!currentPlayer.getUserID().Equals(dealer.getUserID())) {
                                 playerQueue.Enqueue(currentPlayer);
                                 currentPlayer = playerQueue.Dequeue();
@@ -824,10 +874,10 @@ public class GameManagerEuchre : MonoBehaviour
                         //wait for user input
                         if(printed == false) {
                             currentPlayer.printHand();
-                            DisplayHand(currentPlayer);
+                            DisplayOneHand(currentPlayer);
                             printed = true;
                             Debug.Log("Pick a card to play");
-                            GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Pick a card to play";
+                            GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Pick a card index to play (1 leftmost card)";
                         }
                         if(!currentInput.Equals("empty")) {
                             //Debug.Log("card count: " + cardCount);
@@ -844,6 +894,8 @@ public class GameManagerEuchre : MonoBehaviour
                                         bool followedSuit = followSuitCheck(trickCards[0].GetComponent<Card>().suitValueString, currentPlayer.peekAtCard(intInput - 1), trumpSuit);
                                         if(followedSuit) { //if player did follow suit
                                             trickCards[cardCount] = currentPlayer.playCard(intInput - 1);
+                                            flipCard(trickCards[cardCount]);
+                                            DisplayOnePlay(trickCards[cardCount]);
                                             teamID[cardCount] = currentPlayer.getTeamNumber();
                                             Debug.Log("GameManager recieved user index play " + currentInput);
                                             Debug.Log("GameManager recieved User card play " + trickCards[cardCount].GetComponent<Card>().faceValue + " of " + trickCards[cardCount].GetComponent<Card>().suitValueString);
@@ -866,6 +918,7 @@ public class GameManagerEuchre : MonoBehaviour
                                     int intInput = int.Parse(currentInput);
                                     if(intInput <= currentPlayer.getHandList().Count) {
                                         trickCards[cardCount] = currentPlayer.playCard(intInput - 1);
+                                        flipCard(trickCards[cardCount]);
                                         teamID[cardCount] = currentPlayer.getTeamNumber();
                                         Debug.Log("GameManager recieved user index play " + currentInput);
                                         Debug.Log("GameManager recieved User card play " + trickCards[cardCount].GetComponent<Card>().faceValue + " of " + trickCards[cardCount].GetComponent<Card>().suitValueString);
@@ -887,6 +940,13 @@ public class GameManagerEuchre : MonoBehaviour
                         //Debug.Log("card count: " + cardCount);
                         //have computer choose what card to play
                         GameObject playedCard = currentPlayer.chooseCardToPlay(trickCards, trumpSuit, cardCount);
+                        if(currentPlayer.getUserID().Equals("2")) {
+                            DisplayTwoHand(playedCard);
+                        } else if(currentPlayer.getUserID().Equals("3")) {
+                            DisplayThreeHand(playedCard);
+                        } else if(currentPlayer.getUserID().Equals("4")) {
+                            DisplayFourHand(playedCard);
+                        }
                         trickCards[cardCount] = playedCard;
                         teamID[cardCount] = currentPlayer.getTeamNumber();
                         Debug.Log("GameManager recieved Computer " + currentPlayer.getUserID() + " card play " + playedCard.GetComponent<Card>().faceValue + " of " + playedCard.GetComponent<Card>().suitValueString);
@@ -940,21 +1000,24 @@ public class GameManagerEuchre : MonoBehaviour
                     Debug.Log("Team one wins the hand!");
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Team one wins the hand!";
                     if(oneTrickScore == 5 || trumpChosingTeam == 2) {
-                        teamOneScore += 20;
+                        teamOneScore += 5; //is normally 2 
                     } else {
-                        teamOneScore += 10;
+                        teamOneScore += 5; //is normally 1 
                     }
                 } else {
                     Debug.Log("Team two wins the hand!");
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Team two wins the hand!";
                     if(twoTrickScore == 5 || trumpChosingTeam == 1) {
-                        teamTwoScore += 20;
+                        teamTwoScore += 5; //is normally 2 
                     } else {
-                        teamTwoScore += 10;
+                        teamTwoScore += 5; //is normally 1 
                     }
                 }
+                oneTrickScore = 0;
+                twoTrickScore = 0;
                 Debug.Log("current total score is team one: " + teamOneScore + ", Team two score: " + teamTwoScore);
                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text ="current total score is team one: " + teamOneScore + ", Team two score: " + teamTwoScore;
+                TrumpHolder.GetComponent<TMPro.TextMeshProUGUI>().text = "";
                 //reset queue to next dealer
                 dealer = playerQueue.Dequeue();
                 playerQueue.Enqueue(dealer);
