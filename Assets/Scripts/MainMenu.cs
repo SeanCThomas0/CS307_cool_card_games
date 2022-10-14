@@ -45,9 +45,18 @@ public class MainMenu : MonoBehaviour
         if (scene == "GoFish") max =temp.maxPlayersFish;
         if (scene == "Solitaire") max =temp.maxPlayersSolitare;
         if (scene == "EuchreTestScene") max =temp.maxPlayersEucher;
-        PhotonNetwork.LoadLevel(scene);
         //PhotonNetwork.LeaveRoom();
-        PhotonNetwork.JoinOrCreateRoom(scene,new RoomOptions { MaxPlayers = max},null);
+        //PhotonNetwork.CreateRoom(scene,new RoomOptions { MaxPlayers = max},null);
+        //PhotonNetwork.JoinOrCreateRoom(scene,new RoomOptions { MaxPlayers = max},TypedLobby.Default);
+        //PhotonNetwork.JoinRoom(scene);
+        //PhotonNetwork.JoinOrCreateRoom("Game", roomOptions, TypedLobby.Default);
+        //PhotonNetwork.JoinRandomRoom();
+       // PhotonNetwork.JoinRandomRoom();
+       //PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LoadLevel(scene);
+
+
+        Debug.Log("JOINED GAME");
         
 
     }

@@ -99,8 +99,8 @@ public class PhotonServerMaster : MonoBehaviourPunCallbacks
             if (PhotonNetwork.IsConnected)
             {
                 // #Critical we need this point to attempt joining a random rooms If it fails, we'll get notified in OnJoinRandomFailed() and we'll create one
-                PhotonNetwork.JoinOrCreateRoom("mainMenu",new RoomOptions { MaxPlayers = 100},null);
-
+                //PhotonNetwork.JoinOrCreateRoom("mainMenu",new RoomOptions { MaxPlayers = 100},null);
+                //PhotonNetwork.JoinRandomRoom();
 
             }
             else
@@ -122,13 +122,9 @@ public class PhotonServerMaster : MonoBehaviourPunCallbacks
 
         public override void OnConnectedToMaster()
         {
-            Debug.Log("Yep it did it ");
+            Debug.Log("CONNECTED to MASTER ");
             // #Critical: The first we try to do is to join a potential existing room. If there is, good, else, we'll be called back with OnJoinRandomFailed()
-
-
-
-
-
+             PhotonNetwork.JoinLobby();
         }
 
         public override void OnDisconnected(DisconnectCause cause)
@@ -149,33 +145,33 @@ public class PhotonServerMaster : MonoBehaviourPunCallbacks
             Debug.Log("PUN Basics Tutorial/Launcher:OnJoinRandomFailed() was called by PUN. No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
 
             // #Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
-
-        
-                PhotonNetwork.CreateRoom(null, new RoomOptions());
-            
-
+            PhotonNetwork.CreateRoom(null, new RoomOptions());
         }
 
         public override void OnJoinedRoom()
         {
-            Debug.Log("JOINED A ROOOM");
+            Debug.Log("Join room success");
+           // PhotonNetwork.LeaveRoom(); 
 
-            /*
-
-            for(int i = 0; i< PhotonNetwork.PlayerList.Length; i ++) {
-                Player temp_player =PhotonNetwork.PlayerList[i];
-                if (temp_player.IsLocal) {
-
-                    temp_player.NickName=PhotonNetwork.NickName;
-                }
-            }
-            */
-            //PhotonNetwork.LoadLevel(1);
-
-            //progressLabel.SetActive(false);
-            //GameController.SetActive(true);
+            //PhotonNetwork.InLobby(); // false
+            //PhotonNetwork.LeaveRoom(); 
 
         }
+        public override void OnJoinedLobby() {
+            Debug.Log("joined lobby");
+            PhotonNetwork.CreateRoom("GoFish",new RoomOptions { MaxPlayers = 4},TypedLobby.Default);
+            //PhotonNetwork.CreateRoom("Solitaire",new RoomOptions { MaxPlayers = 1},TypedLobby.Default);
+            //PhotonNetwork.CreateRoom("EuchreTestScene",new RoomOptions { MaxPlayers = 4},TypedLobby.Default);
+        }
+
+
+        public  void OnCreateRoomFailed() {
+            Debug.Log("create room failed");
+        }
+        public override void OnCreatedRoom (){
+            Debug.Log("created default room ");
+        }
+
 
 
 

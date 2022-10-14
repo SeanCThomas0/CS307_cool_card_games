@@ -5,8 +5,12 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using System;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
+using System.IO;
+
 [RequireComponent(typeof(PhotonView))]
-public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
+public class GoFishMultiplayer : MonoBehaviour, IPunObservable
 {
 
     PhotonView photonView;
@@ -21,23 +25,25 @@ public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
 
     int next_player =0;
     int cur_player =0;
+    int guh =32;
+
 
 
     public List<GameObject> pool2;
 
-    // Start is called before the first frame update
+    //  Start is called before the first frame update
     void Start()
     {
+
         pool2 =goFishLogic.pool;
         photonView = PhotonView.Get(this);
 
         isMasterPlayer = photonView.IsMine;
-        if (photonView.IsMine ){
+        guh = pool2.Count;
 
-        }
-        else {
 
-        }
+
+
         
     }
 
@@ -56,9 +62,16 @@ public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
     void Update()
     {
 
-        if (photonView.IsMine ){
+        if(guh != goFishLogic.pool.Count ) {
+            this.photonView.RPC("testing",RpcTarget.All);
+            guh =goFishLogic.pool.Count;
+        }
+
+        if (photonView.IsMine){
             //pool2 =goFishLogic.pool;
 
+            //photonView.RPC("updateCards",RpcTarget.All,goFishLogic.pool);
+            
         }
         else {
             //goFishLogic.pool = pool2;
@@ -101,6 +114,27 @@ public class GoFishMultiplayer : MonoBehaviourPun, IPunObservable
     }
 
 
+    [PunRPC]
+    public void updateCards(List<GameObject> poolOfCards)
+    {
+        
+        //Debug.Log("RPC THINGY");
+        //this.pool2=poolOfCards;
+        
+
+        
+    }
+
+        
+    [PunRPC]
+    public void testing()
+    {
+        
+        Debug.Log("Player HAS MADE A MOVE");
+        
+
+        
+    }
 
 
 
