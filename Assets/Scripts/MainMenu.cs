@@ -10,7 +10,7 @@ public class MainMenu : MonoBehaviour
     {
         Debug.Log("Logout");
         FirebaseAuth.DefaultInstance.SignOut();
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("Scenes/LoginPage");
     }
 
     public void ExitGame()
@@ -20,6 +20,12 @@ public class MainMenu : MonoBehaviour
         FirebaseAuth.DefaultInstance.SignOut();
         print(FirebaseAuth.DefaultInstance.CurrentUser == null);
         Application.Quit();
+    }
+
+    public void ChangeScenese(string scene)
+    {
+        Debug.Log("Change to " + scene);
+        SceneManager.LoadScene(scene);
     }
 }
 

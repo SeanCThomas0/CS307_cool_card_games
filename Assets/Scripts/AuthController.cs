@@ -12,6 +12,7 @@ public class AuthController : MonoBehaviour
     TextMeshProUGUI textMeshPro_LoginMessage;
     private string loginMessageString;
 
+
     private void Start()
     {
         textMeshPro_LoginMessage = loginMessage.GetComponent<TextMeshProUGUI>();
@@ -23,7 +24,7 @@ public class AuthController : MonoBehaviour
 
         if (FirebaseAuth.DefaultInstance.CurrentUser != null)
         {
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene("Scenes/MainMenu");
         }
     }
 
