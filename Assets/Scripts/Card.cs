@@ -16,7 +16,7 @@ public class Card : MonoBehaviour
 
     public int numValue;
     public suit suitValue;
-    public bool inPool;
+    public bool inPool; // for Go Fish
 
     public bool showingFront;
     public string faceValue;

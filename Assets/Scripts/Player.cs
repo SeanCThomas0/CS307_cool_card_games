@@ -15,19 +15,6 @@ public class Player : MonoBehaviour
     public int numOfSetsOfFour;
     public GameObject text;
 
-    // -----
-    public string Username;
-    public string Password;
-
-    public Player() { }
-
-    public Player(string name, string pass)
-    {
-        Username = name;
-        Password = pass;
-    }
-    // -----
-
     public void AddToHand(GameObject card)
     {
         hand.Add(card);
@@ -70,10 +57,3 @@ public class Player : MonoBehaviour
         return numRemoved;
     }
 }
-
-
-// [Serializable]
-// public class Player 
-// {
-
-// }
