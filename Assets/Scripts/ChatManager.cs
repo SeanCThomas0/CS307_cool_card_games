@@ -35,7 +35,10 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     [SerializeField]
     private GameObject chatRoomImage;
 
-    public string username;
+    [SerializeField]
+    private GameObject friendSceneButton;
+
+    public static string username;
 
     
 
@@ -48,7 +51,14 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             Debug.LogError("No AppID Provided");
             return;
         }
-        ConnectToServer();
+
+        //if in new scene, reconnect the chat client
+        if(chatClient == null && !string.IsNullOrEmpty(username)) {
+            ConnectToServer();
+            //OnConnected();
+            //OnSubscribed(new string[] {"Chatroom"}, new bool[] {true});
+        }
+        
         
         
     }
@@ -69,7 +79,10 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         chatClient = new ChatClient(this);
         
         //Connect to Photon Server and set username to input field
-        chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new Photon.Chat.AuthenticationValues(usernameInputField.text));
+        if(string.IsNullOrEmpty(username)) {
+            username = usernameInputField.text;
+        }
+        chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new Photon.Chat.AuthenticationValues(username));
         
     }
 
@@ -81,6 +94,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void SendMsg()
     {
+
         //check to send message publicly or privately
         if(string.IsNullOrEmpty(toInput.text)) {
             chatClient.PublishMessage("Chatroom", "<color=black>" + username + ": " + msgInput.text + "</color>");
@@ -124,15 +138,15 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         Debug.Log("Connected and Subscribed");
         chatClient.Subscribe(new string[] {"Chatroom"});
         chatClient.SetOnlineStatus(ChatUserStatus.Online);
+        chatClient.PublishMessage("Chatroom", "<color=black>" + username + ": " + "joined" + "</color>");
     }
 
     //when button is pressed, join chatroom
     public void JoinChatRoom() {
-        username = usernameInputField.text;
         joinChatButton.SetActive(false);
         usernameInput.SetActive(false);
         chatRoomImage.SetActive(true);
-        msgArea.text += "\r\n" + "<color=black>" + username + ": " + "joined" + "</color>";
+        friendSceneButton.SetActive(true);
     }
 
     public void OnChatStateChange(ChatState state)
@@ -218,11 +232,18 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     //add friend by userID and put into friend list while sending friend request
     public void addFriend() {
+        //check if friend is already added
+        if (friendList.Contains(addFriendInput.text)) {
+            chatClient.SendPrivateMessage(username, addFriendInput.text + " is already a friend!</color>");
+            return;
+        }
+        friendList.Add(addFriendInput.text);
         GameObject friend = Instantiate(friendObjectButton);
         friend.transform.SetParent(contentContainer);
+        friend.SetActive(true);
         friend.transform.localScale = Vector2.one;
         Debug.Log(addFriendInput.text);
-        //friend.GetComponentInChildren<Text>().text = addFriendInput.text;
+        friend.GetComponentInChildren<TMP_Text>().text = addFriendInput.text;
         chatClient.SendPrivateMessage(addFriendInput.text, username + " has sent a friend request! Add them back"
         + " by typing the username and pressing add friend in the friend list menu.</color>");
 
@@ -230,8 +251,8 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     //clicking on friend allows you to message the friend
     public void sendFriendMessage(GameObject button) {
-        Debug.Log(button.GetComponentInChildren<Text>().text);
-        toInput.text = button.GetComponentInChildren<Text>().text;
+        Debug.Log(button.GetComponentInChildren<TMP_Text>().text);
+        toInput.text = button.GetComponentInChildren<TMP_Text>().text;
     }
 
 
