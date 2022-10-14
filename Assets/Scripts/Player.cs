@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,16 +15,18 @@ public class Player : MonoBehaviour
     public int numOfSetsOfFour;
     public GameObject text;
 
-    // public Player(string userID)
-    // {
-    //     this.userID = userID;
-    //     this.hand = new List<GameObject>();
-    // }
+    // -----
+    public string Username;
+    public string Password;
 
-    // public string GetUserID()
-    // {
-    //     return userID;
-    // }
+    public Player() { }
+
+    public Player(string name, string pass)
+    {
+        Username = name;
+        Password = pass;
+    }
+    // -----
 
     public void AddToHand(GameObject card)
     {
@@ -67,3 +70,10 @@ public class Player : MonoBehaviour
         return numRemoved;
     }
 }
+
+
+// [Serializable]
+// public class Player 
+// {
+
+// }
