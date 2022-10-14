@@ -541,6 +541,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardDealerController: {fileID: 1033690096}
+  pool: []
   playerOne: {fileID: 58216171}
   playerTwo: {fileID: 924078579}
   playerThree: {fileID: 731994892}
@@ -2094,6 +2095,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LogicController: {fileID: 780356555}
+  pool2: []
 --- !u!4 &2003607047
 Transform:
   m_ObjectHideFlags: 0
