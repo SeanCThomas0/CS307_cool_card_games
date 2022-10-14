@@ -4166,7 +4166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 093437b6ce42aca4cb8ea9d13ac5585a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PhotonServerMainMenu: {fileID: 0}
+  PhotonServerMainMenu: {fileID: 1940588701}
 --- !u!1 &1538738425
 GameObject:
   m_ObjectHideFlags: 0

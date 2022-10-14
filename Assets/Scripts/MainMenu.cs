@@ -45,7 +45,7 @@ public class MainMenu : MonoBehaviour
         if (scene == "GoFish") max =temp.maxPlayersFish;
         if (scene == "Solitaire") max =temp.maxPlayersSolitare;
         if (scene == "EuchreTestScene") max =temp.maxPlayersEucher;
-        PhotonNetwork.JoinOrCreateRoom(scene,null,new RoomOptions { MaxPlayers = max});
+        PhotonNetwork.JoinOrCreateRoom(scene,new RoomOptions { MaxPlayers = max},null);
         
 
     }
