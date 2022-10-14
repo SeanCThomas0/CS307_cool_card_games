@@ -58,6 +58,8 @@ public class GoFishLogic : MonoBehaviour
     public bool diffiBot;
     private bool gaveToBot;
 
+    private int indexInHand;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -141,6 +143,8 @@ public class GoFishLogic : MonoBehaviour
         diffiBot = false;
 
         exitButton.SetActive(false);
+
+        indexInHand = -1;
 
         // display pool
         DisplayPool();
@@ -343,6 +347,115 @@ public class GoFishLogic : MonoBehaviour
         }
 
         // checks for clicking, detects what is clicked
+        if (Input.GetKeyDown(KeyCode.RightArrow) && (turn == playerOne || requestingFrom == playerOne))
+        {
+            Debug.Log("Right arrow clicked");
+
+            if (indexInHand + 1 < playerOne.GetComponent<Player>().hand.Count)
+            {
+                indexInHand++;
+            }
+            else
+            {
+                playerOne.GetComponent<Player>().hand[playerOne.GetComponent<Player>().hand.Count - 1].GetComponent<Card>().GetComponent<SpriteRenderer>().color = Color.white;
+                indexInHand = 0;
+            }
+
+            if (indexInHand - 1 >= 0)
+            {
+                playerOne.GetComponent<Player>().hand[indexInHand - 1].GetComponent<Card>().GetComponent<SpriteRenderer>().color = Color.white;
+            }
+
+            playerOne.GetComponent<Player>().hand[indexInHand].GetComponent<Card>().GetComponent<SpriteRenderer>().color = Color.gray;
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow) && (turn == playerOne || requestingFrom == playerOne))
+        {
+            Debug.Log("Left arrow clicked");
+
+            if (indexInHand - 1 >= 0)
+            {
+                indexInHand--;
+            }
+            else
+            {
+                playerOne.GetComponent<Player>().hand[0].GetComponent<Card>().GetComponent<SpriteRenderer>().color = Color.white;
+                indexInHand = playerOne.GetComponent<Player>().hand.Count - 1;
+            }
+
+            if (indexInHand + 1 < playerOne.GetComponent<Player>().hand.Count)
+            {
+                playerOne.GetComponent<Player>().hand[indexInHand + 1].GetComponent<Card>().GetComponent<SpriteRenderer>().color = Color.white;
+            }
+
+            playerOne.GetComponent<Player>().hand[indexInHand].GetComponent<Card>().GetComponent<SpriteRenderer>().color = Color.gray;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && (turn == playerOne || requestingFrom == playerOne))
+        {
+            switch (gameState)
+            {
+                case gameStates.PICK_NUM_TO_REQEUST:
+                    if (playerOne.GetComponent<Player>().hand[indexInHand].GetComponent<Card>() != null && cardDealer.ContainsCard(playerOne.GetComponent<Player>().hand, playerOne.GetComponent<Player>().hand[indexInHand].GetComponent<Card>().numValue, playerOne.GetComponent<Player>().hand[indexInHand].GetComponent<Card>().suitValue))
+                    {
+                        requestingNumValue = playerOne.GetComponent<Player>().hand[indexInHand].GetComponent<Card>().numValue;
+                        gameAlert = gameAlerts.NONE;
+
+                        if (RequestAllCards())
+                        {
+                            gameState = gameStates.PICK_PLAYER_TO_REQUEST;
+                        }
+                        else
+                        {
+                            gameState = gameStates.PICK_FROM_POOL;
+                        }
+                    }
+                    else
+                    {
+                        gameAlert = gameAlerts.PICK_NUM;
+                    }
+                    break;
+
+                case gameStates.PICK_FROM_POOL:
+                    // if (turn.GetComponent<Player>().hand[indexInHand].GetComponent<Card>() != null && turn.GetComponent<Player>().hand[indexInHand].GetComponent<Card>().inPool)
+                    // {
+                    PickFromPool(pool[UnityEngine.Random.Range(0, pool.Count)]);
+                    // PickFromPool(turn.GetComponent<Player>().hand[indexInHand]);
+                    DetermineNextPlayer();
+                    gameAlert = gameAlerts.NONE;
+                    // }
+                    // else
+                    // {
+                    //     gameAlert = gameAlerts.PICK_POOL;
+                    // }
+                    break;
+                case gameStates.BOT_REQUESTING:
+                    if (playerOne.GetComponent<Player>().hand[indexInHand].GetComponent<Card>() != null && cardDealer.ContainsCard(requestingFrom.GetComponent<Player>().hand, playerOne.GetComponent<Player>().hand[indexInHand].GetComponent<Card>().numValue, playerOne.GetComponent<Player>().hand[indexInHand].GetComponent<Card>().suitValue) && playerOne.GetComponent<Player>().hand[indexInHand].GetComponent<Card>().numValue == requestingNumValue && containBotRequest)
+                    {
+                        RequestCards(playerOne.GetComponent<Player>().hand[indexInHand]);
+                        gaveToBot = true;
+                        gameAlert = gameAlerts.NONE;
+                    }
+                    else if (!containBotRequest)
+                    {
+                        if (pool.Count <= 0)
+                        {
+                            gameState = gameStates.END_GAME;
+                        }
+
+                        PickFromPool(pool[UnityEngine.Random.Range(0, pool.Count)]);
+                        DetermineNextPlayer();
+                        gameAlert = gameAlerts.NONE;
+                    }
+                    else
+                    {
+                        gameAlert = gameAlerts.SATISFY_REQUEST;
+                    }
+
+                    break;
+            }
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -614,6 +727,7 @@ public class GoFishLogic : MonoBehaviour
                 cardDealer.ShowBackKeepValue(player.GetComponent<Player>().hand[i], CardDealer.backColor.BLUE, CardDealer.backDesign.OUTLINE_SIMPLE_PATTERN);
             }
 
+            player.GetComponent<Player>().hand[i].GetComponent<Card>().GetComponent<SpriteRenderer>().color = Color.white;
             player.GetComponent<Player>().hand[i].SetActive(true);
 
             x = x + 0.35f;
