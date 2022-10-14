@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GoFishLogic : MonoBehaviour
@@ -136,6 +137,7 @@ public class GoFishLogic : MonoBehaviour
         gameAlert = gameAlerts.NONE;
 
         gaveToBot = false;
+        diffiBot = true;
 
         exitButton.SetActive(false);
 
@@ -705,5 +707,10 @@ public class GoFishLogic : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void Exit()
+    {
+        SceneManager.LoadScene("Scenes/MainMenu");
     }
 }
