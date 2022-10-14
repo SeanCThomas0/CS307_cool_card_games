@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,20 +9,11 @@ public class Player : MonoBehaviour
     public List<GameObject> hand;
 
     public float xStartPos;
-    public float yPos;
+    public float yStartPos;
+    public float zStartPos;
 
-    public bool active;
-
-    // public Player(string userID)
-    // {
-    //     this.userID = userID;
-    //     this.hand = new List<GameObject>();
-    // }
-
-    // public string GetUserID()
-    // {
-    //     return userID;
-    // }
+    public int numOfSetsOfFour;
+    public GameObject text;
 
     public void AddToHand(GameObject card)
     {
@@ -64,9 +56,4 @@ public class Player : MonoBehaviour
         }
         return numRemoved;
     }
-
-    // public List<GameObject> GetHand()
-    // {
-    //     return hand;
-    // }
 }

@@ -6,7 +6,7 @@ using Firebase.Auth;
 
 public class MainMenu : MonoBehaviour
 {
-    public void Logout ()
+    public void Logout()
     {
         Debug.Log("Logout");
         Debug.Log(FirebaseAuth.DefaultInstance.CurrentUser.Email);
