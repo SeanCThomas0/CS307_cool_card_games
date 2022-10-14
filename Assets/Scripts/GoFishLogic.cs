@@ -601,14 +601,14 @@ public class GoFishLogic : MonoBehaviour
         {
             player.GetComponent<Player>().hand[i].transform.position = new Vector3(x, player.GetComponent<Player>().yStartPos, z);
 
-            // if (player == playerOne)
-            // {
-            cardDealer.SetSprite(player.GetComponent<Player>().hand[i]);
-            // }
-            // else
-            // {
-            //     cardDealer.ShowBackKeepValue(player.GetComponent<Player>().hand[i], CardDealer.backColor.BLUE, CardDealer.backDesign.OUTLINE_SIMPLE_PATTERN);
-            // }
+            if (player == playerOne)
+            {
+                cardDealer.SetSprite(player.GetComponent<Player>().hand[i]);
+            }
+            else
+            {
+                cardDealer.ShowBackKeepValue(player.GetComponent<Player>().hand[i], CardDealer.backColor.BLUE, CardDealer.backDesign.OUTLINE_SIMPLE_PATTERN);
+            }
 
             player.GetComponent<Player>().hand[i].SetActive(true);
 
