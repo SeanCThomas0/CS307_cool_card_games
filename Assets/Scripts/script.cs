@@ -8,7 +8,13 @@ using Photon.Pun;
 using TMPro;
 using UnityEngine.UI;
 
-public class script : MonoBehaviour, IChatClientListener
+
+/*
+Chat Manager script manages the chat fucntions including joining rooms
+and sending/receiving messages. It implements the IChatClientListener
+that responds to the different event of the chatClient.
+*/
+public class ChatManager : MonoBehaviour, IChatClientListener
 {
     private ChatClient chatClient;
     
@@ -16,10 +22,9 @@ public class script : MonoBehaviour, IChatClientListener
     public TMP_Text msgArea;
 
     public TMP_InputField toInput;
-    //public Button joinChatButton;
+    
     public TMP_InputField usernameInputField;
-    //hello
-    //public PhotonManager photonManager;
+    
     [SerializeField]
     private GameObject joinChatButton;
 
@@ -30,7 +35,10 @@ public class script : MonoBehaviour, IChatClientListener
     [SerializeField]
     private GameObject chatRoomImage;
 
-    public string username;
+    [SerializeField]
+    private GameObject friendSceneButton;
+
+    public static string username;
 
     
 
@@ -43,7 +51,14 @@ public class script : MonoBehaviour, IChatClientListener
             Debug.LogError("No AppID Provided");
             return;
         }
-        ConnectToServer();
+
+        //if in new scene, reconnect the chat client
+        if(chatClient == null && !string.IsNullOrEmpty(username)) {
+            ConnectToServer();
+            //OnConnected();
+            //OnSubscribed(new string[] {"Chatroom"}, new bool[] {true});
+        }
+        
         
         
     }
@@ -51,6 +66,7 @@ public class script : MonoBehaviour, IChatClientListener
     // Update is called once per frame
     void Update()
     {
+        //must be called repeatedly to make chatClient function
         if (chatClient != null)
         {
             chatClient.Service();
@@ -61,9 +77,13 @@ public class script : MonoBehaviour, IChatClientListener
     {
         Debug.Log("Connecting");
         chatClient = new ChatClient(this);
-        //chatClient.AuthValues = new Photon.Chat.AuthenticationValues("Bob");
-        chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new Photon.Chat.AuthenticationValues("Bob"));
-        //new Photon.Chat.AuthenticationValues(PhotonNetwork.LocalPlayer.NickName
+        
+        //Connect to Photon Server and set username to input field
+        if(string.IsNullOrEmpty(username)) {
+            username = usernameInputField.text;
+        }
+        chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new Photon.Chat.AuthenticationValues(username));
+        
     }
 
     public void DisconnectFromServer()
@@ -74,25 +94,26 @@ public class script : MonoBehaviour, IChatClientListener
 
     public void SendMsg()
     {
+
+        //check to send message publicly or privately
         if(string.IsNullOrEmpty(toInput.text)) {
             chatClient.PublishMessage("Chatroom", "<color=black>" + username + ": " + msgInput.text + "</color>");
             
         }
         else {
-            chatClient.SendPrivateMessage(toInput.text, "<color=black>" + username + ": " + msgInput.text + "</color>");
+            chatClient.SendPrivateMessage(toInput.text, username + ": " + msgInput.text + "</color>");
             Debug.Log("Target: " + toInput.text);
         }
         
         
-        
+        //reset message input field
         msgInput.text = "";
         
     }
 
     public void Join()
     {
-       //chatClient.Subscribe(new string[] {"Chatroom"});
-        //chatClient.SetOnlineStatus(ChatUserStatus.Online);
+       
     }
 
     public void Leave()
@@ -111,26 +132,28 @@ public class script : MonoBehaviour, IChatClientListener
         
     }
 
+    //when Connect is called, subscribe user to the chatroom
     public void OnConnected()
     {
         Debug.Log("Connected and Subscribed");
         chatClient.Subscribe(new string[] {"Chatroom"});
         chatClient.SetOnlineStatus(ChatUserStatus.Online);
+        chatClient.PublishMessage("Chatroom", "<color=black>" + username + ": " + "joined" + "</color>");
     }
 
+    //when button is pressed, join chatroom
     public void JoinChatRoom() {
-        username = usernameInputField.text;
         joinChatButton.SetActive(false);
         usernameInput.SetActive(false);
         chatRoomImage.SetActive(true);
-        msgArea.text += "\r\n" + "<color=black>" + username + ": " + "joined" + "</color>";
+        friendSceneButton.SetActive(true);
     }
 
     public void OnChatStateChange(ChatState state)
     {
         
     }
-
+    //when publish message is called and messages are received, display them in chatroom
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
     {
         Debug.Log("Received");
@@ -148,29 +171,29 @@ public class script : MonoBehaviour, IChatClientListener
         }
     }
 
+    //when private message is received, display in chatroom
     public void OnPrivateMessage(string sender, object message, string channelName)
     {
         Debug.Log("Received Private");
         if (string.IsNullOrEmpty(msgArea.text))
             {
-                msgArea.text += "(Private) " + message;
+                msgArea.text += "<color=black>(Private) " + message;
             }
             else
             {
-                msgArea.text += "\r\n" + "(Private) " + message;
+                msgArea.text += "\r\n" + "<color=black>(Private) " + message;
             }
     }
 
     public void OnSubscribed(string[] channels, bool[] results)
     {
         Debug.Log("Subcribed");
-        //msgArea.text += "\r\n" + "<color=black>" + username + ": " + "joined" + "</color>";
+        
     }
 
     public void OnUnsubscribed(string[] channels)
     {
         msgArea.text = "";
-        //photonManager.Leave();
     }
 
     public void OnStatusUpdate(string user, int status, bool gotMessage, object message)
@@ -187,4 +210,50 @@ public class script : MonoBehaviour, IChatClientListener
     {
         
     }
+
+
+
+    //friend list implementation
+
+    ArrayList friendList = new ArrayList();
+    //string[] requestList = new string[100];
+    //int friends = 0;
+    public TMP_InputField addFriendInput;
+    [SerializeField]
+    private GameObject addFriendButton;
+    [SerializeField]
+    private GameObject friendObjectButton;
+    [SerializeField]
+    private Transform contentContainer;
+
+    public void AddFriends(string[] friends) {
+
+    }
+
+    //add friend by userID and put into friend list while sending friend request
+    public void addFriend() {
+        //check if friend is already added
+        if (friendList.Contains(addFriendInput.text)) {
+            chatClient.SendPrivateMessage(username, addFriendInput.text + " is already a friend!</color>");
+            return;
+        }
+        friendList.Add(addFriendInput.text);
+        GameObject friend = Instantiate(friendObjectButton);
+        friend.transform.SetParent(contentContainer);
+        friend.SetActive(true);
+        friend.transform.localScale = Vector2.one;
+        Debug.Log(addFriendInput.text);
+        friend.GetComponentInChildren<TMP_Text>().text = addFriendInput.text;
+        chatClient.SendPrivateMessage(addFriendInput.text, username + " has sent a friend request! Add them back"
+        + " by typing the username and pressing add friend in the friend list menu.</color>");
+
+    }
+
+    //clicking on friend allows you to message the friend
+    public void sendFriendMessage(GameObject button) {
+        Debug.Log(button.GetComponentInChildren<TMP_Text>().text);
+        toInput.text = button.GetComponentInChildren<TMP_Text>().text;
+    }
+
+
 }

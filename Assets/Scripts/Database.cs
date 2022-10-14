@@ -9,8 +9,6 @@ using Firebase.Auth;
 
 public class Database : MonoBehaviour
 {
-    
-    public Text username, password;
 
     private Player data;
 
@@ -18,23 +16,29 @@ public class Database : MonoBehaviour
 
     private DatabaseReference databaseReference;
 
+    public Database()
+    {
+        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
+    }
+
     private void Start()
     {
         databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
-    public void SaveData()
+    public void CreateAccountData(Firebase.Auth.FirebaseUser user)
     {
-        if(username.text.Equals("") && password.text.Equals(""))
-        {
-            return;
-        }
+        DatabaseReference userRef = databaseReference.Child("users").Child(user.UserId);
 
-        data = new Player(username.text, password.text);
+        //user_data
+        Debug.Log("Database");
+        userRef.Child("user_data").Child("email").SetValueAsync(user.Email);
+        userRef.Child("user_data").Child("username").SetValueAsync(user.Email.Substring(0, user.Email.IndexOf("@")));
+        Debug.Log("logged event: " + user.UserId + " " + user.Email + " " + user.Email.Substring(0, user.Email.IndexOf("@")));
 
-        string jsonData = JsonUtility.ToJson(data);
+        //game_statistics
 
-        databaseReference.Child("Users" + Random.Range(0, 1000000000)).SetRawJsonValueAsync(jsonData);
+
     }
 
     public void LoadData()
