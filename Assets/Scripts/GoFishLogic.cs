@@ -603,7 +603,7 @@ public class GoFishLogic : MonoBehaviour
             newRequestingNumValue = numOfNumValues[0];
             for (int i = 1; i < numOfNumValues.Length; i++)
             {
-                if (numOfNumValues[i] > newRequestingNumValue)
+                if (numOfNumValues[i] > newRequestingNumValue && numOfNumValues[i] != requestingNumValue)
                 {
                     newRequestingNumValue = i + 1;
                 }
