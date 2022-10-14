@@ -39,12 +39,14 @@ public class MainMenu : MonoBehaviour
     public void ChangeScenese(string scene)
     {
         Debug.Log("Change to " + scene);
-        SceneManager.LoadScene(scene);
+        //SceneManager.LoadScene(scene);
         // THIS HAS TO BE A BYTE FOR SOME REASON???????????????
         byte max =  0;
         if (scene == "GoFish") max =temp.maxPlayersFish;
         if (scene == "Solitaire") max =temp.maxPlayersSolitare;
         if (scene == "EuchreTestScene") max =temp.maxPlayersEucher;
+        PhotonNetwork.LoadLevel(scene);
+        //PhotonNetwork.LeaveRoom();
         PhotonNetwork.JoinOrCreateRoom(scene,new RoomOptions { MaxPlayers = max},null);
         
 

@@ -79,6 +79,7 @@ public class PhotonServerMaster : MonoBehaviourPunCallbacks
         }
 
 
+
         #endregion
 
 
@@ -100,6 +101,7 @@ public class PhotonServerMaster : MonoBehaviourPunCallbacks
                 // #Critical we need this point to attempt joining a random rooms If it fails, we'll get notified in OnJoinRandomFailed() and we'll create one
                 PhotonNetwork.JoinOrCreateRoom("mainMenu",new RoomOptions { MaxPlayers = 100},null);
 
+
             }
             else
             {
@@ -120,9 +122,9 @@ public class PhotonServerMaster : MonoBehaviourPunCallbacks
 
         public override void OnConnectedToMaster()
         {
-            Debug.Log("PUN Bascis Tutorial/Launcher: OnConnectedToMaster() was called by PUN");
+            Debug.Log("Yep it did it ");
             // #Critical: The first we try to do is to join a potential existing room. If there is, good, else, we'll be called back with OnJoinRandomFailed()
-            PhotonNetwork.JoinRandomRoom();
+
 
 
 
@@ -148,15 +150,15 @@ public class PhotonServerMaster : MonoBehaviourPunCallbacks
 
             // #Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
 
-            /*
-            PhotonNetwork.JoinOrCreateRoom("mainMenu",null,new RoomOptions { MaxPlayers = 100});
-            */
+        
+                PhotonNetwork.CreateRoom(null, new RoomOptions());
+            
 
         }
 
         public override void OnJoinedRoom()
         {
-            Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
+            Debug.Log("JOINED A ROOOM");
 
             /*
 
