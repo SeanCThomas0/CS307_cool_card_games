@@ -70,3 +70,11 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+Assets/ExternalDependencyManager.meta
+Assets/ExternalDependencyManager/Editor.meta
+Assets/ExternalDependencyManager/Editor/1.2.172.meta
+Assets/Firebase.meta
+Assets/Firebase/Editor.meta
+Assets/Firebase/Plugins.meta
+Assets/Firebase/Plugins/iOS.meta
+ProjectSettings/GvhProjectSettings.xml
