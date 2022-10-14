@@ -69,16 +69,18 @@ public class GoFishLogic : MonoBehaviour
         }
 
         // create queue of players and distribute cards
-        numOfPlayers = 4;
+        numOfPlayers = 3;
         queue = new Queue<GameObject>();
         switch (numOfPlayers)
         {
             case 2:
                 queue.Enqueue(playerOne);
+                playerOne.GetComponent<Player>().active = true;
                 DistributeCards(playerOne, 5);
                 DisplayHand(playerOne);
 
                 queue.Enqueue(playerTwo);
+                playerTwo.GetComponent<Player>().active = true;
                 playerTwoIsBot = true;
                 DistributeCards(playerTwo, 5);
                 DisplayHand(playerTwo);
@@ -89,15 +91,18 @@ public class GoFishLogic : MonoBehaviour
                 break;
             case 3:
                 queue.Enqueue(playerOne);
+                playerOne.GetComponent<Player>().active = true;
                 DistributeCards(playerOne, 5);
                 DisplayHand(playerOne);
 
                 queue.Enqueue(playerTwo);
+                playerTwo.GetComponent<Player>().active = true;
                 playerTwoIsBot = true;
                 DistributeCards(playerTwo, 5);
                 DisplayHand(playerTwo);
 
                 queue.Enqueue(playerThree);
+                playerThree.GetComponent<Player>().active = true;
                 playerThreeIsBot = true;
                 DistributeCards(playerThree, 5);
                 DisplayHand(playerThree);
@@ -107,20 +112,24 @@ public class GoFishLogic : MonoBehaviour
                 break;
             case 4:
                 queue.Enqueue(playerOne);
+                playerOne.GetComponent<Player>().active = true;
                 DistributeCards(playerOne, 5);
                 DisplayHand(playerOne);
 
                 queue.Enqueue(playerTwo);
+                playerTwo.GetComponent<Player>().active = true;
                 playerTwoIsBot = true;
                 DistributeCards(playerTwo, 5);
                 DisplayHand(playerTwo);
 
                 queue.Enqueue(playerThree);
+                playerThree.GetComponent<Player>().active = true;
                 playerThreeIsBot = true;
                 DistributeCards(playerThree, 5);
                 DisplayHand(playerThree);
 
                 queue.Enqueue(playerFour);
+                playerFour.GetComponent<Player>().active = true;
                 playerFourIsBot = true;
                 DistributeCards(playerFour, 5);
                 DisplayHand(playerFour);
@@ -294,44 +303,17 @@ public class GoFishLogic : MonoBehaviour
                 break;
             case gameStates.END_GAME:
                 GameObject[] players = queue.ToArray();
-                GameObject maxPlayer = players[0];
-
-                List<GameObject> winningPlayers = new List<GameObject>();
+                GameObject winningPlayer = players[0];
 
                 for (int i = 1; i < players.Length; i++)
                 {
-                    if (players[i].GetComponent<Player>().numOfSetsOfFour > maxPlayer.GetComponent<Player>().numOfSetsOfFour)
+                    if (players[i].GetComponent<Player>().numOfSetsOfFour > winningPlayer.GetComponent<Player>().numOfSetsOfFour)
                     {
-                        maxPlayer = players[i];
+                        winningPlayer = players[i];
                     }
                 }
 
-                for (int i = 1; i < players.Length; i++)
-                {
-                    if (players[i].GetComponent<Player>().numOfSetsOfFour >= maxPlayer.GetComponent<Player>().numOfSetsOfFour)
-                    {
-                        winningPlayers.Add(players[i]);
-                    }
-                }
-
-                switch (winningPlayers.Count)
-                {
-                    case 0:
-                        guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "The pool is empty. Game over. Nobody wins!";
-                        break;
-                    case 1:
-                        guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "The pool is empty. Game over. " + winningPlayers[0].GetComponent<Player>().userID + " wins with " + winningPlayers[0].GetComponent<Player>().numOfSetsOfFour + " sets.";
-                        break;
-                    case 2:
-                        guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "The pool is empty. Game over. " + winningPlayers[0].GetComponent<Player>().userID + " and " + winningPlayers[1].GetComponent<Player>().userID + " tie with " + winningPlayers[0].GetComponent<Player>().numOfSetsOfFour + " sets.";
-                        break;
-                    case 3:
-                        guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "The pool is empty. Game over. " + winningPlayers[0].GetComponent<Player>().userID + ", " + winningPlayers[1].GetComponent<Player>().userID + ", and " + winningPlayers[2].GetComponent<Player>().userID + " tie with " + winningPlayers[0].GetComponent<Player>().numOfSetsOfFour + " sets.";
-                        break;
-                    case 4:
-                        guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "The pool is empty. Game over. " + winningPlayers[0].GetComponent<Player>().userID + ", " + winningPlayers[1].GetComponent<Player>().userID + ", " + winningPlayers[2].GetComponent<Player>().userID + ", and " + winningPlayers[2].GetComponent<Player>().userID + " tie with " + winningPlayers[0].GetComponent<Player>().numOfSetsOfFour + " sets.";
-                        break;
-                }
+                guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Game over. " + winningPlayer.GetComponent<Player>().userID + " wins!";
 
                 quitButton.SetActive(false);
                 exitButton.SetActive(true);
@@ -352,8 +334,9 @@ public class GoFishLogic : MonoBehaviour
                 switch (gameState)
                 {
                     case gameStates.PICK_PLAYER_TO_REQUEST:
-                        if (hit.collider.gameObject.GetComponent<Player>() != null && hit.collider.gameObject.activeSelf && hit.collider.gameObject != turn)
+                        if (hit.collider.gameObject.GetComponent<Player>() != null && hit.collider.gameObject.GetComponent<Player>().active == true && hit.collider.gameObject != turn)
                         {
+                            Debug.Log("Player " + hit.collider.gameObject.GetComponent<Player>().userID + " clicked.");
                             requestingFrom = hit.collider.gameObject;
                             gameState = gameStates.PICK_NUM_TO_REQEUST;
                             gameAlert = gameAlerts.NONE;
@@ -439,11 +422,6 @@ public class GoFishLogic : MonoBehaviour
                         if (hit.collider.gameObject.GetComponent<Card>() != null && hit.collider.GetComponent<Card>().inPool)
                         {
                             PickFromPool(hit.collider.gameObject);
-                        }
-
-                        if (pool.Count <= 0)
-                        {
-                            gameState = gameStates.END_GAME;
                         }
                         break;
                 }
@@ -599,7 +577,7 @@ public class GoFishLogic : MonoBehaviour
 
         for (int i = 0; i < player.GetComponent<Player>().hand.Count; i++)
         {
-            player.GetComponent<Player>().hand[i].transform.position = new Vector3(x, player.GetComponent<Player>().yStartPos, z);
+            player.GetComponent<Player>().hand[i].transform.position = new Vector3(x, player.GetComponent<Player>().yPos, z);
 
             // if (player == playerOne)
             // {

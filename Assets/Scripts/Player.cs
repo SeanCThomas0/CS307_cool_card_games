@@ -8,8 +8,9 @@ public class Player : MonoBehaviour
     public List<GameObject> hand;
 
     public float xStartPos;
-    public float yStartPos;
-    public float zStartPos;
+    public float yPos;
+
+    public bool active;
 
     public int numOfSetsOfFour;
     public GameObject text;

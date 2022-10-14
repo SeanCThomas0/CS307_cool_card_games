@@ -546,12 +546,9 @@ MonoBehaviour:
   playerThree: {fileID: 731994892}
   playerFour: {fileID: 328814603}
   playerTwoIsBot: 0
-  playerThreeIsBot: 0
-  playerFourIsBot: 0
   guideText: {fileID: 1001943163}
   quitButton: {fileID: 1564771131}
   exitButton: {fileID: 766570421}
-  diffiBot: 0
 --- !u!4 &780356557
 Transform:
   m_ObjectHideFlags: 0
@@ -662,7 +659,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8189398408075451663, guid: 714259784f91c4ff1808ce2539c7c6ba, type: 3}
       propertyPath: yStartPos
-      value: -0.8
+      value: -1.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 714259784f91c4ff1808ce2539c7c6ba, type: 3}
@@ -891,7 +888,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8189398408075451663, guid: 714259784f91c4ff1808ce2539c7c6ba, type: 3}
       propertyPath: yStartPos
-      value: -3.1
+      value: -3.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 714259784f91c4ff1808ce2539c7c6ba, type: 3}
@@ -1710,7 +1707,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8189398408075451663, guid: 714259784f91c4ff1808ce2539c7c6ba, type: 3}
       propertyPath: yStartPos
-      value: 1.5
+      value: 1.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 714259784f91c4ff1808ce2539c7c6ba, type: 3}
@@ -1992,7 +1989,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215688, g: 0.4745098, b: 0.22615875, a: 0}
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -2186,7 +2183,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8189398408075451663, guid: 714259784f91c4ff1808ce2539c7c6ba, type: 3}
       propertyPath: yStartPos
-      value: 3.8
+      value: 3.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 714259784f91c4ff1808ce2539c7c6ba, type: 3}
