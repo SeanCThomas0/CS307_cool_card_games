@@ -10,8 +10,6 @@ using Firebase.Auth;
 public class Database : MonoBehaviour
 {
 
-    private Player data;
-
     private string DATA_URL = "https://cool-card-games-default-rtdb.firebaseio.com/";
 
     private DatabaseReference databaseReference;
@@ -38,6 +36,9 @@ public class Database : MonoBehaviour
 
         //game_statistics
 
+        //solitaire
+        userRef.Child("game_statistics").Child("solitaire").Child("win_count").SetValueAsync(0);
+
 
     }
 
@@ -55,20 +56,7 @@ public class Database : MonoBehaviour
             }
             if (task.IsCompleted)
             {
-                DataSnapshot snapshot = task.Result;
-
-                string playerData = snapshot.GetRawJsonValue();
-
-                Player player = JsonUtility.FromJson<Player>(playerData);
-
-                foreach(var child in snapshot.Children)
-                {
-                    string t = child.GetRawJsonValue();
-                    Player extractedData = JsonUtility.FromJson<Player>(t);
-
-                }
-
-                print("Data is: " + playerData);
+                //Add function
             }
         }));
     }

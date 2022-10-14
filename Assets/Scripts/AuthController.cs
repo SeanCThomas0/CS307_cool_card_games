@@ -15,8 +15,10 @@ public class AuthController : MonoBehaviour
     private void Start()
     {
         textMeshPro_LoginMessage = loginMessage.GetComponent<TextMeshProUGUI>();
+        FirebaseAuth.DefaultInstance.SignOut();
+        Debug.Log(FirebaseAuth.DefaultInstance.CurrentUser);
+        Debug.Log(FirebaseAuth.DefaultInstance);
     }
-
     
 
     private void Update()
