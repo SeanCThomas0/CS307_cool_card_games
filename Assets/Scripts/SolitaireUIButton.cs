@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SolitaireUIButton : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class SolitaireUIButton : MonoBehaviour
     }
 
     public void ResetScene() {
+        clicked = false;
         UpdateSprite[] cards = FindObjectsOfType<UpdateSprite>();
         foreach (UpdateSprite card in cards) {
             Destroy(card.gameObject);
@@ -64,5 +66,10 @@ public class SolitaireUIButton : MonoBehaviour
         solitaire.topPos[1].GetComponent<Selectable>().suit = "D";
         solitaire.topPos[2].GetComponent<Selectable>().suit = "H";
         solitaire.topPos[3].GetComponent<Selectable>().suit = "C";
+    }
+
+    public void Quit(string scene) {
+        Debug.Log("Change to" + scene);
+        SceneManager.LoadScene(scene);
     }
 }

@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManagerEuchre : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class GameManagerEuchre : MonoBehaviour
     public GameObject CardDealer;
     public GameObject TrumpHolder;
     public GameObject DealerHolder;
+    public GameObject QuitButton;
     private CardDealer cardDealer;
 
     /*Temporary card class for testing to be replaced with CardDealer script*/
@@ -548,6 +550,7 @@ public class GameManagerEuchre : MonoBehaviour
         
         Debug.Log("Euchre Game Starting");
         GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Euchre Game Starting";
+        StartCoroutine(sleepFunction());
         pool1 = cardDealer.RandomCards(4, 1, 1, true, true, true, true);
         pool2 = cardDealer.RandomCards(20, 9, 13, true, true, true, true);
         foreach(GameObject cards in pool1) {
@@ -1080,6 +1083,10 @@ public class GameManagerEuchre : MonoBehaviour
             StartCoroutine(sleepFunction());
             //Debug.Log("sleep running set to true");
         }
+    }
+
+    public void UseExitButton() {
+        SceneManager.LoadScene("Scenes/MainMenu");
     }
 
     
