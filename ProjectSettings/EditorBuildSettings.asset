@@ -20,7 +20,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Solitaire.unity
     guid: ded32abff809b764ab83bf5aa4dd0d70
-  - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
-    guid: ac956d3ce0cbf774c909f77fe505e8f1
   m_configObjects: {}
