@@ -829,6 +829,14 @@ public class GoFishLogic : MonoBehaviour
     public void ChangeBotDIfficulty()
     {
         diffiBot = !diffiBot;
-        botDiffButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Bot Mode: Hard";
+
+        if (diffiBot)
+        {
+            botDiffButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Bot Mode: Hard";
+        }
+        else
+        {
+            botDiffButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Bot Mode: Easy";
+        }
     }
 }
