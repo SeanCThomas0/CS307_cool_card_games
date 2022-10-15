@@ -136,7 +136,7 @@ public class GoFishLogic : MonoBehaviour
         queue.Enqueue(turn);
 
         gameState = gameStates.PICK_PLAYER_TO_REQUEST;
-        // gameState = gameStates.DEMO_POOL_RAPID_FIRE; // to demonstrate win conditions
+         //gameState = gameStates.DEMO_POOL_RAPID_FIRE; // to demonstrate win conditions
         gameAlert = gameAlerts.NONE;
 
         gaveToBot = false;
