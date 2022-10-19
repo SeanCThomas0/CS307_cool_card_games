@@ -15,32 +15,12 @@ public class CardDealer : MonoBehaviour
     public Sprite[] green;
     public Sprite[] red;
 
-    public enum backColor
-    {
-        BLUE,
-        GREEN,
-        RED
-    }
+    private Card.customDesign cardDesign;
+    private Card.cardSize cardSize;
 
-    public enum backDesign
-    {
-        PLAIN,
-        OUTLINE,
-        OUTLINE_PATTERN,
-        OUTLINE_SIMPLE_PATTERN,
-        PATTERN
-    }
-
-    // Start is called before the first frame update
     void Start()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        cardSize = Card.cardSize.DEFAULT;
     }
 
     /*
@@ -395,45 +375,89 @@ public class CardDealer : MonoBehaviour
 
 
     
-    color - color of card back (use by stating "CardDealer.backColor.COLOR" where COLOR is BLUE, GREEN, or RED)
-    design - design of card back (use by stating "CardDealer.backDesign.DESIGN" where DESIGN is PLAIN, OUTLINE, OUTLINE_PATTERN, OUTLINE_SIMPLE_PATTERN, or PATTERN)
+    color - color of card back (use by stating "Card.backColor.COLOR" where COLOR is BLUE, GREEN, or RED)
+    design - design of card back (use by stating "Card.backDesign.DESIGN" where DESIGN is PLAIN, OUTLINE, OUTLINE_PATTERN, OUTLINE_SIMPLE_PATTERN, or PATTERN)
     */
-    public void ShowBackKeepValue(GameObject card, backColor color, backDesign design)
+    public void ShowBackKeepValue(GameObject card, Card.backColor color, Card.backDesign design)
     {
         List<GameObject> cardBacks = new List<GameObject>();
 
         int index = -1;
         switch (design)
         {
-            case backDesign.PLAIN:
+            case Card.backDesign.PLAIN:
                 index = 0;
                 break;
-            case backDesign.OUTLINE:
+            case Card.backDesign.OUTLINE:
                 index = 1;
                 break;
-            case backDesign.OUTLINE_PATTERN:
+            case Card.backDesign.OUTLINE_PATTERN:
                 index = 2;
                 break;
-            case backDesign.OUTLINE_SIMPLE_PATTERN:
+            case Card.backDesign.OUTLINE_SIMPLE_PATTERN:
                 index = 3;
                 break;
-            case backDesign.PATTERN:
+            case Card.backDesign.PATTERN:
                 index = 4;
                 break;
         }
 
-        if (color == backColor.BLUE)
+        if (color == Card.backColor.BLUE)
         {
             card.GetComponent<SpriteRenderer>().sprite = blue[index];
         }
-        else if (color == backColor.GREEN)
+        else if (color == Card.backColor.GREEN)
         {
             card.GetComponent<SpriteRenderer>().sprite = green[index];
         }
-        else if (color == backColor.RED)
+        else if (color == Card.backColor.RED)
         {
             card.GetComponent<SpriteRenderer>().sprite = red[index];
         }
+    }
+
+    /*
+
+
+    
+    custom - Card.backDesign name that you would like the back design set to
+    */
+    public void ShowBackKeepValue(GameObject card, Card.customDesign custom)
+    {
+        List<GameObject> cardBacks = new List<GameObject>();
+
+        int index = -1;
+        switch (custom)
+        {
+            // case Card.customDesign.PLAIN:
+            //     index = 0;
+            //     break;
+            // case Card.customDesign.OUTLINE:
+            //     index = 1;
+            //     break;
+            // case Card.customDesign.OUTLINE_PATTERN:
+            //     index = 2;
+            //     break;
+            // case Card.customDesign.OUTLINE_SIMPLE_PATTERN:
+            //     index = 3;
+            //     break;
+            // case Card.customDesign.PATTERN:
+            //     index = 4;
+            //     break;
+        }
+
+        // if (color == Card.backColor.BLUE)
+        // {
+        //     card.GetComponent<SpriteRenderer>().sprite = blue[index];
+        // }
+        // else if (color == Card.backColor.GREEN)
+        // {
+        //     card.GetComponent<SpriteRenderer>().sprite = green[index];
+        // }
+        // else if (color == Card.backColor.RED)
+        // {
+        //     card.GetComponent<SpriteRenderer>().sprite = red[index];
+        // }
     }
 
     public void SortCards(List<GameObject> cards)
