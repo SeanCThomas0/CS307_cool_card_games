@@ -136,7 +136,7 @@ public class GoFishLogic : MonoBehaviour
         queue.Enqueue(turn);
 
         gameState = gameStates.PICK_PLAYER_TO_REQUEST;
-        // gameState = gameStates.DEMO_POOL_RAPID_FIRE; // to demonstrate win conditions
+         //gameState = gameStates.DEMO_POOL_RAPID_FIRE; // to demonstrate win conditions
         gameAlert = gameAlerts.NONE;
 
         gaveToBot = false;
@@ -829,6 +829,14 @@ public class GoFishLogic : MonoBehaviour
     public void ChangeBotDIfficulty()
     {
         diffiBot = !diffiBot;
-        botDiffButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Bot Mode: Hard";
+
+        if (diffiBot)
+        {
+            botDiffButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Bot Mode: Hard";
+        }
+        else
+        {
+            botDiffButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Bot Mode: Easy";
+        }
     }
 }
