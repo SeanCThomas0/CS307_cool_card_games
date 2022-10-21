@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4994407739428068691}
   - component: {fileID: 4994407739428068692}
   - component: {fileID: -1693542925513745181}
+  - component: {fileID: 1870418564916316023}
   m_Layer: 0
   m_Name: Card
   m_TagString: Untagged
@@ -100,6 +101,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numValue: -1
   suitValue: 4
+  numValueString: 
+  suitValueString: 
+  inPool: 0
+  showingFront: 0
+  faceValue: 
 --- !u!61 &-1693542925513745181
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -126,3 +132,24 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.4, y: 1.9}
   m_EdgeRadius: 0
+--- !u!50 &1870418564916316023
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4994407739428068693}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

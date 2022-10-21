@@ -72,14 +72,14 @@ public class SolitaireUserInput : MonoBehaviour
         //card click actions
         print("clicked on card");
 
-        if (!selected.GetComponent<Selectable>().faceUp) {//if the card clicked on is facedown
+        if (!selected.GetComponent<Card>().showingFront) {//if the card clicked on is facedown
             //if the card clicked on is not blocked
                 //flip it over
             if (!Blocked(selected)) {
-                selected.GetComponent<Selectable>().faceUp = true;
+                selected.GetComponent<Card>().showingFront = true;
                 slot1 = this.gameObject;
             }     
-        } else if (selected.GetComponent<Selectable>().inDeckPile) {
+        } else if (selected.GetComponent<Card>().inPool) {
             if (!Blocked(selected)) {
                 if (slot1 == selected) {
                     if (DoubleClick()) {
@@ -133,7 +133,7 @@ public class SolitaireUserInput : MonoBehaviour
         //top click actions
         print("clicked on top");
         if (slot1.CompareTag("Card")) {
-            if (slot1.GetComponent<Selectable>().value == 1) {
+            if (slot1.GetComponent<Card>().numValue == 1) {
                 Stack(selected);
             }
         }
@@ -143,21 +143,21 @@ public class SolitaireUserInput : MonoBehaviour
         //bottom click actions
         print("clicked on bottom");
         if (slot1.CompareTag("Card")) {
-            if (slot1.GetComponent<Selectable>().value == 13) {
+            if (slot1.GetComponent<Card>().numValue == 13) {
                 Stack(selected);
             }
         }
     }
 
     bool Stackable(GameObject selected) {
-        Selectable s1 = slot1.GetComponent<Selectable>();
-        Selectable s2 = selected.GetComponent<Selectable>();
+        Card s1 = slot1.GetComponent<Card>();
+        Card s2 = selected.GetComponent<Card>();
         // compare them to see if they stack
 
-        if (!s2.inDeckPile) {
+        if (!s2.inPool) {
             if (s2.top) { // if in the top pile must stack suited Ace to King
-                if (s1.suit == s2.suit || (s1.value == 1 && s2.suit == null)) {
-                    if (s1.value == s2.value + 1) {
+                if (s1.suitValue == s2.suitValue || (s1.numValue == 1 && s2.suitValueString == null)) {
+                    if (s1.numValue == s2.numValue + 1) {
                         wrongMove.SetActive(false);
                         return true;
                     }
@@ -166,15 +166,15 @@ public class SolitaireUserInput : MonoBehaviour
                     return false;
                 }
             } else { // if in the bottom pile must stack alternate colors King to Ace
-                if (s1.value == s2.value - 1) {
+                if (s1.numValue == s2.numValue - 1) {
                     bool card1Red = true;
                     bool card2Red = true;
 
-                    if (s1.suit == "C" || s1.suit == "S") {
+                    if (s1.suitValueString == "clubs" || s1.suitValueString == "spades") {
                         card1Red = false;
                     }
 
-                    if (s2.suit == "C" || s2.suit == "S") {
+                    if (s2.suitValueString == "clubs" || s2.suitValueString == "spades") {
                         card2Red = false;
                     }
 
@@ -195,69 +195,69 @@ public class SolitaireUserInput : MonoBehaviour
     void Stack(GameObject selected) {
         // if on top of King or empty bottom stack the cards in place
         // else stack the cards with a negative y offset
-        Selectable s1 = slot1.GetComponent<Selectable>();
-        Selectable s2 = selected.GetComponent<Selectable>();
+        Card s1 = slot1.GetComponent<Card>();
+        Card s2 = selected.GetComponent<Card>();
         float yOffset = 0.3f;
         if (!solitaireUIButton.clicked) {
             
             
 
-            if (s2.top || (!s2.top && s1.value == 13)) {
+            if (s2.top || (!s2.top && s1.numValue == 13)) {
                 yOffset = 0;
             }
 
             slot1.transform.position = new Vector3(selected.transform.position.x, selected.transform.position.y - yOffset, selected.transform.position.z - 0.01f);
             slot1.transform.parent = selected.transform;
 
-            if (s1.inDeckPile) {
-                solitaire.tripsOnDisplay.Remove(slot1.name);
-            } else if (s1.top && s2.top && s1.value == 1) {
-                solitaire.topPos[s1.row].GetComponent<Selectable>().value = 0;
-                solitaire.topPos[s1.row].GetComponent<Selectable>().suit = null;
+            if (s1.inPool) {
+                solitaire.tripsOnDisplay.Remove(slot1);
+            } else if (s1.top && s2.top && s1.numValue == 1) {
+                solitaire.topPos[s1.row].GetComponent<Card>().numValue = 0;
+                solitaire.topPos[s1.row].GetComponent<Card>().suitValueString = null;
             } else if (s1.top) {
-                solitaire.topPos[s1.row].GetComponent<Selectable>().value = s1.value - 1;
+                solitaire.topPos[s1.row].GetComponent<Card>().numValue = s1.numValue - 1;
             } else {
-                solitaire.playSpaces[s1.row].Remove(slot1.name);
+                solitaire.playSpaces[s1.row].Remove(slot1);
             }
 
-            s1.inDeckPile = false;
+            s1.inPool = false;
             s1.row = s2.row;
 
-            if (s2.top && s2.suit == s1.suit) {
-                if (solitaire.topPos[0].GetComponent<Selectable>().suit == s1.suit) {
-                    solitaire.topPos[0].GetComponent<Selectable>().value = s1.value;
-                    solitaire.topPos[0].GetComponent<Selectable>().suit = s1.suit;
+            if (s2.top && s2.suitValueString == s1.suitValueString) {
+                if (solitaire.topPos[0].GetComponent<Card>().suitValueString == s1.suitValueString) {
+                    solitaire.topPos[0].GetComponent<Card>().numValue = s1.numValue;
+                    solitaire.topPos[0].GetComponent<Card>().suitValueString = s1.suitValueString;
                     s1.top = true;
-                } else if (solitaire.topPos[1].GetComponent<Selectable>().suit == s1.suit) {
-                    solitaire.topPos[1].GetComponent<Selectable>().value = s1.value;
-                    solitaire.topPos[1].GetComponent<Selectable>().suit = s1.suit;
+                } else if (solitaire.topPos[1].GetComponent<Card>().suitValueString == s1.suitValueString) {
+                    solitaire.topPos[1].GetComponent<Card>().numValue = s1.numValue;
+                    solitaire.topPos[1].GetComponent<Card>().suitValueString = s1.suitValueString;
                     s1.top = true;
-                } else if (solitaire.topPos[2].GetComponent<Selectable>().suit == s1.suit) {
-                    solitaire.topPos[2].GetComponent<Selectable>().value = s1.value;
-                    solitaire.topPos[2].GetComponent<Selectable>().suit = s1.suit;
+                } else if (solitaire.topPos[2].GetComponent<Card>().suitValueString == s1.suitValueString) {
+                    solitaire.topPos[2].GetComponent<Card>().numValue = s1.numValue;
+                    solitaire.topPos[2].GetComponent<Card>().suitValueString = s1.suitValueString;
                     s1.top = true;
-                } else if (solitaire.topPos[3].GetComponent<Selectable>().suit == s1.suit) {
-                    solitaire.topPos[3].GetComponent<Selectable>().value = s1.value;
-                    solitaire.topPos[3].GetComponent<Selectable>().suit = s1.suit;
+                } else if (solitaire.topPos[3].GetComponent<Card>().suitValueString == s1.suitValueString) {
+                    solitaire.topPos[3].GetComponent<Card>().numValue = s1.numValue;
+                    solitaire.topPos[3].GetComponent<Card>().suitValueString = s1.suitValueString;
                     s1.top = true;
                 }
             }
             else if (s2.top) {
-                if (solitaire.topPos[0].GetComponent<Selectable>().value == 0) {
-                    solitaire.topPos[0].GetComponent<Selectable>().value = s1.value;
-                    solitaire.topPos[0].GetComponent<Selectable>().suit = s1.suit;
+                if (solitaire.topPos[0].GetComponent<Card>().numValue == 0) {
+                    solitaire.topPos[0].GetComponent<Card>().numValue = s1.numValue;
+                    solitaire.topPos[0].GetComponent<Card>().suitValueString = s1.suitValueString;
                     s1.top = true;
-                } else if (solitaire.topPos[1].GetComponent<Selectable>().value == 0) {
-                    solitaire.topPos[1].GetComponent<Selectable>().value = s1.value;
-                    solitaire.topPos[1].GetComponent<Selectable>().suit = s1.suit;
+                } else if (solitaire.topPos[1].GetComponent<Card>().numValue == 0) {
+                    solitaire.topPos[1].GetComponent<Card>().numValue = s1.numValue;
+                    solitaire.topPos[1].GetComponent<Card>().suitValueString = s1.suitValueString;
                     s1.top = true;
-                } else if (solitaire.topPos[2].GetComponent<Selectable>().value == 0) {
-                    solitaire.topPos[2].GetComponent<Selectable>().value = s1.value;
-                    solitaire.topPos[2].GetComponent<Selectable>().suit = s1.suit;
+                } else if (solitaire.topPos[2].GetComponent<Card>().numValue == 0) {
+                    solitaire.topPos[2].GetComponent<Card>().numValue = s1.numValue;
+                    solitaire.topPos[2].GetComponent<Card>().suitValueString = s1.suitValueString;
                     s1.top = true;
-                } else if (solitaire.topPos[3].GetComponent<Selectable>().value == 0) {
-                    solitaire.topPos[3].GetComponent<Selectable>().value = s1.value;
-                    solitaire.topPos[3].GetComponent<Selectable>().suit = s1.suit;
+                } else if (solitaire.topPos[3].GetComponent<Card>().numValue == 0) {
+                    solitaire.topPos[3].GetComponent<Card>().numValue = s1.numValue;
+                    solitaire.topPos[3].GetComponent<Card>().suitValueString = s1.suitValueString;
                     s1.top = true;
                 }
             } else {
@@ -268,28 +268,28 @@ public class SolitaireUserInput : MonoBehaviour
         } else {
             slot1.transform.position = new Vector3(selected.transform.position.x, selected.transform.position.y - yOffset, selected.transform.position.z - 0.01f);
             slot1.transform.parent = selected.transform;
-            if (s1.inDeckPile) {
-                solitaire.tripsOnDisplay.Remove(slot1.name);
-            } else if (s1.top && s2.top && s1.value == 1) {
-                solitaire.topPos[s1.row].GetComponent<Selectable>().value = 0;
-                solitaire.topPos[s1.row].GetComponent<Selectable>().suit = null;
+            if (s1.inPool) {
+                solitaire.tripsOnDisplay.Remove(slot1);
+            } else if (s1.top && s2.top && s1.numValue == 1) {
+                solitaire.topPos[s1.row].GetComponent<Card>().numValue = 0;
+                solitaire.topPos[s1.row].GetComponent<Card>().suitValueString = null;
             } else if (s1.top) {
-                solitaire.topPos[s1.row].GetComponent<Selectable>().value = s1.value - 1;
+                solitaire.topPos[s1.row].GetComponent<Card>().numValue = s1.numValue - 1;
             } else {
-                solitaire.playSpaces[s1.row].Remove(slot1.name);
+                solitaire.playSpaces[s1.row].Remove(slot1);
             }
-            s1.inDeckPile = false;
+            s1.inPool = false;
             s1.row = s2.row;
             if (s2.top) {
-                solitaire.topPos[0].GetComponent<Selectable>().value = 13;
+                solitaire.topPos[0].GetComponent<Card>().numValue = 13;
             }
         }
     }
 
     bool Blocked(GameObject selected) {
-        Selectable s2 = selected.GetComponent<Selectable>();
-        if (s2.inDeckPile == true) {
-            if (s2.name == solitaire.tripsOnDisplay.Last()) {
+        Card s2 = selected.GetComponent<Card>();
+        if (s2.inPool == true) {
+            if (s2.GetComponent<GameObject>() == solitaire.tripsOnDisplay.Last()) {
                 wrongMove.SetActive(false);
                 return false;
             } else {
@@ -297,7 +297,7 @@ public class SolitaireUserInput : MonoBehaviour
                 return true;
             }
         } else {
-            if (s2.name == solitaire.playSpaces[s2.row].Last()) {
+            if (s2.GetComponent<GameObject>() == solitaire.playSpaces[s2.row].Last()) {
                 wrongMove.SetActive(false);
                 return false;
             } else {
@@ -318,29 +318,29 @@ public class SolitaireUserInput : MonoBehaviour
 
     void AutoStack(GameObject selected) {
         for (int i = 0; i < solitaire.topPos.Length; i++) {
-            Selectable stack = solitaire.topPos[i].GetComponent<Selectable>();
-            if (selected.GetComponent<Selectable>().value == 1) {
-                if (solitaire.topPos[i].GetComponent<Selectable>().value == 0) {
+            Card stack = solitaire.topPos[i].GetComponent<Card>();
+            if (selected.GetComponent<Card>().numValue == 1) {
+                if (solitaire.topPos[i].GetComponent<Card>().numValue == 0) {
                     slot1 = selected;
                     Stack(stack.gameObject);
                     break;
                 }
             } else {
-                if ((solitaire.topPos[i].GetComponent<Selectable>().suit == slot1.GetComponent<Selectable>().suit) && (solitaire.topPos[i].GetComponent<Selectable>().value == slot1.GetComponent<Selectable>().value - 1)) {
+                if ((solitaire.topPos[i].GetComponent<Card>().suitValueString == slot1.GetComponent<Card>().suitValueString) && (solitaire.topPos[i].GetComponent<Card>().numValue == slot1.GetComponent<Card>().numValue - 1)) {
                     if (HasNoChildren(slot1)) {
                         slot1 = selected;
-                        string lastCardname = stack.suit + stack.value.ToString();
-                        if (stack.value == 1) {
-                            lastCardname = stack.suit + "A";
+                        string lastCardname = stack.suitValueString + stack.numValue.ToString();
+                        if (stack.numValue == 1) {
+                            lastCardname = stack.suitValueString + "ace";
                         }
-                        if (stack.value == 11) {
-                            lastCardname = stack.suit + "J";
+                        if (stack.numValue == 11) {
+                            lastCardname = stack.suitValueString + "jack";
                         }
-                        if (stack.value == 12) {
-                            lastCardname = stack.suit + "Q";
+                        if (stack.numValue == 12) {
+                            lastCardname = stack.suitValueString + "queen";
                         }
-                        if (stack.value == 13) {
-                            lastCardname = stack.suit + "K";
+                        if (stack.numValue == 13) {
+                            lastCardname = stack.suitValueString + "king";
                         }
                         GameObject lastCard = GameObject.Find(lastCardname);
                         Stack(lastCard);
