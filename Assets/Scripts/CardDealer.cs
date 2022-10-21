@@ -37,7 +37,28 @@ public class CardDealer : MonoBehaviour
             newCard.SetActive(false);
 
             newCard.GetComponent<Card>().numValue = i + 1;
+
+            switch(i + 1) {
+                case 1:
+                    newCard.GetComponent<Card>().numValueString = "ace";
+                    break;
+                case 11:
+                    newCard.GetComponent<Card>().numValueString = "jack";
+                    break;
+                case 12:
+                    newCard.GetComponent<Card>().numValueString = "queen";
+                    break;
+                case 13:
+                    newCard.GetComponent<Card>().numValueString = "king";
+                    break;
+                default:
+                    newCard.GetComponent<Card>().numValueString = "" + (i + 1);
+                    break;
+            }
+
             newCard.GetComponent<Card>().suitValue = Card.suit.CLUBS;
+            newCard.GetComponent<Card>().suitValueString = "clubs";
+
             SetSprite(newCard);
 
             standardDeck.Add(newCard);
@@ -49,7 +70,28 @@ public class CardDealer : MonoBehaviour
             newCard.SetActive(false);
 
             newCard.GetComponent<Card>().numValue = i + 1;
+
+            switch(i + 1) {
+                case 1:
+                    newCard.GetComponent<Card>().numValueString = "ace";
+                    break;
+                case 11:
+                    newCard.GetComponent<Card>().numValueString = "jack";
+                    break;
+                case 12:
+                    newCard.GetComponent<Card>().numValueString = "queen";
+                    break;
+                case 13:
+                    newCard.GetComponent<Card>().numValueString = "king";
+                    break;
+                default:
+                    newCard.GetComponent<Card>().numValueString = "" + (i + 1);
+                    break;
+            }
+
             newCard.GetComponent<Card>().suitValue = Card.suit.HEARTS;
+            newCard.GetComponent<Card>().suitValueString = "hearts";
+
             SetSprite(newCard);
 
             standardDeck.Add(newCard);
@@ -61,7 +103,28 @@ public class CardDealer : MonoBehaviour
             newCard.SetActive(false);
 
             newCard.GetComponent<Card>().numValue = i + 1;
+
+            switch(i + 1) {
+                case 1:
+                    newCard.GetComponent<Card>().numValueString = "ace";
+                    break;
+                case 11:
+                    newCard.GetComponent<Card>().numValueString = "jack";
+                    break;
+                case 12:
+                    newCard.GetComponent<Card>().numValueString = "queen";
+                    break;
+                case 13:
+                    newCard.GetComponent<Card>().numValueString = "king";
+                    break;
+                default:
+                    newCard.GetComponent<Card>().numValueString = "" + (i + 1);
+                    break;
+            }
+
             newCard.GetComponent<Card>().suitValue = Card.suit.SPADES;
+            newCard.GetComponent<Card>().suitValueString = "spades";
+
             SetSprite(newCard);
 
             standardDeck.Add(newCard);
@@ -73,7 +136,28 @@ public class CardDealer : MonoBehaviour
             newCard.SetActive(false);
 
             newCard.GetComponent<Card>().numValue = i + 1;
+
+            switch(i + 1) {
+                case 1:
+                    newCard.GetComponent<Card>().numValueString = "ace";
+                    break;
+                case 11:
+                    newCard.GetComponent<Card>().numValueString = "jack";
+                    break;
+                case 12:
+                    newCard.GetComponent<Card>().numValueString = "queen";
+                    break;
+                case 13:
+                    newCard.GetComponent<Card>().numValueString = "king";
+                    break;
+                default:
+                    newCard.GetComponent<Card>().numValueString = "" + (i + 1);
+                    break;
+            }
+
             newCard.GetComponent<Card>().suitValue = Card.suit.DIAMONDS;
+            newCard.GetComponent<Card>().suitValueString = "diamonds";
+
             SetSprite(newCard);
 
             standardDeck.Add(newCard);
@@ -119,7 +203,28 @@ public class CardDealer : MonoBehaviour
                         newCard.SetActive(false);
 
                         newCard.GetComponent<Card>().numValue = randomNum + 1;
+
+                        switch(randomNum + 1) {
+                            case 1:
+                                newCard.GetComponent<Card>().numValueString = "ace";
+                                break;
+                            case 11:
+                                newCard.GetComponent<Card>().numValueString = "jack";
+                                break;
+                            case 12:
+                                newCard.GetComponent<Card>().numValueString = "queen";
+                                break;
+                            case 13:
+                                newCard.GetComponent<Card>().numValueString = "king";
+                                break;
+                            default:
+                                newCard.GetComponent<Card>().numValueString = "" + (randomNum + 1);
+                                break;
+                        }
+
                         newCard.GetComponent<Card>().suitValue = Card.suit.CLUBS;
+                        newCard.GetComponent<Card>().suitValueString = "clubs";
+
                         SetSprite(newCard);
 
                         randomCards.Add(newCard);
@@ -132,7 +237,28 @@ public class CardDealer : MonoBehaviour
                         newCard.SetActive(false);
 
                         newCard.GetComponent<Card>().numValue = randomNum + 1;
+
+                        switch(randomNum + 1) {
+                            case 1:
+                                newCard.GetComponent<Card>().numValueString = "ace";
+                                break;
+                            case 11:
+                                newCard.GetComponent<Card>().numValueString = "jack";
+                                break;
+                            case 12:
+                                newCard.GetComponent<Card>().numValueString = "queen";
+                                break;
+                            case 13:
+                                newCard.GetComponent<Card>().numValueString = "king";
+                                break;
+                            default:
+                                newCard.GetComponent<Card>().numValueString = "" + (randomNum + 1);
+                                break;
+                        }
+
                         newCard.GetComponent<Card>().suitValue = Card.suit.HEARTS;
+                        newCard.GetComponent<Card>().suitValueString = "hearts";
+
                         SetSprite(newCard);
 
                         randomCards.Add(newCard);
@@ -145,7 +271,28 @@ public class CardDealer : MonoBehaviour
                         newCard.SetActive(false);
 
                         newCard.GetComponent<Card>().numValue = randomNum + 1;
+
+                        switch(randomNum + 1) {
+                            case 1:
+                                newCard.GetComponent<Card>().numValueString = "ace";
+                                break;
+                            case 11:
+                                newCard.GetComponent<Card>().numValueString = "jack";
+                                break;
+                            case 12:
+                                newCard.GetComponent<Card>().numValueString = "queen";
+                                break;
+                            case 13:
+                                newCard.GetComponent<Card>().numValueString = "king";
+                                break;
+                            default:
+                                newCard.GetComponent<Card>().numValueString = "" + (randomNum + 1);
+                                break;
+                        }
+
                         newCard.GetComponent<Card>().suitValue = Card.suit.SPADES;
+                        newCard.GetComponent<Card>().suitValueString = "spades";
+
                         SetSprite(newCard);
 
                         randomCards.Add(newCard);
@@ -158,7 +305,28 @@ public class CardDealer : MonoBehaviour
                         newCard.SetActive(false);
 
                         newCard.GetComponent<Card>().numValue = randomNum + 1;
+
+                        switch(randomNum + 1) {
+                            case 1:
+                                newCard.GetComponent<Card>().numValueString = "ace";
+                                break;
+                            case 11:
+                                newCard.GetComponent<Card>().numValueString = "jack";
+                                break;
+                            case 12:
+                                newCard.GetComponent<Card>().numValueString = "queen";
+                                break;
+                            case 13:
+                                newCard.GetComponent<Card>().numValueString = "king";
+                                break;
+                            default:
+                                newCard.GetComponent<Card>().numValueString = "" + (randomNum + 1);
+                                break;
+                        }
+
                         newCard.GetComponent<Card>().suitValue = Card.suit.DIAMONDS;
+                        newCard.GetComponent<Card>().suitValueString = "diamonds";
+
                         SetSprite(newCard);
 
                         randomCards.Add(newCard);
