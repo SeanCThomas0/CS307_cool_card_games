@@ -537,6 +537,8 @@ public class CardDealer : MonoBehaviour
                 card.GetComponent<SpriteRenderer>().sprite = joker;
                 break;
         }
+
+        card.GetComponent<Card>().showingFront = true;
     }
 
     /*
@@ -582,6 +584,8 @@ public class CardDealer : MonoBehaviour
         {
             card.GetComponent<SpriteRenderer>().sprite = red[index];
         }
+
+        card.GetComponent<Card>().showingFront = false;
     }
 
     /*
@@ -626,6 +630,8 @@ public class CardDealer : MonoBehaviour
         // {
         //     card.GetComponent<SpriteRenderer>().sprite = red[index];
         // }
+
+        // newCard.GetComponent<Card>().showingFront = false;
     }
 
     public void SortCards(List<GameObject> cards)
