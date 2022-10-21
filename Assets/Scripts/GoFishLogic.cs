@@ -720,7 +720,7 @@ public class GoFishLogic : MonoBehaviour
             }
             else
             {
-                cardDealer.ShowBackKeepValue(player.GetComponent<Player>().hand[i], CardDealer.backColor.BLUE, CardDealer.backDesign.OUTLINE_SIMPLE_PATTERN);
+                cardDealer.ShowBackKeepValue(player.GetComponent<Player>().hand[i], Card.backColor.BLUE, Card.backDesign.OUTLINE_SIMPLE_PATTERN);
             }
 
             player.GetComponent<Player>().hand[i].GetComponent<Card>().GetComponent<SpriteRenderer>().color = Color.white;
@@ -769,7 +769,7 @@ public class GoFishLogic : MonoBehaviour
             float zOffset = (float)randomGenerator.NextDouble() * negative;
 
             pool[i].transform.position = new Vector3(0 + xOffset, 0 + yOffset, 0 + zOffset);
-            cardDealer.ShowBackKeepValue(pool[i], CardDealer.backColor.BLUE, CardDealer.backDesign.OUTLINE_SIMPLE_PATTERN);
+            cardDealer.ShowBackKeepValue(pool[i], Card.backColor.BLUE, Card.backDesign.OUTLINE_SIMPLE_PATTERN);
             pool[i].SetActive(true);
         }
     }
