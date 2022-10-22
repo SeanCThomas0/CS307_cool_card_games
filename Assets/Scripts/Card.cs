@@ -48,11 +48,13 @@ public class Card : MonoBehaviour
     public string numValueString; // same as 'faceValue' below, but for here again for naming consistency
     public string suitValueString;
 
+    // tells whether the front is showing
+   public bool showingFront;
+
     // for Go Fish
     public bool inPool; 
 
     // for Euchre
-    public bool showingFront;
     public string faceValue;
 
     //for solitiare
