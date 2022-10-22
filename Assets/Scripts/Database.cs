@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using Firebase;
 using Firebase.Database;
 using Firebase.Unity;
 using Firebase.Auth;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class Database : MonoBehaviour
 {
@@ -14,14 +16,17 @@ public class Database : MonoBehaviour
     private string DATA_URL = "https://cool-card-games-default-rtdb.firebaseio.com/";
 
     private DatabaseReference databaseReference;
+    private FirebaseAuth auth;
 
     public Database()
     {
+        auth = FirebaseAuth.DefaultInstance;
         databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
     private void Start()
     {
+        auth = FirebaseAuth.DefaultInstance;
         databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
@@ -98,5 +103,37 @@ public class Database : MonoBehaviour
                 //Add function
             }
         }));
+    }
+
+    public void DeleteCurrentUser()
+    {
+        string userID = auth.CurrentUser.UserId;
+
+        databaseReference.Child("users").Child(userID).RemoveValueAsync();
+
+        Firebase.Auth.FirebaseUser user = auth.CurrentUser;
+        if (user != null)
+        {
+            user.DeleteAsync().ContinueWith(task => {
+                if (task.IsCanceled)
+                {
+                    Debug.LogError("DeleteAsync was canceled.");
+                    return;
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.LogError("DeleteAsync encountered an error: " + task.Exception);
+                    return;
+                }
+
+                Debug.Log("User deleted successfully.");
+
+
+            });
+        }
+        else
+        {
+            Debug.LogError("DeleteCurrentUser: current user is null");
+        }
     }
 }

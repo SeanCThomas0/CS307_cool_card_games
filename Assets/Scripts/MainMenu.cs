@@ -6,6 +6,14 @@ using Firebase.Auth;
 
 public class MainMenu : MonoBehaviour
 {
+    private void Update()
+    {
+        if (FirebaseAuth.DefaultInstance.CurrentUser == null)
+        {
+            SceneManager.LoadScene("Scenes/LoginPage");
+        }
+    }
+
     public void Logout()
     {
         Debug.Log("Logout");
