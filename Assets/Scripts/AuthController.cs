@@ -9,21 +9,47 @@ using TMPro;
 public class AuthController : MonoBehaviour
 {
     public GameObject loginMessage;
+    public GameObject forgottenPasswordMessage;
     TextMeshProUGUI textMeshPro_LoginMessage;
-    private string loginMessageString;
+    TextMeshProUGUI textMeshPro_ForgottenPasswordMessage;
+    public GameObject passwordText;
+    TextMeshProUGUI textMeshPro_password;
 
+    private string loginMessageString;
+    private string email, password;
+    private Color32 msgColor;
+
+    /*
+     * Function : Start
+     * 
+     * Description : This function starts up the unity login page
+     */
     private void Start()
     {
         textMeshPro_LoginMessage = loginMessage.GetComponent<TextMeshProUGUI>();
+        textMeshPro_ForgottenPasswordMessage = forgottenPasswordMessage.GetComponent<TextMeshProUGUI>();
+        textMeshPro_password = passwordText.GetComponent<TextMeshProUGUI>();
         FirebaseAuth.DefaultInstance.SignOut();
         Debug.Log(FirebaseAuth.DefaultInstance.CurrentUser);
         Debug.Log(FirebaseAuth.DefaultInstance);
+        msgColor = new Color32(255, 0, 0, 255); //Set message color to red for error messages
     }
-    
 
+    /*
+     * Function : Update
+     * 
+     * Description : This function updates the login page continuously
+     */
     private void Update()
     {
         textMeshPro_LoginMessage.text = loginMessageString;
+        textMeshPro_ForgottenPasswordMessage.text = loginMessageString;
+
+        //Changes text to currently selected color
+        if (textMeshPro_ForgottenPasswordMessage.color != msgColor)
+        {
+            textMeshPro_ForgottenPasswordMessage.color = msgColor;
+        }
 
         if (FirebaseAuth.DefaultInstance.CurrentUser != null)
         {
@@ -32,8 +58,6 @@ public class AuthController : MonoBehaviour
             SceneManager.LoadScene("Scenes/MainMenu");
         }
     }
-
-    private string email, password;
 
     /*
      * Function : ReadEmailString
@@ -97,7 +121,6 @@ public class AuthController : MonoBehaviour
         print(FirebaseAuth.DefaultInstance.CurrentUser);
     }
 
-
     /*
      * Function : Login
      * 
@@ -139,6 +162,7 @@ public class AuthController : MonoBehaviour
 
         });
 
+        //Login the user after successful account creation
         FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
             if (task.IsCanceled)
             {
@@ -164,9 +188,9 @@ public class AuthController : MonoBehaviour
      */
     void GetErrorMessage(AuthError errorCode)
     {
-        string msg = errorCode.ToString(); //Error Code
+        Debug.Log("Error: " + errorCode.ToString());
 
-        switch(errorCode)
+        switch (errorCode)
         {
             case AuthError.EmailAlreadyInUse:
                 loginMessageString = "This email is already in use. Please use a different email";
@@ -189,15 +213,65 @@ public class AuthController : MonoBehaviour
             case AuthError.UserNotFound:
                 loginMessageString = "Account does not exist. Please enter a valid email address";
                 break;
+            case AuthError.TooManyRequests:
+                loginMessageString = "Too many failed login attempts. Please try again later";
+                break;
         }
-
-        print(loginMessageString);
-        print("Error: " + msg);
     }
 
+    /*
+     * Function : ExitGame
+     * 
+     * Description : This function exits out of the card game application
+     */
     public void ExitGame()
     {
         Debug.Log("QUIT");
         Application.Quit();
+    }
+
+    /*
+     * Function : ForgottenPassword
+     * 
+     * Parameter : email //This is the email that we will send the verification code to
+     * 
+     * Description : This function sends an email to a user to reset their password
+     */
+    public void ForgottenPassword()
+    {
+        Debug.Log("Forgotten Password");
+        FirebaseAuth.DefaultInstance.SendPasswordResetEmailAsync(email).ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("ForgottenPassword Canceled");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                msgColor = new Color32(255, 0, 0, 255);
+                Debug.Log("ForgottenPassword Error: " + task.Exception);
+                Firebase.FirebaseException e = task.Exception.Flatten().InnerException as Firebase.FirebaseException;
+                GetErrorMessage((AuthError)e.ErrorCode);
+
+                return;
+            }
+
+            msgColor = new Color32(255, 255, 255, 255); //Sets text to white
+            loginMessageString = "Email Sent to the following email address: " + email;
+        });
+    }
+
+
+    /*
+     * Function : ChangePanel
+     * 
+     * Description : This function preps the next panel so it is fresh
+     */
+    public void ChangePanel()
+    {
+        loginMessageString = "";
+        textMeshPro_password.text = "";
+        msgColor = new Color32(255, 0, 0, 255); //Sets text to red
     }
 }

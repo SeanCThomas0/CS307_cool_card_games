@@ -6,6 +6,24 @@ using Firebase.Auth;
 
 public class MainMenu : MonoBehaviour
 {
+    /*
+     * Function : Update
+     * 
+     * Description : This function updates the LoginPage scene continuously
+     */
+    private void Update()
+    {
+        if (FirebaseAuth.DefaultInstance.CurrentUser == null)
+        {
+            SceneManager.LoadScene("Scenes/LoginPage");
+        }
+    }
+
+    /*
+     * Function : Logout
+     * 
+     * Description : This function logs out the user and returns them to the LoginPage scene
+     */
     public void Logout()
     {
         Debug.Log("Logout");
@@ -15,6 +33,11 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("Scenes/LoginPage");
     }
 
+    /*
+     * Function : ExitGame
+     * 
+     * Description : This function logs the user out and exits the application
+     */
     public void ExitGame()
     {
         Debug.Log("QUIT");
@@ -24,6 +47,13 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 
+    /*
+     * Function : ChangeScenes
+     * 
+     * Parameter : scene //The path of the scene we are changing to
+     * 
+     * Description : This function changes to the scene provided in the string
+     */
     public void ChangeScenes(string scene)
     {
         Debug.Log("Change to " + scene);

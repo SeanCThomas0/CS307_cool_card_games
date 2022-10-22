@@ -56,4 +56,8 @@ public class Card : MonoBehaviour
 
     // for Euchre
     public string faceValue;
+
+    //for solitiare
+    public bool top = false;
+    public int row;
 }
