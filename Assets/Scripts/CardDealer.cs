@@ -10,17 +10,17 @@ public class CardDealer : MonoBehaviour
     public Sprite[] hearts;
     public Sprite[] spades;
     public Sprite[] diamonds;
+
     public Sprite joker;
+
     public Sprite[] blue;
     public Sprite[] green;
     public Sprite[] red;
 
-    private Card.customDesign cardDesign;
-    private Card.cardSize cardSize;
+    public Card.cardSize cardSize;
 
-    void Start()
-    {
-        cardSize = Card.cardSize.DEFAULT;
+    void OnEnable() {
+        cardSize = (Card.cardSize) PlayerPrefs.GetInt("cardSize");
     }
 
     /*
@@ -162,6 +162,8 @@ public class CardDealer : MonoBehaviour
 
             standardDeck.Add(newCard);
         }
+
+        setSize(standardDeck);
 
         return standardDeck;
     }
@@ -338,6 +340,8 @@ public class CardDealer : MonoBehaviour
             }
         }
 
+        setSize(randomCards);
+
         return randomCards;
     }
 
@@ -470,6 +474,8 @@ public class CardDealer : MonoBehaviour
             }
         }
 
+        setSize(randomCards);
+
         return randomCards;
     }
 
@@ -513,6 +519,21 @@ public class CardDealer : MonoBehaviour
         newCard.GetComponent<Card>().numValue = 0;
         newCard.GetComponent<Card>().suitValue = Card.suit.JOKER;
         SetSprite(newCard);
+
+        // switch (cardSize) {
+        //     case Card.cardSize.SMALL:
+        //         newCard.transform.localScale = new Vector3(.5f, .5f, .5f);
+        //         cardSize = Card.cardSize.SMALL;
+        //         break;
+        //     case Card.cardSize.DEFAULT:
+        //         newCard.transform.localScale = new Vector3(.75f, .75f, .75f);
+        //         cardSize = Card.cardSize.DEFAULT;
+        //         break;
+        //     case Card.cardSize.LARGE:
+        //         newCard.transform.localScale = new Vector3(1f, 1f, 1f);
+        //         cardSize = Card.cardSize.LARGE;
+        //         break;
+        // }
 
         return newCard;
     }
@@ -669,5 +690,25 @@ public class CardDealer : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void setSize(List<GameObject> cards) {
+        for (int i = 0; i < cards.Count; i++)
+        {
+            switch (cardSize) {
+                case Card.cardSize.SMALL:
+                    cards[i].transform.localScale = new Vector3(.5f, .5f, .5f);
+                    cardSize = Card.cardSize.SMALL;
+                    break;
+                case Card.cardSize.DEFAULT:
+                    cards[i].transform.localScale = new Vector3(.75f, .75f, .75f);
+                    cardSize = Card.cardSize.DEFAULT;
+                    break;
+                case Card.cardSize.LARGE:
+                    cards[i].transform.localScale = new Vector3(1f, 1f, 1f);
+                    cardSize = Card.cardSize.LARGE;
+                    break;
+            }
+        }
     }
 }
