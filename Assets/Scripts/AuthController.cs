@@ -45,6 +45,7 @@ public class AuthController : MonoBehaviour
         textMeshPro_LoginMessage.text = loginMessageString;
         textMeshPro_ForgottenPasswordMessage.text = loginMessageString;
 
+        //Changes text to currently selected color
         if (textMeshPro_ForgottenPasswordMessage.color != msgColor)
         {
             textMeshPro_ForgottenPasswordMessage.color = msgColor;
@@ -187,10 +188,7 @@ public class AuthController : MonoBehaviour
      */
     void GetErrorMessage(AuthError errorCode)
     {
-        
-        string msg = errorCode.ToString(); //Error Code
-
-        Debug.Log("Error: " + msg);
+        Debug.Log("Error: " + errorCode.ToString());
 
         switch (errorCode)
         {
@@ -259,7 +257,7 @@ public class AuthController : MonoBehaviour
                 return;
             }
 
-            msgColor = new Color32(255, 255, 255, 255);
+            msgColor = new Color32(255, 255, 255, 255); //Sets text to white
             loginMessageString = "Email Sent to the following email address: " + email;
         });
     }
@@ -274,6 +272,6 @@ public class AuthController : MonoBehaviour
     {
         loginMessageString = "";
         textMeshPro_password.text = "";
-        msgColor = new Color32(255, 0, 0, 255);
+        msgColor = new Color32(255, 0, 0, 255); //Sets text to red
     }
 }
