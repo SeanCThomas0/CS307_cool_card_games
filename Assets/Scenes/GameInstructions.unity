@@ -480,8 +480,8 @@ MonoBehaviour:
   PokerButton: {fileID: 0}
   BruhButton: {fileID: 0}
   ExitButton: {fileID: 0}
-  TextBox1: {fileID: 0}
-  TextBox2: {fileID: 0}
+  TextBox1: {fileID: 1430259719}
+  TextBox2: {fileID: 1818059907}
 --- !u!1 &312997430
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,8 +517,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 271, y: 2.0798}
-  m_SizeDelta: {x: 256.951, y: 367.8403}
+  m_AnchoredPosition: {x: 272.333, y: 0.0000023841858}
+  m_SizeDelta: {x: 259.6169, y: 387.84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &312997432
 MonoBehaviour:
@@ -1630,8 +1630,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -8.5246, y: 1.5793}
-  m_SizeDelta: {x: -578.25, y: -55.96}
+  m_AnchoredPosition: {x: -8.524597, y: 10.163406}
+  m_SizeDelta: {x: -591.5798, y: -67.9569}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1430259721
 MonoBehaviour:
@@ -1899,8 +1899,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -8.5245, y: 2.0798}
-  m_SizeDelta: {x: 256.951, y: 367.8403}
+  m_AnchoredPosition: {x: -11.657, y: 0}
+  m_SizeDelta: {x: 250.69, y: 387.8351}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1558772515
 MonoBehaviour:
@@ -2310,8 +2310,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 271, y: 2.58}
-  m_SizeDelta: {x: -578.25, y: -55.96}
+  m_AnchoredPosition: {x: 271, y: 10.163406}
+  m_SizeDelta: {x: -591.5799, y: -67.957}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1818059909
 MonoBehaviour:
