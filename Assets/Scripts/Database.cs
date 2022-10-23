@@ -56,10 +56,12 @@ public class Database : MonoBehaviour
         userRef.Child("user_data").Child("username").SetValueAsync(user.Email.Substring(0, user.Email.IndexOf("@")));
         Debug.Log("logged event: " + user.UserId + " " + user.Email + " " + user.Email.Substring(0, user.Email.IndexOf("@")));
 
+        /* Instead of initializing all of these values to zero at the start, we are just not going to initialize them and when we first need them, we will initialize them then
         //game_statistics
-
+        
         //solitaire
         userRef.Child("game_statistics").Child("solitaire").Child("win_count").SetValueAsync(0);
+        */
     }
 
     /*
