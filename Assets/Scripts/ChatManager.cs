@@ -211,6 +211,27 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         
     }
 
+    public void checkMessage(TMP_InputField inputField) {
+        string message = inputField.text;
+        string[] bannedWords = new string[] {"ass", "bitch", "fuck", "hell", "sex", "shit"};
+
+        foreach (string word in bannedWords) {
+            string asterisk = "";
+            
+
+            if (message.Contains(word)) {
+                for (int i = 0; i < word.Length; i++)
+                {
+                    asterisk += "*";
+                }
+                message = message.Replace(word, asterisk);
+            }
+        }
+        
+        inputField.text = message;    
+        
+    }
+
 
 
     //friend list implementation
