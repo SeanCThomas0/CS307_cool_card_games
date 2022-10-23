@@ -23,6 +23,9 @@ public class ReportManager : MonoBehaviour
 
     public TMP_InputField usernameInput;
     public TMP_InputField messageInput;
+
+    [SerializeField]
+    private GameObject reportArea;
     
     //got help with the code found on https://www.mrventures.net/all-tutorials/sending-emails
     public void sendEmail() {
@@ -53,5 +56,14 @@ public class ReportManager : MonoBehaviour
         //reset input fields
         usernameInput.text = "";
         messageInput.text = "";
+    }
+
+    public void setActiveReportArea() {
+        if(reportArea.activeSelf) {
+            reportArea.SetActive(false);
+        }
+        else {
+            reportArea.SetActive(true);
+        }
     }
 }
