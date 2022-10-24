@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Firebase.Auth;
 using TMPro;
+using Firebase.Database;
 
 public class AuthController : MonoBehaviour
 {
@@ -19,6 +20,9 @@ public class AuthController : MonoBehaviour
     private string email, password;
     private Color32 msgColor;
 
+    private DatabaseReference databaseReference;
+    private FirebaseAuth auth;
+
     /*
      * Function : Start
      * 
@@ -26,6 +30,8 @@ public class AuthController : MonoBehaviour
      */
     private void Start()
     {
+        auth = FirebaseAuth.DefaultInstance;
+        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
         textMeshPro_LoginMessage = loginMessage.GetComponent<TextMeshProUGUI>();
         textMeshPro_ForgottenPasswordMessage = forgottenPasswordMessage.GetComponent<TextMeshProUGUI>();
         textMeshPro_password = passwordText.GetComponent<TextMeshProUGUI>();
@@ -153,8 +159,7 @@ public class AuthController : MonoBehaviour
             Firebase.Auth.FirebaseUser newUser = task.Result;
 
             //Add account to database
-            Database database = new Database();
-            database.CreateAccountData(newUser);
+            CreateAccountData(newUser);
 
             //FirebaseDatabase.DefaultInstance.RootReference.
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
@@ -273,5 +278,23 @@ public class AuthController : MonoBehaviour
         loginMessageString = "";
         textMeshPro_password.text = "";
         msgColor = new Color32(255, 0, 0, 255); //Sets text to red
+    }
+
+    public void CreateAccountData(Firebase.Auth.FirebaseUser user)
+    {
+        DatabaseReference userRef = databaseReference.Child("users").Child(user.UserId);
+
+        //user_data
+        Debug.Log("Database");
+        userRef.Child("user_data").Child("email").SetValueAsync(user.Email);
+        userRef.Child("user_data").Child("username").SetValueAsync(user.Email.Substring(0, user.Email.IndexOf("@")));
+        Debug.Log("logged event: " + user.UserId + " " + user.Email + " " + user.Email.Substring(0, user.Email.IndexOf("@")));
+
+        /* Instead of initializing all of these values to zero at the start, we are just not going to initialize them and when we first need them, we will initialize them then
+        //game_statistics
+        
+        //solitaire
+        userRef.Child("game_statistics").Child("solitaire").Child("win_count").SetValueAsync(0);
+        */
     }
 }

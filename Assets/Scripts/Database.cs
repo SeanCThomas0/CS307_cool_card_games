@@ -18,17 +18,6 @@ public class Database : MonoBehaviour
     private FirebaseAuth auth;
 
     /*
-     * Function : Database
-     * 
-     * Description : Database constructor
-     */
-    public Database()
-    {
-        auth = FirebaseAuth.DefaultInstance;
-        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
-    }
-
-    /*
      * Function : Start
      * 
      * Description : This function provides starting values for the scenes
