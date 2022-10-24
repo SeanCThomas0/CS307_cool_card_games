@@ -1,0 +1,5 @@
+Go Fish Game Rules
+
+	Go Fish is a game that in our application can be played with between 2 and 4 players. The goal of the game is to acquire sets of 4 cards of the same value, with the player who is able to clear their hand first winning the game. 
+	The game begins when the dealer gives 5 cards to each player in the game. Players in the game take turns asking the other players if they have a card that the user themselves has in their hand and is trying to make a set of 4 of. If a player asks another player for say a 4, and they have any number of 4’s they must give all your 4’s to that player. If a player guesses that a player has a given card correctly, that player gets to go again. If a player asks another player for a card and they don’t have it, the other player tells the requesting player to go fish, and the requesting player takes a card out of the middle pile and adds it to their hand. Once a player is told to go fish the next player has their opportunity to ask for cards. 
+	This sequence repeats until a player gets rid of all the cards in their hand by creating sets of 4, and the player who does that is declared the winner, ending the game.

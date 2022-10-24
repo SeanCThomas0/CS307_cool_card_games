@@ -1,0 +1,4 @@
+Bruh Game rules
+
+	Bruh is a card game that is unique to our application. It is a single player game where the goal is to get rid of all cards in your hand. While it is a single player game, there are computer players that can work to either trick or help you win the game. In this aspect the game is probably most similar to the card game Mao which requires a user to follow a certain set of rules to get rid of the cards in their hand. However, bruh is different in that it has different unwritten rules for the user to figure out, as well as a computer companion and computer opponent that change the dynamics of the game significantly. 
+	The game begins when the computer opponent gives the player 7 cards to start with. The computer opponent then gives the user a comment that they can either follow or ignore. The player may choose to ignore the comment as the computer opponent chooses randomly whether to give the user helpful advice.

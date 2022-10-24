@@ -1,0 +1,1 @@
+	Eventually if the user is able to work the cards around to organize them in the foundations from smallest to largest value then they win. If at a certain point no possible moves are available for the user make from the tableau or the waste then the player loses the game.

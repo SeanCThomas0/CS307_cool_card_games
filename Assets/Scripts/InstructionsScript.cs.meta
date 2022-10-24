@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 6bf67e44e31bf9245b0b0be034be355c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - UserPlayer: {fileID: 3422935818999897842, guid: d9c91f2ae19c4a540aac2a3ef35a561d, type: 3}
+  - Opponent1: {fileID: 3334726200239475319, guid: 3b155c3d4a72ca74592927231a4d1d5f, type: 3}
+  - PartnerPlayer: {fileID: 4646602269133651159, guid: 746ca449b7f051447b225719d2c3bb49, type: 3}
+  - Opponent2: {fileID: 3381804852753108483, guid: 22e8a42e876f44a4f99d30433aecb817, type: 3}
+  - CardArea: {fileID: 1077519073059653341, guid: 18ddfc909fdb6ee428fd98bd823db031, type: 3}
+  - GameManager: {fileID: 3804418893832999594, guid: 551ce12cefabf79439ad3b314267d037, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
