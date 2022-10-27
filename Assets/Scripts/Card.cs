@@ -30,11 +30,28 @@ public class Card : MonoBehaviour
         PATTERN
     }
 
-    public enum customDesign {
-        
+    public enum customDesign
+    {
+        NONE,
+        BLUE,
+        BLUE_OUTLINE,
+        BLUE_OUTLINE_PATTERN,
+        BLUE_OUTLINE_SIMPLE,
+        BLUE_PATTERN,
+        GREEN,
+        GREEN_OUTLINE,
+        GREEN_OUTLINE_PATTERN,
+        GREEN_OUTLINE_SIMPLE,
+        GREEN_PATTERN,
+        RED,
+        RED_OUTLINE,
+        RED_OUTLINE_PATTERN,
+        RED_OUTLINE_SIMPLE,
+        RED_PATTERN
     }
 
-    public enum cardSize {
+    public enum cardSize
+    {
         SMALL,
         DEFAULT,
         LARGE
@@ -43,16 +60,16 @@ public class Card : MonoBehaviour
     // values as int
     public int numValue;
     public suit suitValue;
-    
+
     // values as string
     public string numValueString; // same as 'faceValue' below, but for here again for naming consistency
     public string suitValueString;
 
     // tells whether the front is showing
-   public bool showingFront;
+    public bool showingFront;
 
     // for Go Fish
-    public bool inPool; 
+    public bool inPool;
 
     // for Euchre
     public string faceValue;
