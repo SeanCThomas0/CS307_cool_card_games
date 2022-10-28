@@ -47,7 +47,22 @@ public class Card : MonoBehaviour
         RED_OUTLINE,
         RED_OUTLINE_PATTERN,
         RED_OUTLINE_SIMPLE,
-        RED_PATTERN
+        RED_PATTERN,
+        CHECKER_BLACK,
+        CHECKER_RED,
+        BOILERMAKE_SPECIAL,
+        CANDY_CANE,
+        DADDY_DANIELS,
+        DOTS,
+        EMOJI,
+        FISH,
+        FOOD,
+        LOGO,
+        PETS,
+        PURDUE_PETE,
+        PURDUE,
+        RICK_ROLL,
+        TURKSTRA
     }
 
     public enum cardSize

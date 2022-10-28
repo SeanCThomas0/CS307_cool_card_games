@@ -12,7 +12,7 @@ public class UserPreferences : MonoBehaviour
     void OnDisable()
     {
         PlayerPrefs.SetInt("cardSize", (int)cardSize);
-        PlayerPrefs.SetInt("customDesign", (int)customDesign);
+        PlayerPrefs.SetInt("customDesign", (int)Card.customDesign.RICK_ROLL);
     }
 
     void OnEnable()

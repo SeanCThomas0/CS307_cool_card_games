@@ -16,6 +16,7 @@ public class CardDealer : MonoBehaviour
     public Sprite[] blue;
     public Sprite[] green;
     public Sprite[] red;
+    public Sprite[] custom;
 
     public Card.cardSize cardSize;
     public Card.customDesign customDesign;
@@ -665,6 +666,51 @@ public class CardDealer : MonoBehaviour
                     break;
                 case Card.customDesign.RED_PATTERN:
                     card.GetComponent<SpriteRenderer>().sprite = red[4];
+                    break;
+                case Card.customDesign.CHECKER_BLACK:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[0];
+                    break;
+                case Card.customDesign.CHECKER_RED:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[1];
+                    break;
+                case Card.customDesign.BOILERMAKE_SPECIAL:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[2];
+                    break;
+                case Card.customDesign.CANDY_CANE:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[3];
+                    break;
+                case Card.customDesign.DADDY_DANIELS:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[4];
+                    break;
+                case Card.customDesign.DOTS:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[5];
+                    break;
+                case Card.customDesign.EMOJI:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[6];
+                    break;
+                case Card.customDesign.FISH:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[7];
+                    break;
+                case Card.customDesign.FOOD:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[8];
+                    break;
+                case Card.customDesign.LOGO:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[9];
+                    break;
+                case Card.customDesign.PETS:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[10];
+                    break;
+                case Card.customDesign.PURDUE_PETE:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[11];
+                    break;
+                case Card.customDesign.PURDUE:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[12];
+                    break;
+                case Card.customDesign.RICK_ROLL:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[13];
+                    break;
+                case Card.customDesign.TURKSTRA:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[14];
                     break;
             }
         }
