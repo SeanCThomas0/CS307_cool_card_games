@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardDealerController: {fileID: 105804279}
-  deckButton: {fileID: 2052167605}
+  deckButton: {fileID: 605206589}
   bottomPos:
   - {fileID: 1365127892}
   - {fileID: 502304759}
@@ -1503,7 +1503,7 @@ GameObject:
   - component: {fileID: 754810002}
   - component: {fileID: 754810001}
   m_Layer: 5
-  m_Name: Button
+  m_Name: 1MoveFromWinButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1924,7 +1924,7 @@ GameObject:
   - component: {fileID: 799969419}
   - component: {fileID: 799969418}
   m_Layer: 5
-  m_Name: Button
+  m_Name: HintButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2994,7 +2994,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Undo
+  m_text: Hint
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4158,7 +4158,7 @@ GameObject:
   - component: {fileID: 1973913512}
   - component: {fileID: 1973913511}
   m_Layer: 5
-  m_Name: Button
+  m_Name: QuitButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

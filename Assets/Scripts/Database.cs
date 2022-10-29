@@ -143,4 +143,13 @@ public class Database : MonoBehaviour
             Debug.LogError("DeleteCurrentUser: current user is null");
         }
     }
+
+    public void ResetStatistics()
+    {
+        Firebase.Auth.FirebaseUser user = auth.CurrentUser;
+
+        DatabaseReference userRef = databaseReference.Child("users").Child(user.UserId);
+
+        userRef.Child("game_statistics").RemoveValueAsync();
+    }
 }
