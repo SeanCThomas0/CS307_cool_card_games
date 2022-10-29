@@ -708,7 +708,13 @@ public class CardDealer : MonoBehaviour
                     cards[i].transform.localScale = new Vector3(1f, 1f, 1f);
                     cardSize = Card.cardSize.LARGE;
                     break;
+                case Card.cardSize.HUGE:
+                    Debug.Log("Set to huge");
+                    cards[i].transform.localScale = new Vector3(50f, 50f, 50f);
+                    cardSize = Card.cardSize.HUGE;
+                    break;
             }
         }
     }
+    
 }

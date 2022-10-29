@@ -37,7 +37,8 @@ public class Card : MonoBehaviour
     public enum cardSize {
         SMALL,
         DEFAULT,
-        LARGE
+        LARGE,
+        HUGE
     }
 
     // values as int

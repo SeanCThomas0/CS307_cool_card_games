@@ -10,6 +10,10 @@ public class BruhManager : MonoBehaviour
 {
     public GameObject CardDealer;
     public GameObject DealButton;
+    public GameObject UserInput;
+    public GameObject CompanionText;
+    public GameObject OppText;
+    public GameObject GameText;
     
     /* Global variables */ 
     //private
@@ -27,8 +31,8 @@ public class BruhManager : MonoBehaviour
     public int playerLowerConsecCount = 0;
     public int playerBruhConsecCount = 0;
     public int playerMovesConsecCount = 0; //for playing card >3 times
-    public float userXPos = -7;
-    public float userYPos = -124;
+    public float userXPos = 300f;
+    public float userYPos = 200f;
 
     public int currentState = 0;
 
@@ -87,16 +91,16 @@ public class BruhManager : MonoBehaviour
     private void DisplayOneHand(CardPlayer currentPlayer)
     {
         float x = userXPos;
-        float z = 0;
+        float z = 100f;
 
         for (int i = 0; i < currentPlayer.getHandList().Count; i++)
         {
-            currentPlayer.peekAtCard(i).transform.position = new Vector3(x, userYPos, z);
+            currentPlayer.peekAtCard(i).transform.position = new Vector3(x + 190f, userYPos + 240f, z);
 
             currentPlayer.peekAtCard(i).SetActive(true);
 
-            x = x + 0.45f;
-            z = z - 0.1f;
+            x = x + 30f;
+            z = z - 5f;
         }
     }
 
@@ -129,6 +133,7 @@ public class BruhManager : MonoBehaviour
                     userPlayer.addToHand(pool[i]);
                 }
                 DisplayOneHand(userPlayer);
+                currentState = 1;
             } else if(currentState == 1) {
                 
             } else if(currentState == 2) {
@@ -154,8 +159,9 @@ public class BruhManager : MonoBehaviour
     {
         Debug.Log("Bruh game Starting");
         cardDealer = CardDealer.GetComponent<CardDealer>();
+        cardDealer.cardSize = Card.cardSize.HUGE;
         pool = cardDealer.RandomCards(52, 1, 13, true, true, true, true);
-        
+       
         foreach(GameObject cards in pool) {
             if(cards.GetComponent<Card>().suitValue == Card.suit.CLUBS) {
                 cards.GetComponent<Card>().suitValueString = "Clubs";
@@ -166,6 +172,7 @@ public class BruhManager : MonoBehaviour
             } else if(cards.GetComponent<Card>().suitValue == Card.suit.SPADES) {
                 cards.GetComponent<Card>().suitValueString = "Spades";
             }
+            
         }
 
         userPlayer = new CardPlayer("1");
