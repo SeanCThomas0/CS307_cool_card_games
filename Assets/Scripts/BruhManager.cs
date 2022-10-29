@@ -8,7 +8,8 @@ using UnityEngine.SceneManagement;
 
 public class BruhManager : MonoBehaviour
 {
-
+    public GameObject CardDealer;
+    public GameObject DealButton;
     
     /* Global variables */ 
     //private
@@ -26,6 +27,8 @@ public class BruhManager : MonoBehaviour
     public int playerLowerConsecCount = 0;
     public int playerBruhConsecCount = 0;
     public int playerMovesConsecCount = 0; //for playing card >3 times
+    public float userXPos = -7;
+    public float userYPos = -124;
 
     public int currentState = 0;
 
@@ -81,14 +84,30 @@ public class BruhManager : MonoBehaviour
         }
     }
 
+    private void DisplayOneHand(CardPlayer currentPlayer)
+    {
+        float x = userXPos;
+        float z = 0;
+
+        for (int i = 0; i < currentPlayer.getHandList().Count; i++)
+        {
+            currentPlayer.peekAtCard(i).transform.position = new Vector3(x, userYPos, z);
+
+            currentPlayer.peekAtCard(i).SetActive(true);
+
+            x = x + 0.45f;
+            z = z - 0.1f;
+        }
+    }
 
     /* abstracted methods */
     public bool checkForWinner() { 
-        if(userPlayer.getHandList.Count >= 20) {
+        Debug.Log("Check winner");
+        if(userPlayer.getHandList().Count >= 20) {
             gameEnded = true;
             playerWin = false;
             return true;
-        } else if(userPlayer.getHandList.Count <= 0 || playerBruhConsecCount == 4) {
+        } else if((userPlayer.getHandList().Count <= 0 || playerBruhConsecCount == 4) && currentState != 0) {
             gameEnded = true;
             playerWin = true;
             if(playerBruhConsecCount == 4) {
@@ -102,9 +121,14 @@ public class BruhManager : MonoBehaviour
 
     public void gameLoop() {
         bool finished = checkForWinner();
-        while(finished == false) {
+        if(finished == false) {
             if(currentState == 0) {
-
+                //deal user their cards
+                Debug.Log("Player dealt cards");
+                for(int i = 0; i < 7; i++) {
+                    userPlayer.addToHand(pool[i]);
+                }
+                DisplayOneHand(userPlayer);
             } else if(currentState == 1) {
                 
             } else if(currentState == 2) {
@@ -115,6 +139,7 @@ public class BruhManager : MonoBehaviour
                 
             }
         }
+        
     }
 
     IEnumerator  sleepFunction() {
@@ -128,7 +153,7 @@ public class BruhManager : MonoBehaviour
     void Start()
     {
         Debug.Log("Bruh game Starting");
-
+        cardDealer = CardDealer.GetComponent<CardDealer>();
         pool = cardDealer.RandomCards(52, 1, 13, true, true, true, true);
         
         foreach(GameObject cards in pool) {
@@ -143,6 +168,7 @@ public class BruhManager : MonoBehaviour
             }
         }
 
+        userPlayer = new CardPlayer("1");
         currentState = 0;
     }
     
