@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Firebase.Auth;
+using Firebase.Database;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -59,6 +62,12 @@ public class GoFishLogic : MonoBehaviour
     private bool gaveToBot;
 
     private int indexInHand;
+
+    private DatabaseReference databaseReference;
+    private FirebaseAuth auth;
+    private int curUserWinCount = 0;
+    private int curUserSetCount = 0;
+    private bool updatedDatabase;
 
     // Start is called before the first frame update
     void Start()
@@ -148,6 +157,47 @@ public class GoFishLogic : MonoBehaviour
 
         // display pool
         DisplayPool();
+
+        // Set Firebase authenticator and database reference
+        auth = FirebaseAuth.DefaultInstance;
+        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
+
+        // Retrieve current user game statistics
+        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/win_count").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("win_count = 0");
+            }
+            if (task.IsFaulted)
+            {
+                Debug.Log("win_count = 0");
+            }
+            else
+            {
+                curUserWinCount = Int32.Parse(task.Result.Value.ToString());
+                Debug.Log("win_count = " + curUserWinCount);
+            }
+        });
+
+        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/set_count").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("set_count = 0");
+            }
+            if (task.IsFaulted)
+            {
+                Debug.Log("set_count = 0");
+            }
+            else
+            {
+                curUserSetCount = Int32.Parse(task.Result.Value.ToString());
+                Debug.Log("set_count = " + curUserSetCount);
+            }
+        });
+
+        updatedDatabase = false;
     }
 
     // Update is called once per frame
@@ -307,6 +357,13 @@ public class GoFishLogic : MonoBehaviour
 
                 for (int i = 1; i < players.Length; i++)
                 {
+                    //Updates current user's set count
+                    if (players[i].GetComponent<Player>().userID.Equals("1") && !updatedDatabase)
+                    {
+                        curUserSetCount += players[i].GetComponent<Player>().numOfSetsOfFour;
+                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/set_count").SetValueAsync(curUserSetCount);
+                    }
+
                     if (players[i].GetComponent<Player>().numOfSetsOfFour > maxPlayer.GetComponent<Player>().numOfSetsOfFour)
                     {
                         maxPlayer = players[i];
@@ -317,9 +374,16 @@ public class GoFishLogic : MonoBehaviour
                 {
                     if (players[i].GetComponent<Player>().numOfSetsOfFour >= maxPlayer.GetComponent<Player>().numOfSetsOfFour)
                     {
+                        //updates current user's win count
+                        if (players[i].GetComponent<Player>().userID.Equals("1") && !updatedDatabase)
+                        {
+                            databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/win_count").SetValueAsync(++curUserWinCount);
+                        }
                         winningPlayers.Add(players[i]);
                     }
                 }
+                //database has been updated and doesn't need to be updated again this game
+                updatedDatabase = true;
 
                 switch (winningPlayers.Count)
                 {

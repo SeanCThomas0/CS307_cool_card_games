@@ -15,7 +15,7 @@ public class AuthController : MonoBehaviour
     TextMeshProUGUI textMeshPro_ForgottenPasswordMessage;
     public GameObject passwordText;
     TextMeshProUGUI textMeshPro_password;
-
+    
     private string loginMessageString;
     private string email, password;
     private Color32 msgColor;
@@ -267,7 +267,6 @@ public class AuthController : MonoBehaviour
         });
     }
 
-
     /*
      * Function : ChangePanel
      * 
@@ -280,6 +279,13 @@ public class AuthController : MonoBehaviour
         msgColor = new Color32(255, 0, 0, 255); //Sets text to red
     }
 
+    /*
+     * Function : CreateAccountData
+     * 
+     * Parameter : user //The firebase user we are creating account data for
+     * 
+     * Description : This function preps the next panel so it is fresh
+     */
     public void CreateAccountData(Firebase.Auth.FirebaseUser user)
     {
         DatabaseReference userRef = databaseReference.Child("users").Child(user.UserId);
