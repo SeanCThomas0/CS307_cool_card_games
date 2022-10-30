@@ -28,6 +28,9 @@ public class Rankings : MonoBehaviour
     public GameObject curUserStat;
     TextMeshProUGUI curUserStatText;
 
+    string curUsername = null;
+    string curUserID = null;
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -43,11 +46,13 @@ public class Rankings : MonoBehaviour
 
     public void RankingsButton(string path)
     {
+        Debug.Log("RankingsButton");
         StartCoroutine(LoadRankingData(path));
     }
 
     private IEnumerator LoadRankingData(string path)
     {
+        Debug.Log("LoadRankingData");
         if (auth == null)
         {
             auth = FirebaseAuth.DefaultInstance;
@@ -60,29 +65,14 @@ public class Rankings : MonoBehaviour
         curUserStatText = curUserStat.GetComponent<TextMeshProUGUI>();
 
         //Get the current user's username
-        string curUsername = null;
-        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("user_data/username").GetValueAsync().ContinueWith(task =>
-        {
-            if (task.IsCanceled)
-            {
-                Debug.Log("Rankings.cs curUsername canceled");
-            }
-            if (task.IsFaulted)
-            {
-                Debug.Log("Rankings.cs curUsername faulted");
-            }
-            else
-            {
-                curUsername = task.Result.Value.ToString();
-            }
-        });
+        curUsername = auth.CurrentUser.DisplayName;
+        curUserID = auth.CurrentUser.UserId;
 
         //Get a list of all children with existing statistics
         var task = databaseReference.Child("users").OrderByChild("game_statistics/" + path).GetValueAsync();
 
         yield return new WaitUntil(predicate: () => task.IsCompleted);
-
-
+        
         if (task.Exception != null)
         {
             Debug.LogWarning("Failed to grab ranking data: " + task.Exception.ToString());
@@ -97,6 +87,7 @@ public class Rankings : MonoBehaviour
             }
 
             int order = 1; //Order of the rankings elements
+            bool currentUserFound = false;
 
             foreach (DataSnapshot childSnapshot in snapshot.Children.Reverse<DataSnapshot>())
             {
@@ -118,6 +109,7 @@ public class Rankings : MonoBehaviour
                     curUserRankingText.text = order.ToString();
                     curUserUsernameText.text = username;
                     curUserStatText.text = stat;
+                    currentUserFound = true;
                 }
 
                 GameObject rankingsBoardElement = Instantiate(rankingsElement, rankingsContent);
@@ -127,7 +119,7 @@ public class Rankings : MonoBehaviour
             }
 
             //If the current user wasn't in the childSnapshots, set the current user data text to null values
-            if (curUserUsernameText.Equals(curUsername))
+            if (!currentUserFound)
             {
                 curUserRankingText.text = "n/a";
                 curUserUsernameText.text = curUsername;

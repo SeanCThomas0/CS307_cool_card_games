@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Firebase.Auth;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class MainMenu : MonoBehaviour
 {

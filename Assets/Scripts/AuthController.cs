@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using Firebase.Auth;
 using TMPro;
 using Firebase.Database;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class AuthController : MonoBehaviour
 {
@@ -122,6 +123,28 @@ public class AuthController : MonoBehaviour
             
             Firebase.Auth.FirebaseUser newUser = task.Result;
             Debug.LogFormat("User signed in successfully: {0} ({1})", newUser.DisplayName, newUser.UserId);
+
+            if (FirebaseAuth.DefaultInstance.CurrentUser.DisplayName.Equals(""))
+            {
+                Firebase.Auth.UserProfile profile = new Firebase.Auth.UserProfile
+                {
+                    DisplayName = newUser.Email.Substring(0, newUser.Email.IndexOf("@")),
+                };
+                newUser.UpdateUserProfileAsync(profile).ContinueWith(task => {
+                    if (task.IsCanceled)
+                    {
+                        Debug.LogError("UpdateUserProfileAsync was canceled.");
+                        return;
+                    }
+                    if (task.IsFaulted)
+                    {
+                        Debug.LogError("UpdateUserProfileAsync encountered an error: " + task.Exception);
+                        return;
+                    }
+
+                    Debug.Log("User profile updated successfully.");
+                });
+            }
         });
 
         print(FirebaseAuth.DefaultInstance.CurrentUser);
@@ -294,7 +317,28 @@ public class AuthController : MonoBehaviour
         Debug.Log("Database");
         userRef.Child("user_data").Child("email").SetValueAsync(user.Email);
         userRef.Child("user_data").Child("username").SetValueAsync(user.Email.Substring(0, user.Email.IndexOf("@")));
-        Debug.Log("logged event: " + user.UserId + " " + user.Email + " " + user.Email.Substring(0, user.Email.IndexOf("@")));
+
+        //update user profile in authenticator
+        Firebase.Auth.UserProfile profile = new Firebase.Auth.UserProfile
+        {
+            DisplayName = user.Email.Substring(0, user.Email.IndexOf("@")),
+        };
+        user.UpdateUserProfileAsync(profile).ContinueWith(task => {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("UpdateUserProfileAsync was canceled.");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                Debug.LogError("UpdateUserProfileAsync encountered an error: " + task.Exception);
+                return;
+            }
+
+            Debug.Log("User profile updated successfully.");
+        });
+
+        Debug.Log("logged event: " + user.UserId + " " + user.Email + " " + user.DisplayName);
 
         /* Instead of initializing all of these values to zero at the start, we are just not going to initialize them and when we first need them, we will initialize them then
         //game_statistics
