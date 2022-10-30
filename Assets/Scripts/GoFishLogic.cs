@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
 public class GoFishLogic : MonoBehaviour
 {
     public GameObject cardDealerController; // to get CardDealer
@@ -69,9 +70,13 @@ public class GoFishLogic : MonoBehaviour
     private int curUserSetCount = 0;
     private bool updatedDatabase;
 
+
+
     // Start is called before the first frame update
     void Start()
     {
+
+
         // get a randomized standard deck of cards
         cardDealer = cardDealerController.GetComponent<CardDealer>();
         pool = cardDealer.RandomCards(52);
