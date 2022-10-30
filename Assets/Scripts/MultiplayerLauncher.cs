@@ -105,6 +105,7 @@ public class MultiplayerLauncher : MonoBehaviourPunCallbacks
 
     public void joinGoFish() {
                PhotonNetwork.JoinOrCreateRoom("goFish", new RoomOptions { MaxPlayers = 4 },null);
+               PhotonNetwork.LoadLevel(7);
     }
     public void joinEuch() {
                PhotonNetwork.JoinOrCreateRoom("euch", new RoomOptions { MaxPlayers = 4 },null);
