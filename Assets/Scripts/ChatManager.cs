@@ -224,7 +224,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                 {
                     asterisk += "*";
                 }
-                message = message.Replace(word, asterisk);
+                message = message.Replace(word.Replace(" ", "").Replace(".", ""), asterisk);
             }
         }
         
