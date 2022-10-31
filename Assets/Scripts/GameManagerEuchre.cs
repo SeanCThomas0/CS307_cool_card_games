@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Firebase.Auth;
+using Firebase.Database;
 
 public class GameManagerEuchre : MonoBehaviour
 {
@@ -588,7 +590,12 @@ public class GameManagerEuchre : MonoBehaviour
     public List<GameObject> pool;
     public List<GameObject> pool1;
     public List<GameObject> pool2;
-    
+
+    public bool databaseUpdated; //Whether or not the database has been updated after the game ends
+    private DatabaseReference databaseReference;
+    private FirebaseAuth auth;
+    private int curUserWinCount = 0;
+    private int curUserTrickCount = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -690,6 +697,43 @@ public class GameManagerEuchre : MonoBehaviour
             }
         }
         currentState = -1;
+
+        auth = FirebaseAuth.DefaultInstance;
+        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
+        databaseUpdated = false;
+        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/win_count").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("win_count = 0");
+            }
+            if (task.IsFaulted)
+            {
+                Debug.Log("win_count = 0");
+            }
+            else
+            {
+                curUserWinCount = Int32.Parse(task.Result.Value.ToString());
+                Debug.Log("win_count = " + curUserWinCount);
+            }
+        });
+
+        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/trick_count").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("trick_count = 0");
+            }
+            if (task.IsFaulted)
+            {
+                Debug.Log("trick_count = 0");
+            }
+            else
+            {
+                curUserTrickCount = Int32.Parse(task.Result.Value.ToString());
+                Debug.Log("trick_count = " + curUserTrickCount);
+            }
+        });
     }
 
     private bool getJackValue(string trumpSuit, GameObject jack) {
@@ -1055,6 +1099,8 @@ public class GameManagerEuchre : MonoBehaviour
                             playerQueue.Enqueue(currentPlayer);
                             currentPlayer = playerQueue.Dequeue();
                         }
+                        //update database with trick count
+                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/trick_count").SetValueAsync(++curUserTrickCount);
                     } else {
                         twoTrickScore++;
                         Debug.Log("Team two wins the trick");
@@ -1121,6 +1167,14 @@ public class GameManagerEuchre : MonoBehaviour
             string message = "Team 1 wins!";
             GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Team 1 wins!";
             Debug.Log(message);
+
+            //Update win_count in database
+            if (!databaseUpdated)
+            {
+                databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/win_count").SetValueAsync(++curUserWinCount);
+                databaseUpdated = true;
+            }
+
             return true;
         } else if(teamTwoScore >= 10) {
             string message = "Team 2 wins!";

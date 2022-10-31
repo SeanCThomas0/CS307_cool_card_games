@@ -38,12 +38,6 @@ public class Rankings : MonoBehaviour
         databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void RankingsButton(string path)
     {
         Debug.Log("RankingsButton");
