@@ -34,7 +34,7 @@ public class MultiplayerLauncher : MonoBehaviourPunCallbacks
         {
             // #Critical
             // this makes sure we can use PhotonNetwork.LoadLevel() on the master client and all clients in the same room sync their level automatically
-            PhotonNetwork.AutomaticallySyncScene = true;
+            //PhotonNetwork.AutomaticallySyncScene = true;
         }
 
 
@@ -100,12 +100,22 @@ public class MultiplayerLauncher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
+
     }
 
     public void joinGoFish() {
+               Debug.Log("joinGoFish() called");
                PhotonNetwork.JoinOrCreateRoom("goFish", new RoomOptions { MaxPlayers = 4 },null);
+
+
                PhotonNetwork.LoadLevel(7);
+               
+               if (PhotonNetwork.InRoom) {
+                Debug.Log("User is in a room");
+               }
+               else {
+                Debug.Log("User NOT in a room");
+               }
     }
     public void joinEuch() {
                PhotonNetwork.JoinOrCreateRoom("euch", new RoomOptions { MaxPlayers = 4 },null);
@@ -117,6 +127,11 @@ public class MultiplayerLauncher : MonoBehaviourPunCallbacks
                PhotonNetwork.JoinOrCreateRoom("bruh", new RoomOptions { MaxPlayers = 4 },null);
     }
 
+    public override void OnJoinRoomFailed(short returnCode,string message ) {
+        Debug.Log("Join room FAILED :(");
+    }
+
+    
 
 }
 

@@ -6,13 +6,19 @@ using Photon.Realtime;
 using ExitGames.Client.Photon;
 
 
+
 public class GoFishMultiplayer : MonoBehaviourPun
 
 {
     [SerializeField]
     public GameObject GoFishLogic;
     public List<GameObject> curPool;
+
+
+    Dictionary<int,string> dictionary_name = new Dictionary<int,string>();
+
     // Start is called before the first frame update
+
     void Start()
     {
         curPool = GoFishLogic.GetComponent<GoFishLogic>().pool;

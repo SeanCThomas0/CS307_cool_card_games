@@ -11,6 +11,7 @@ using Photon.Realtime;
 using ExitGames.Client.Photon;
 
 
+
 public class GoFishLogic : MonoBehaviourPun
 {
     public GameObject cardDealerController; // to get CardDealer
@@ -169,7 +170,9 @@ public class GoFishLogic : MonoBehaviourPun
         indexInHand = -1;
 
         // display pool
-        photonView.RPC("updatePool",RpcTarget.Others,pool);
+  
+
+
         DisplayPool();
 
         // Set Firebase authenticator and database reference
@@ -217,6 +220,12 @@ public class GoFishLogic : MonoBehaviourPun
     // Update is called once per frame
     void Update()
     {
+        if(PhotonNetwork.InRoom) {
+                    //photonView.RPC("updatePool",RpcTarget.Others,pool);
+        }
+
+
+        photonView.RPC("updatePool",RpcTarget.Others,pool);
         // updates text
         bool containBotRequest = false;
 
