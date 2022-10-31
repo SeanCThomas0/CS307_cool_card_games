@@ -2322,10 +2322,13 @@ MonoBehaviour:
   playerLowerConsecCount: 0
   playerBruhConsecCount: 0
   playerMovesConsecCount: 0
+  turnsSinceCompHelp: 3
   userXPos: -7
   userYPos: -124
+  currentInput: 
   currentState: 0
   pool: []
+  lastCardPlayed: {fileID: 0}
 --- !u!1 &1928740491
 GameObject:
   m_ObjectHideFlags: 0

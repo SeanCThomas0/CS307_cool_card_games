@@ -24,6 +24,7 @@ public class BruhManager : MonoBehaviour
     public bool sleepRunning = false;
     public bool playerWin = false;
     public bool gameEnded = false;
+    public static bool diff = false;
 
     public int playerColorConsecCount = 0;
     public int playerNumberConsecCount = 0;
@@ -31,13 +32,18 @@ public class BruhManager : MonoBehaviour
     public int playerLowerConsecCount = 0;
     public int playerBruhConsecCount = 0;
     public int playerMovesConsecCount = 0; //for playing card >3 times
+    public int turnsSinceCompHelp = 3;
     public float userXPos = 300f;
     public float userYPos = 200f;
+    public string currentInput;
 
     public int currentState = 0;
 
     public CardPlayer userPlayer;
     public List<GameObject> pool;
+    public GameObject lastCardPlayed;
+    public ComputerOpp opponent;
+    public ComputerComp companion;
 
     /* User player class */
     public class CardPlayer {
@@ -88,6 +94,38 @@ public class BruhManager : MonoBehaviour
         }
     }
 
+    public class ComputerOpp{
+        private bool difficult;
+        private int turnsCount;
+        public GameObject OppText;
+
+        public ComputerOpp(bool difficult, GameObject OppText) {
+            this.difficult = diff;
+            this.turnsCount = 0;
+            this.OppText = OppText;
+        }
+
+        public void displayOppMessage() {
+            OppText.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opp moves count: " + turnsCount;
+            turnsCount++;
+        }
+    }
+
+    public class ComputerComp{
+        private int recs;
+        public GameObject CompanionText;
+
+        public ComputerComp(GameObject CompanionText) {
+            this.recs = 0;
+            this.CompanionText = CompanionText;
+        }
+
+        public void displayCompMessage() {
+            CompanionText.GetComponent<TMPro.TextMeshProUGUI>().text = "companion recommendations count: " + recs;
+            recs++;
+        }
+    }
+
     private void DisplayOneHand(CardPlayer currentPlayer)
     {
         float x = userXPos;
@@ -129,19 +167,40 @@ public class BruhManager : MonoBehaviour
             if(currentState == 0) {
                 //deal user their cards
                 Debug.Log("Player dealt cards");
+                GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Player cards dealt";
                 for(int i = 0; i < 7; i++) {
                     userPlayer.addToHand(pool[i]);
                 }
                 DisplayOneHand(userPlayer);
                 currentState = 1;
             } else if(currentState == 1) {
-                
+                //have computer opponent give their message
+                opponent.displayOppMessage();
+                currentState = 2;
             } else if(currentState == 2) {
-                
+                //wait for user input
+                if(!currentInput.Equals("empty")) {
+                    Debug.Log("recieved user input" + currentInput);
+                    if(currentInput.Equals("help")) {
+                        if(turnsSinceCompHelp >= 3) {
+                            currentState = 3;
+                        } else {
+                            Debug.Log("Companion is on cooldown");
+                        }
+                    } else {
+                        currentState = 4;
+                    }
+                }
             } else if(currentState == 3) {
-                
+                //if input asks for companion advice:
+                //give companion advice then reprompt the user to make a move
+                companion.displayCompMessage();
+                currentState = 2;
             } else if(currentState == 4) {
-                
+                //evaluate user input 
+                //if user input is valid accept or reject move and update counters
+                //once finished go back to state 1
+                currentState = 1;
             }
         }
         
@@ -159,6 +218,8 @@ public class BruhManager : MonoBehaviour
     {
         Debug.Log("Bruh game Starting");
         cardDealer = CardDealer.GetComponent<CardDealer>();
+        opponent = new ComputerOpp(false, OppText);
+        companion = new ComputerComp(CompanionText);
         cardDealer.cardSize = Card.cardSize.HUGE;
         pool = cardDealer.RandomCards(52, 1, 13, true, true, true, true);
        
@@ -190,5 +251,20 @@ public class BruhManager : MonoBehaviour
             sleepRunning = true;
             StartCoroutine(sleepFunction());
         }
+    }
+
+    public void OnEnter(string userInput) {
+        Debug.Log("User entered " + userInput); 
+        currentInput = userInput;
+    }
+
+    public void DeckClick() {
+        Debug.Log("deck draw"); 
+        currentInput = "deck draw";
+    }
+
+    public void DifficultMode() {
+        diff = true;
+        currentInput = "Button";
     }
 }
