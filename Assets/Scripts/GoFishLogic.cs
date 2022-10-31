@@ -33,6 +33,7 @@ public class GoFishLogic : MonoBehaviourPun
     public GameObject quitButton;
     public GameObject exitButton;
     public GameObject botDiffButtonText;
+    
 
     private enum gameStates
     {
@@ -73,11 +74,15 @@ public class GoFishLogic : MonoBehaviourPun
     private int curUserSetCount = 0;
     private bool updatedDatabase;
 
+    // SEAN MULTIPLAYER VARS
+
+
 
 
     // Start is called before the first frame update
     void Start()
     {
+        PhotonView photonView = PhotonView.Get(this);
 
 
         // get a randomized standard deck of cards
@@ -164,6 +169,7 @@ public class GoFishLogic : MonoBehaviourPun
         indexInHand = -1;
 
         // display pool
+        photonView.RPC("updatePool",RpcTarget.Others,pool);
         DisplayPool();
 
         // Set Firebase authenticator and database reference

@@ -7,11 +7,15 @@ using ExitGames.Client.Photon;
 
 
 public class GoFishMultiplayer : MonoBehaviourPun
+
 {
+    [SerializeField]
+    public GameObject GoFishLogic;
+    public List<GameObject> curPool;
     // Start is called before the first frame update
     void Start()
     {
-        
+        curPool = GoFishLogic.GetComponent<GoFishLogic>().pool;
     }
 
     // Update is called once per frame
@@ -24,22 +28,11 @@ public class GoFishMultiplayer : MonoBehaviourPun
 
     }
 
-    //public const byte UpDateGoFishPoolCode = 1;
-
-
-
-
-    private void SendGoFishPoolEvent()
+    [PunRPC]
+    void updatePool(List<GameObject> guh)
     {
-        
+        curPool = guh;
+        //wha
     }
 
-
-    public void OnEvent(EventData photonEvent) {
-    byte eventCode = photonEvent.Code;
-
-        if (eventCode == UpDateGoFishPoolCode) {
-
-        }
-    }
 }
