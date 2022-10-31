@@ -673,7 +673,7 @@ public class CardDealer : MonoBehaviour
                 case Card.customDesign.CHECKER_RED:
                     card.GetComponent<SpriteRenderer>().sprite = custom[1];
                     break;
-                case Card.customDesign.BOILERMAKE_SPECIAL:
+                case Card.customDesign.BOILERMAKER_SPECIAL:
                     card.GetComponent<SpriteRenderer>().sprite = custom[2];
                     break;
                 case Card.customDesign.CANDY_CANE:
