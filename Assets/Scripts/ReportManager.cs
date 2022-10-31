@@ -58,6 +58,7 @@ public class ReportManager : MonoBehaviour
         messageInput.text = "";
     }
 
+    //toggle the visibility of the report area
     public void setActiveReportArea() {
         if(reportArea.activeSelf) {
             reportArea.SetActive(false);

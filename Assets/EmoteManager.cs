@@ -23,6 +23,7 @@ public class EmoteManager : MonoBehaviour
     [SerializeField]
     private GameObject currentEmote;
 
+    //toggle the visibility of the emote interface
     public void setActiveEmoteInterface() {
         if(emoteInterface.activeSelf) {
             emoteInterface.SetActive(false);
@@ -32,11 +33,14 @@ public class EmoteManager : MonoBehaviour
         }
     }
 
+    //display selected emote
     public void sendEmote(GameObject emoteButton) {
         emoteInterface.SetActive(false);
         currentEmote.SetActive(true);
+        //change blank image to display emote with correct size
         currentEmote.GetComponent<Image>().sprite = emoteButton.GetComponent<Image>().sprite;
         currentEmote.GetComponent<RectTransform>().sizeDelta = new Vector2(emoteButton.GetComponent<RectTransform>().rect.width, emoteButton.GetComponent<RectTransform>().rect.height);
+        //call pass time to display emote for 2 seconds before disappearing
         Invoke("passTime", 2);
         
     }

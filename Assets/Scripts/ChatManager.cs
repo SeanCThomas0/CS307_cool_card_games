@@ -7,6 +7,7 @@ using Photon.Chat;
 using Photon.Pun;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
 /*
@@ -211,6 +212,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         
     }
 
+    //check if message contains inappropriate words and replace them with asterisks
     public void checkMessage(TMP_InputField inputField) {
         string message = inputField.text;
         string[] bannedWords = new string[] {"ass", "bitch", "fuck", "hell", "sex", "shit"};
@@ -220,6 +222,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             
 
             if (message.Contains(word)) {
+                //determine length of asterisk string
                 for (int i = 0; i < word.Length; i++)
                 {
                     asterisk += "*";
@@ -228,6 +231,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             }
         }
         
+        //set input field text to new message with asterisks
         inputField.text = message;    
         
     }
@@ -274,6 +278,11 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public void sendFriendMessage(GameObject button) {
         Debug.Log(button.GetComponentInChildren<TMP_Text>().text);
         toInput.text = button.GetComponentInChildren<TMP_Text>().text;
+    }
+
+    //change to main menu scene
+    public void changeToMainMenuScene() {
+        SceneManager.LoadScene("MainMenu");
     }
 
 

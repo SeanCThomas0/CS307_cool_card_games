@@ -317,5 +317,11 @@ public class UserPreferences : MonoBehaviour
                 checkUnlocked.SetActive(true);
                 break;
         }
+
+        
+    }
+    public void setResolution() {
+        Screen.SetResolution(640, 480, FullScreenMode.MaximizedWindow);
+        Debug.Log("Change Resolution");
     }
 }
