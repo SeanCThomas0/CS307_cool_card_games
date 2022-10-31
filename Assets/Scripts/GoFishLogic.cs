@@ -6,14 +6,17 @@ using Firebase.Database;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
 
-public class GoFishLogic : MonoBehaviour
+public class GoFishLogic : MonoBehaviourPun
 {
     public GameObject cardDealerController; // to get CardDealer
     private CardDealer cardDealer;
 
-    private List<GameObject> pool;
+    public List<GameObject> pool;
     private Queue<GameObject> queue;
 
     int numOfPlayers;
