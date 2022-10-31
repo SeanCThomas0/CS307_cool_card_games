@@ -50,7 +50,7 @@ public class Card : MonoBehaviour
         RED_PATTERN,
         CHECKER_BLACK,
         CHECKER_RED,
-        BOILERMAKE_SPECIAL,
+        BOILERMAKER_SPECIAL,
         CANDY_CANE,
         DADDY_DANIELS,
         DOTS,
