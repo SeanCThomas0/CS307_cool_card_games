@@ -14,8 +14,8 @@ public class UserPreferences : MonoBehaviour
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
 
-    public Card.cardSize cardSize = Card.cardSize.DEFAULT;
-    public Card.customDesign customDesign = Card.customDesign.GREEN;
+    public Card.cardSize cardSize;
+    public Card.customDesign customDesign;
 
     public GameObject cardSizeButtonText;
     public GameObject checkDefault;
@@ -24,33 +24,8 @@ public class UserPreferences : MonoBehaviour
     public GameObject errorText;
     private bool changeFailed;
 
-    // void OnDisable()
-    // {
-    //     PlayerPrefs.SetInt("cardSize", (int)cardSize);
-    //     PlayerPrefs.SetInt("customDesign", (int)customDesign);
-    // }
-
-    // void OnEnable()
-    // {
-    //     cardSize = (Card.cardSize)PlayerPrefs.GetInt("cardSize");
-    //     customDesign = (Card.customDesign)PlayerPrefs.GetInt("customDesign");
-    // }
-
     void Start()
     {
-        switch (cardSize)
-        {
-            case Card.cardSize.SMALL:
-                cardSizeButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Small";
-                break;
-            case Card.cardSize.DEFAULT:
-                cardSizeButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Default";
-                break;
-            case Card.cardSize.LARGE:
-                cardSizeButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Large";
-                break;
-        }
-
         auth = FirebaseAuth.DefaultInstance;
         databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
 
@@ -63,12 +38,6 @@ public class UserPreferences : MonoBehaviour
     {
         PlayerPrefs.SetInt("cardSize", (int)cardSize);
         PlayerPrefs.SetInt("customDesign", (int)customDesign);
-    }
-
-    void OnEnable()
-    {
-        cardSize = (Card.cardSize)PlayerPrefs.GetInt("cardSize");
-        customDesign = (Card.customDesign)PlayerPrefs.GetInt("customDesign");
     }
 
     private async void RetrieveVarsFromFriebase()
@@ -109,10 +78,23 @@ public class UserPreferences : MonoBehaviour
                 {
                     cardSize = (Card.cardSize)Int32.Parse(task.Result.Value.ToString());
 
-                    Debug.Log("card sizee =" + cardSize);
+                    Debug.Log("card size =" + cardSize);
                 }
             }
         });
+
+        switch (cardSize)
+        {
+            case Card.cardSize.SMALL:
+                cardSizeButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Small";
+                break;
+            case Card.cardSize.DEFAULT:
+                cardSizeButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Default";
+                break;
+            case Card.cardSize.LARGE:
+                cardSizeButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Large";
+                break;
+        }
     }
 
     // private async void DetermineUnlock()
@@ -198,17 +180,17 @@ public class UserPreferences : MonoBehaviour
             case Card.cardSize.SMALL:
                 cardSize = Card.cardSize.DEFAULT;
                 cardSizeButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Default";
-                await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/selected_design").SetValueAsync(1);
+                await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/card_size").SetValueAsync(1);
                 break;
             case Card.cardSize.DEFAULT:
                 cardSize = Card.cardSize.LARGE;
                 cardSizeButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Large";
-                await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/selected_design").SetValueAsync(2);
+                await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/card_size").SetValueAsync(2);
                 break;
             case Card.cardSize.LARGE:
                 cardSize = Card.cardSize.SMALL;
                 cardSizeButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Small";
-                await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/selected_design").SetValueAsync(0);
+                await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/card_size").SetValueAsync(0);
                 break;
         }
     }
