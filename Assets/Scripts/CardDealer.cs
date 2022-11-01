@@ -21,11 +21,11 @@ public class CardDealer : MonoBehaviour
     public Card.cardSize cardSize;
     public Card.customDesign customDesign;
 
-    void OnEnable()
-    {
-        cardSize = (Card.cardSize)PlayerPrefs.GetInt("cardSize");
-        customDesign = (Card.customDesign)PlayerPrefs.GetInt("customDesign");
-    }
+    // void OnEnable()
+    // {
+    //     cardSize = (Card.cardSize)PlayerPrefs.GetInt("cardSize");
+    //     customDesign = (Card.customDesign)PlayerPrefs.GetInt("customDesign");
+    // }
 
     /*
     returns a standard deck of 52 cards
