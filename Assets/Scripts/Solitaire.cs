@@ -64,7 +64,6 @@ public class Solitaire : MonoBehaviour
                 card.transform.position = new Vector3(bottomPos[i].transform.position.x, bottomPos[i].transform.position.y - yOffset, bottomPos[i].transform.position.z - zOffset);
                 
                 // card.GetComponent<Selectable>().row = i;
-                Debug.Log("got here");
                 card.SetActive(true);
                 if (card != playSpaces[i][playSpaces[i].Count - 1]) {
                     cardDealer.ShowBackKeepValue(card, Card.backColor.BLUE, Card.backDesign.OUTLINE_SIMPLE_PATTERN);
@@ -87,9 +86,7 @@ public class Solitaire : MonoBehaviour
     void SolitaireSort() {
         for (int i = 0; i < 7; i++) {
             for (int j = i; j < 7; j++) {
-                Debug.Log(deck.Last<GameObject>().GetComponent<Card>().numValue);
                 playSpaces[j].Add(deck.Last<GameObject>());
-                Debug.Log(playSpaces[j][i].GetComponent<Card>().numValue);
                 deck.RemoveAt(deck.Count - 1);
             }
         }
@@ -128,6 +125,7 @@ public class Solitaire : MonoBehaviour
 
         foreach (Transform child in deckButton.transform) {
             if (child.CompareTag("Card")) {
+                //child.GetComponent<GameObject>().SetActive(false);\
                 deck.Remove(child.GetComponent<GameObject>());
                 discardPile.Add(child.GetComponent<GameObject>());
                 Destroy(child.gameObject);
@@ -138,12 +136,9 @@ public class Solitaire : MonoBehaviour
             tripsOnDisplay.Clear();
             float xOffset = -2.5f;
             float zOffset = -0.2f;
-            float x = 10.0f;
-            float y = 3.14342f;
-            float z = -9.008199f;
             foreach (GameObject card in deckTrips[deckLocation]) {
-                //card.transform.SetParent(deckButton.transform, false);
-                card.transform.position = new Vector3(x + xOffset, y, z + zOffset);
+                card.transform.SetParent(deckButton.transform, false);
+                card.transform.position = new Vector3(deckButton.transform.position.x + xOffset, deckButton.transform.position.y, deckButton.transform.position.z + zOffset);
                 card.SetActive(true);
                 xOffset -= 0.5f;
                 zOffset -= 0.2f;

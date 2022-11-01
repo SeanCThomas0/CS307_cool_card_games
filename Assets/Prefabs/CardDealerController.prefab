@@ -120,3 +120,21 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c387bd1cee7df45d2b4940623b555638, type: 3}
   - {fileID: 21300000, guid: c2b37d078a96842538967e91c27ee66c, type: 3}
   - {fileID: 21300000, guid: 2ba6c197fd3634e3590d319b8fff6612, type: 3}
+  custom:
+  - {fileID: 21300000, guid: 07d8b070026554842bd062463b794b55, type: 3}
+  - {fileID: 21300000, guid: ddfb9351ee5944897bb0bcbbe68fb3ad, type: 3}
+  - {fileID: 21300000, guid: 309aa2f21e13f45ae94c4ae2f9fae819, type: 3}
+  - {fileID: 21300000, guid: 751d03bf7325e4c939b95d91cb755766, type: 3}
+  - {fileID: 21300000, guid: 268250820f7654d3cb477e66b23bf713, type: 3}
+  - {fileID: 21300000, guid: e25f9d646eb354d0489764124906cc3e, type: 3}
+  - {fileID: 21300000, guid: 3befcc4f6466a40669b2d0f2f99980ff, type: 3}
+  - {fileID: 21300000, guid: 7f8930d9b9cdb42b896afb21bf978e2b, type: 3}
+  - {fileID: 21300000, guid: 1caee344aa91e4462be1ccc15fa42387, type: 3}
+  - {fileID: 21300000, guid: 751871a3c7f914701bf5ed99ea487ff7, type: 3}
+  - {fileID: 21300000, guid: a6047b0a758584736bb30f800f3609ee, type: 3}
+  - {fileID: 21300000, guid: 922e90bd5034e438aa6d644da09146bc, type: 3}
+  - {fileID: 21300000, guid: 9da919a5e40ac43e0a935c304ba997e0, type: 3}
+  - {fileID: 21300000, guid: cec280b0c16bd42a9988cc51e11dc7cb, type: 3}
+  - {fileID: 21300000, guid: ba4c53d9472024b78b53b9c4e4ab9b38, type: 3}
+  cardSize: 1
+  customDesign: 0

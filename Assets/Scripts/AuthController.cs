@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Firebase.Auth;
 using TMPro;
+using Firebase.Database;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class AuthController : MonoBehaviour
 {
@@ -14,10 +16,13 @@ public class AuthController : MonoBehaviour
     TextMeshProUGUI textMeshPro_ForgottenPasswordMessage;
     public GameObject passwordText;
     TextMeshProUGUI textMeshPro_password;
-
+    
     private string loginMessageString;
     private string email, password;
     private Color32 msgColor;
+
+    private DatabaseReference databaseReference;
+    private FirebaseAuth auth;
 
     /*
      * Function : Start
@@ -26,6 +31,8 @@ public class AuthController : MonoBehaviour
      */
     private void Start()
     {
+        auth = FirebaseAuth.DefaultInstance;
+        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
         textMeshPro_LoginMessage = loginMessage.GetComponent<TextMeshProUGUI>();
         textMeshPro_ForgottenPasswordMessage = forgottenPasswordMessage.GetComponent<TextMeshProUGUI>();
         textMeshPro_password = passwordText.GetComponent<TextMeshProUGUI>();
@@ -116,6 +123,28 @@ public class AuthController : MonoBehaviour
             
             Firebase.Auth.FirebaseUser newUser = task.Result;
             Debug.LogFormat("User signed in successfully: {0} ({1})", newUser.DisplayName, newUser.UserId);
+
+            if (FirebaseAuth.DefaultInstance.CurrentUser.DisplayName.Equals(""))
+            {
+                Firebase.Auth.UserProfile profile = new Firebase.Auth.UserProfile
+                {
+                    DisplayName = newUser.Email.Substring(0, newUser.Email.IndexOf("@")),
+                };
+                newUser.UpdateUserProfileAsync(profile).ContinueWith(task => {
+                    if (task.IsCanceled)
+                    {
+                        Debug.LogError("UpdateUserProfileAsync was canceled.");
+                        return;
+                    }
+                    if (task.IsFaulted)
+                    {
+                        Debug.LogError("UpdateUserProfileAsync encountered an error: " + task.Exception);
+                        return;
+                    }
+
+                    Debug.Log("User profile updated successfully.");
+                });
+            }
         });
 
         print(FirebaseAuth.DefaultInstance.CurrentUser);
@@ -153,8 +182,7 @@ public class AuthController : MonoBehaviour
             Firebase.Auth.FirebaseUser newUser = task.Result;
 
             //Add account to database
-            Database database = new Database();
-            database.CreateAccountData(newUser);
+            CreateAccountData(newUser);
 
             //FirebaseDatabase.DefaultInstance.RootReference.
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
@@ -262,7 +290,6 @@ public class AuthController : MonoBehaviour
         });
     }
 
-
     /*
      * Function : ChangePanel
      * 
@@ -273,5 +300,51 @@ public class AuthController : MonoBehaviour
         loginMessageString = "";
         textMeshPro_password.text = "";
         msgColor = new Color32(255, 0, 0, 255); //Sets text to red
+    }
+
+    /*
+     * Function : CreateAccountData
+     * 
+     * Parameter : user //The firebase user we are creating account data for
+     * 
+     * Description : This function preps the next panel so it is fresh
+     */
+    public void CreateAccountData(Firebase.Auth.FirebaseUser user)
+    {
+        DatabaseReference userRef = databaseReference.Child("users").Child(user.UserId);
+
+        //user_data
+        Debug.Log("Database");
+        userRef.Child("user_data").Child("email").SetValueAsync(user.Email);
+        userRef.Child("user_data").Child("username").SetValueAsync(user.Email.Substring(0, user.Email.IndexOf("@")));
+
+        //update user profile in authenticator
+        Firebase.Auth.UserProfile profile = new Firebase.Auth.UserProfile
+        {
+            DisplayName = user.Email.Substring(0, user.Email.IndexOf("@")),
+        };
+        user.UpdateUserProfileAsync(profile).ContinueWith(task => {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("UpdateUserProfileAsync was canceled.");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                Debug.LogError("UpdateUserProfileAsync encountered an error: " + task.Exception);
+                return;
+            }
+
+            Debug.Log("User profile updated successfully.");
+        });
+
+        Debug.Log("logged event: " + user.UserId + " " + user.Email + " " + user.DisplayName);
+
+        /* Instead of initializing all of these values to zero at the start, we are just not going to initialize them and when we first need them, we will initialize them then
+        //game_statistics
+        
+        //solitaire
+        userRef.Child("game_statistics").Child("solitaire").Child("win_count").SetValueAsync(0);
+        */
     }
 }

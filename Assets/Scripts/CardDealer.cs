@@ -16,11 +16,15 @@ public class CardDealer : MonoBehaviour
     public Sprite[] blue;
     public Sprite[] green;
     public Sprite[] red;
+    public Sprite[] custom;
 
     public Card.cardSize cardSize;
+    public Card.customDesign customDesign;
 
-    void OnEnable() {
-        cardSize = (Card.cardSize) PlayerPrefs.GetInt("cardSize");
+    void OnEnable()
+    {
+        cardSize = (Card.cardSize)PlayerPrefs.GetInt("cardSize");
+        customDesign = (Card.customDesign)PlayerPrefs.GetInt("customDesign");
     }
 
     /*
@@ -38,7 +42,8 @@ public class CardDealer : MonoBehaviour
 
             newCard.GetComponent<Card>().numValue = i + 1;
 
-            switch(i + 1) {
+            switch (i + 1)
+            {
                 case 1:
                     newCard.GetComponent<Card>().numValueString = "ace";
                     break;
@@ -71,7 +76,8 @@ public class CardDealer : MonoBehaviour
 
             newCard.GetComponent<Card>().numValue = i + 1;
 
-            switch(i + 1) {
+            switch (i + 1)
+            {
                 case 1:
                     newCard.GetComponent<Card>().numValueString = "ace";
                     break;
@@ -104,7 +110,8 @@ public class CardDealer : MonoBehaviour
 
             newCard.GetComponent<Card>().numValue = i + 1;
 
-            switch(i + 1) {
+            switch (i + 1)
+            {
                 case 1:
                     newCard.GetComponent<Card>().numValueString = "ace";
                     break;
@@ -137,7 +144,8 @@ public class CardDealer : MonoBehaviour
 
             newCard.GetComponent<Card>().numValue = i + 1;
 
-            switch(i + 1) {
+            switch (i + 1)
+            {
                 case 1:
                     newCard.GetComponent<Card>().numValueString = "ace";
                     break;
@@ -206,7 +214,8 @@ public class CardDealer : MonoBehaviour
 
                         newCard.GetComponent<Card>().numValue = randomNum + 1;
 
-                        switch(randomNum + 1) {
+                        switch (randomNum + 1)
+                        {
                             case 1:
                                 newCard.GetComponent<Card>().numValueString = "ace";
                                 break;
@@ -240,7 +249,8 @@ public class CardDealer : MonoBehaviour
 
                         newCard.GetComponent<Card>().numValue = randomNum + 1;
 
-                        switch(randomNum + 1) {
+                        switch (randomNum + 1)
+                        {
                             case 1:
                                 newCard.GetComponent<Card>().numValueString = "ace";
                                 break;
@@ -274,7 +284,8 @@ public class CardDealer : MonoBehaviour
 
                         newCard.GetComponent<Card>().numValue = randomNum + 1;
 
-                        switch(randomNum + 1) {
+                        switch (randomNum + 1)
+                        {
                             case 1:
                                 newCard.GetComponent<Card>().numValueString = "ace";
                                 break;
@@ -308,7 +319,8 @@ public class CardDealer : MonoBehaviour
 
                         newCard.GetComponent<Card>().numValue = randomNum + 1;
 
-                        switch(randomNum + 1) {
+                        switch (randomNum + 1)
+                        {
                             case 1:
                                 newCard.GetComponent<Card>().numValueString = "ace";
                                 break;
@@ -571,88 +583,139 @@ public class CardDealer : MonoBehaviour
     */
     public void ShowBackKeepValue(GameObject card, Card.backColor color, Card.backDesign design)
     {
-        List<GameObject> cardBacks = new List<GameObject>();
+        if (customDesign == Card.customDesign.NONE)
+        {
+            int index = -1;
+            switch (design)
+            {
+                case Card.backDesign.PLAIN:
+                    index = 0;
+                    break;
+                case Card.backDesign.OUTLINE:
+                    index = 1;
+                    break;
+                case Card.backDesign.OUTLINE_PATTERN:
+                    index = 2;
+                    break;
+                case Card.backDesign.OUTLINE_SIMPLE_PATTERN:
+                    index = 3;
+                    break;
+                case Card.backDesign.PATTERN:
+                    index = 4;
+                    break;
+            }
 
-        int index = -1;
-        switch (design)
-        {
-            case Card.backDesign.PLAIN:
-                index = 0;
-                break;
-            case Card.backDesign.OUTLINE:
-                index = 1;
-                break;
-            case Card.backDesign.OUTLINE_PATTERN:
-                index = 2;
-                break;
-            case Card.backDesign.OUTLINE_SIMPLE_PATTERN:
-                index = 3;
-                break;
-            case Card.backDesign.PATTERN:
-                index = 4;
-                break;
+            if (color == Card.backColor.BLUE)
+            {
+                card.GetComponent<SpriteRenderer>().sprite = blue[index];
+            }
+            else if (color == Card.backColor.GREEN)
+            {
+                card.GetComponent<SpriteRenderer>().sprite = green[index];
+            }
+            else if (color == Card.backColor.RED)
+            {
+                card.GetComponent<SpriteRenderer>().sprite = red[index];
+            }
         }
-
-        if (color == Card.backColor.BLUE)
+        else
         {
-            card.GetComponent<SpriteRenderer>().sprite = blue[index];
-        }
-        else if (color == Card.backColor.GREEN)
-        {
-            card.GetComponent<SpriteRenderer>().sprite = green[index];
-        }
-        else if (color == Card.backColor.RED)
-        {
-            card.GetComponent<SpriteRenderer>().sprite = red[index];
+            switch (customDesign)
+            {
+                case Card.customDesign.BLUE:
+                    card.GetComponent<SpriteRenderer>().sprite = blue[0];
+                    break;
+                case Card.customDesign.BLUE_OUTLINE:
+                    card.GetComponent<SpriteRenderer>().sprite = blue[1];
+                    break;
+                case Card.customDesign.BLUE_OUTLINE_PATTERN:
+                    card.GetComponent<SpriteRenderer>().sprite = blue[2];
+                    break;
+                case Card.customDesign.BLUE_OUTLINE_SIMPLE:
+                    card.GetComponent<SpriteRenderer>().sprite = blue[3];
+                    break;
+                case Card.customDesign.BLUE_PATTERN:
+                    card.GetComponent<SpriteRenderer>().sprite = blue[4];
+                    break;
+                case Card.customDesign.GREEN:
+                    card.GetComponent<SpriteRenderer>().sprite = green[0];
+                    break;
+                case Card.customDesign.GREEN_OUTLINE:
+                    card.GetComponent<SpriteRenderer>().sprite = green[1];
+                    break;
+                case Card.customDesign.GREEN_OUTLINE_PATTERN:
+                    card.GetComponent<SpriteRenderer>().sprite = green[2];
+                    break;
+                case Card.customDesign.GREEN_OUTLINE_SIMPLE:
+                    card.GetComponent<SpriteRenderer>().sprite = green[3];
+                    break;
+                case Card.customDesign.GREEN_PATTERN:
+                    card.GetComponent<SpriteRenderer>().sprite = green[4];
+                    break;
+                case Card.customDesign.RED:
+                    card.GetComponent<SpriteRenderer>().sprite = red[0];
+                    break;
+                case Card.customDesign.RED_OUTLINE:
+                    card.GetComponent<SpriteRenderer>().sprite = red[1];
+                    break;
+                case Card.customDesign.RED_OUTLINE_PATTERN:
+                    card.GetComponent<SpriteRenderer>().sprite = red[2];
+                    break;
+                case Card.customDesign.RED_OUTLINE_SIMPLE:
+                    card.GetComponent<SpriteRenderer>().sprite = red[3];
+                    break;
+                case Card.customDesign.RED_PATTERN:
+                    card.GetComponent<SpriteRenderer>().sprite = red[4];
+                    break;
+                case Card.customDesign.CHECKER_BLACK:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[0];
+                    break;
+                case Card.customDesign.CHECKER_RED:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[1];
+                    break;
+                case Card.customDesign.BOILERMAKER_SPECIAL:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[2];
+                    break;
+                case Card.customDesign.CANDY_CANE:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[3];
+                    break;
+                case Card.customDesign.DADDY_DANIELS:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[4];
+                    break;
+                case Card.customDesign.DOTS:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[5];
+                    break;
+                case Card.customDesign.EMOJI:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[6];
+                    break;
+                case Card.customDesign.FISH:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[7];
+                    break;
+                case Card.customDesign.FOOD:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[8];
+                    break;
+                case Card.customDesign.LOGO:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[9];
+                    break;
+                case Card.customDesign.PETS:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[10];
+                    break;
+                case Card.customDesign.PURDUE_PETE:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[11];
+                    break;
+                case Card.customDesign.PURDUE:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[12];
+                    break;
+                case Card.customDesign.RICK_ROLL:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[13];
+                    break;
+                case Card.customDesign.TURKSTRA:
+                    card.GetComponent<SpriteRenderer>().sprite = custom[14];
+                    break;
+            }
         }
 
         card.GetComponent<Card>().showingFront = false;
-    }
-
-    /*
-
-
-    
-    custom - Card.backDesign name that you would like the back design set to
-    */
-    public void ShowBackKeepValue(GameObject card, Card.customDesign custom)
-    {
-        List<GameObject> cardBacks = new List<GameObject>();
-
-        int index = -1;
-        switch (custom)
-        {
-            // case Card.customDesign.PLAIN:
-            //     index = 0;
-            //     break;
-            // case Card.customDesign.OUTLINE:
-            //     index = 1;
-            //     break;
-            // case Card.customDesign.OUTLINE_PATTERN:
-            //     index = 2;
-            //     break;
-            // case Card.customDesign.OUTLINE_SIMPLE_PATTERN:
-            //     index = 3;
-            //     break;
-            // case Card.customDesign.PATTERN:
-            //     index = 4;
-            //     break;
-        }
-
-        // if (color == Card.backColor.BLUE)
-        // {
-        //     card.GetComponent<SpriteRenderer>().sprite = blue[index];
-        // }
-        // else if (color == Card.backColor.GREEN)
-        // {
-        //     card.GetComponent<SpriteRenderer>().sprite = green[index];
-        // }
-        // else if (color == Card.backColor.RED)
-        // {
-        //     card.GetComponent<SpriteRenderer>().sprite = red[index];
-        // }
-
-        // newCard.GetComponent<Card>().showingFront = false;
     }
 
     public void SortCards(List<GameObject> cards)
@@ -692,10 +755,12 @@ public class CardDealer : MonoBehaviour
         return false;
     }
 
-    private void setSize(List<GameObject> cards) {
+    private void setSize(List<GameObject> cards)
+    {
         for (int i = 0; i < cards.Count; i++)
         {
-            switch (cardSize) {
+            switch (cardSize)
+            {
                 case Card.cardSize.SMALL:
                     cards[i].transform.localScale = new Vector3(.5f, .5f, .5f);
                     cardSize = Card.cardSize.SMALL;

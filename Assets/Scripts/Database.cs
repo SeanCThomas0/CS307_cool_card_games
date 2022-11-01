@@ -18,17 +18,6 @@ public class Database : MonoBehaviour
     private FirebaseAuth auth;
 
     /*
-     * Function : Database
-     * 
-     * Description : Database constructor
-     */
-    public Database()
-    {
-        auth = FirebaseAuth.DefaultInstance;
-        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
-    }
-
-    /*
      * Function : Start
      * 
      * Description : This function provides starting values for the scenes
@@ -153,5 +142,14 @@ public class Database : MonoBehaviour
         {
             Debug.LogError("DeleteCurrentUser: current user is null");
         }
+    }
+
+    public void ResetStatistics()
+    {
+        Firebase.Auth.FirebaseUser user = auth.CurrentUser;
+
+        DatabaseReference userRef = databaseReference.Child("users").Child(user.UserId);
+
+        userRef.Child("game_statistics").RemoveValueAsync();
     }
 }
