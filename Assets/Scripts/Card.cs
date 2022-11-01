@@ -80,6 +80,7 @@ public class Card : MonoBehaviour
     // values as string
     public string numValueString; // same as 'faceValue' below, but for here again for naming consistency
     public string suitValueString;
+    public string frontColor;
 
     // tells whether the front is showing
     public bool showingFront;
