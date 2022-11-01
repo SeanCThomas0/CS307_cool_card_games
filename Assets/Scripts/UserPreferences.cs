@@ -31,7 +31,9 @@ public class UserPreferences : MonoBehaviour
 
         changeFailed = false;
 
-        RetrieveVarsFromFriebase();
+        RetrieveVarsFromFirebase();
+
+        DetermineUnlock();
     }
 
     void OnDisable()
@@ -40,7 +42,7 @@ public class UserPreferences : MonoBehaviour
         PlayerPrefs.SetInt("customDesign", (int)customDesign);
     }
 
-    private async void RetrieveVarsFromFriebase()
+    private async void RetrieveVarsFromFirebase()
     {
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/selected_design").GetValueAsync().ContinueWith(task =>
             {
@@ -97,81 +99,122 @@ public class UserPreferences : MonoBehaviour
         }
     }
 
-    // private async void DetermineUnlock()
-    // {
-    //     string cardToCheck = "blue_outline_simple";
-    //     for (int i = 0; i < 15; i++)
-    //     {
-    //         switch (i)
-    //         {
-    //             case 0:
-    //                 cardToCheck = "checkered_red";
-    //                 break;
-    //             case 1:
-    //                 cardToCheck = "boilermaker_special";
-    //                 break;
-    //             case 2:
-    //                 cardToCheck = "candy_cane";
-    //                 break;
-    //             case 3:
-    //                 cardToCheck = "daddy_daniels";
-    //                 break;
-    //             case 4:
-    //                 cardToCheck = "dots";
-    //                 break;
-    //             case 5:
-    //                 cardToCheck = "emoji";
-    //                 break;
-    //             case 6:
-    //                 cardToCheck = "fish";
-    //                 break;
-    //             case 7:
-    //                 cardToCheck = "food";
-    //                 break;
-    //             case 8:
-    //                 cardToCheck = "logo";
-    //                 break;
-    //             case 9:
-    //                 cardToCheck = "pets";
-    //                 break;
-    //             case 10:
-    //                 cardToCheck = "purdue_pete";
-    //                 break;
-    //             case 11:
-    //                 cardToCheck = "purdue";
-    //                 break;
-    //             case 12:
-    //                 cardToCheck = "rick_roll";
-    //                 break;
-    //             case 13:
-    //                 cardToCheck = "turkstra";
-    //                 break;
-    //             case 14:
-    //                 cardToCheck = "checkered_black";
-    //                 break;
-    //         }
+    private async void DetermineUnlock()
+    {
+        // UNLOCK EMOJI
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/solitaire/win_count").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                // Debug.Log("card_set_to = blue_outline_simple");
+            }
+            if (task.IsFaulted)
+            {
+                // Debug.Log("card_set_to = blue_outline_simple");
+            }
+            else
+            {
+                if (task.Result.Value != null)
+                {
+                    if (Int32.Parse(task.Result.Value.ToString()) >= 5)
+                    {
+                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/emoji").SetValueAsync(true);
+                    }
+                }
+            }
+        });
 
-    //         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/" + cardToCheck).GetValueAsync().ContinueWith(task =>
-    //         {
-    //             if (task.IsCanceled)
-    //             {
-    //                 Debug.Log("card_set_to = blue_outline_simple");
-    //             }
-    //             if (task.IsFaulted)
-    //             {
-    //                 Debug.Log("card_set_to = blue_outline_simple");
-    //             }
-    //             else
-    //             {
-    //                 if (task.Result.Value != null && (bool)task.Result.Value)
-    //                 {
-    //                     unlockedDesigns.Add(cardToCheck);
-    //                     Debug.Log("unlocked = " + unlockedDesigns[unlockedDesigns.Count - 1]);
-    //                 }
-    //             }
-    //         });
-    //     }
-    // }
+        // UNLOCK FISH
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/set_count").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("cancelled");
+            }
+            if (task.IsFaulted)
+            {
+                Debug.Log("faulted");
+            }
+            else
+            {
+                if (task.Result.Value != null)
+                {
+                    if (Int32.Parse(task.Result.Value.ToString()) >= 20)
+                    {
+                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/fish").SetValueAsync(true);
+                    }
+                }
+            }
+        });
+
+        // UNLOCK PETS
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/win_count").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                // Debug.Log("card_set_to = blue_outline_simple");
+            }
+            if (task.IsFaulted)
+            {
+                // Debug.Log("card_set_to = blue_outline_simple");
+            }
+            else
+            {
+                if (task.Result.Value != null)
+                {
+                    if (Int32.Parse(task.Result.Value.ToString()) >= 5)
+                    {
+                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/pets").SetValueAsync(true);
+                    }
+                }
+            }
+        });
+
+        // UNLOCK PURDUE
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/trick_count").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                // Debug.Log("card_set_to = blue_outline_simple");
+            }
+            if (task.IsFaulted)
+            {
+                // Debug.Log("card_set_to = blue_outline_simple");
+            }
+            else
+            {
+                if (task.Result.Value != null)
+                {
+                    if (Int32.Parse(task.Result.Value.ToString()) >= 20)
+                    {
+                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/purdue").SetValueAsync(true);
+                    }
+                }
+            }
+        });
+
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/win_count").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                // Debug.Log("card_set_to = blue_outline_simple");
+            }
+            if (task.IsFaulted)
+            {
+                // Debug.Log("card_set_to = blue_outline_simple");
+            }
+            else
+            {
+                if (task.Result.Value != null)
+                {
+                    if (Int32.Parse(task.Result.Value.ToString()) >= 5)
+                    {
+                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/checkered_black").SetValueAsync(true);
+                    }
+                }
+            }
+        });
+    }
 
     public async void ChangeCardSize()
     {
@@ -199,6 +242,7 @@ public class UserPreferences : MonoBehaviour
     {
         string clickedName = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name;
         Debug.Log("clicked " + clickedName);
+        errorText.SetActive(false);
 
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/" + clickedName).GetValueAsync().ContinueWith(task =>
             {
@@ -444,6 +488,7 @@ public class UserPreferences : MonoBehaviour
 
 
     }
+
     public void setResolution()
     {
         Screen.SetResolution(640, 480, FullScreenMode.MaximizedWindow);
