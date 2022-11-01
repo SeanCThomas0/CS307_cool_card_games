@@ -69,7 +69,8 @@ public class Card : MonoBehaviour
     {
         SMALL,
         DEFAULT,
-        LARGE
+        LARGE,
+        HUGE
     }
 
     // values as int
