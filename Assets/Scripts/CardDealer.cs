@@ -1,10 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System;
+using Firebase.Auth;
+using Firebase.Database;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CardDealer : MonoBehaviour
 {
+    private DatabaseReference databaseReference;
+    private FirebaseAuth auth;
+
     public GameObject card;
     public Sprite[] clubs;
     public Sprite[] hearts;
@@ -21,11 +28,11 @@ public class CardDealer : MonoBehaviour
     public Card.cardSize cardSize;
     public Card.customDesign customDesign;
 
-    // void OnEnable()
-    // {
-    //     cardSize = (Card.cardSize)PlayerPrefs.GetInt("cardSize");
-    //     customDesign = (Card.customDesign)PlayerPrefs.GetInt("customDesign");
-    // }
+    void OnEnable()
+    {
+        cardSize = (Card.cardSize)PlayerPrefs.GetInt("cardSize");
+        customDesign = (Card.customDesign)PlayerPrefs.GetInt("customDesign");
+    }
 
     /*
     returns a standard deck of 52 cards
@@ -574,13 +581,6 @@ public class CardDealer : MonoBehaviour
         card.GetComponent<Card>().showingFront = true;
     }
 
-    /*
-
-
-    
-    color - color of card back (use by stating "Card.backColor.COLOR" where COLOR is BLUE, GREEN, or RED)
-    design - design of card back (use by stating "Card.backDesign.DESIGN" where DESIGN is PLAIN, OUTLINE, OUTLINE_PATTERN, OUTLINE_SIMPLE_PATTERN, or PATTERN)
-    */
     public void ShowBackKeepValue(GameObject card, Card.backColor color, Card.backDesign design)
     {
         if (customDesign == Card.customDesign.NONE)
@@ -780,5 +780,4 @@ public class CardDealer : MonoBehaviour
             }
         }
     }
-    
 }

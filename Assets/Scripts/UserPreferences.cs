@@ -59,6 +59,18 @@ public class UserPreferences : MonoBehaviour
         RetrieveVarsFromFriebase();
     }
 
+    void OnDisable()
+    {
+        PlayerPrefs.SetInt("cardSize", (int)cardSize);
+        PlayerPrefs.SetInt("customDesign", (int)customDesign);
+    }
+
+    void OnEnable()
+    {
+        cardSize = (Card.cardSize)PlayerPrefs.GetInt("cardSize");
+        customDesign = (Card.customDesign)PlayerPrefs.GetInt("customDesign");
+    }
+
     private async void RetrieveVarsFromFriebase()
     {
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/selected_design").GetValueAsync().ContinueWith(task =>
@@ -80,6 +92,27 @@ public class UserPreferences : MonoBehaviour
                     }
                 }
             });
+
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/card_size").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                // Debug.Log("card_set_to = blue_outline_simple");
+            }
+            if (task.IsFaulted)
+            {
+                // Debug.Log("card_set_to = blue_outline_simple");
+            }
+            else
+            {
+                if (task.Result.Value != null)
+                {
+                    cardSize = (Card.cardSize)Int32.Parse(task.Result.Value.ToString());
+
+                    Debug.Log("card sizee =" + cardSize);
+                }
+            }
+        });
     }
 
     // private async void DetermineUnlock()
@@ -158,21 +191,24 @@ public class UserPreferences : MonoBehaviour
     //     }
     // }
 
-    public void ChangeCardSize()
+    public async void ChangeCardSize()
     {
         switch (cardSize)
         {
             case Card.cardSize.SMALL:
                 cardSize = Card.cardSize.DEFAULT;
                 cardSizeButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Default";
+                await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/selected_design").SetValueAsync(1);
                 break;
             case Card.cardSize.DEFAULT:
                 cardSize = Card.cardSize.LARGE;
                 cardSizeButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Large";
+                await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/selected_design").SetValueAsync(2);
                 break;
             case Card.cardSize.LARGE:
                 cardSize = Card.cardSize.SMALL;
                 cardSizeButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Small";
+                await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/selected_design").SetValueAsync(0);
                 break;
         }
     }
@@ -424,9 +460,10 @@ public class UserPreferences : MonoBehaviour
                 break;
         }
 
-        
+
     }
-    public void setResolution() {
+    public void setResolution()
+    {
         Screen.SetResolution(640, 480, FullScreenMode.MaximizedWindow);
         Debug.Log("Change Resolution");
     }
