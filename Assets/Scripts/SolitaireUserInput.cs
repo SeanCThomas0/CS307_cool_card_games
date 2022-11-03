@@ -199,9 +199,6 @@ public class SolitaireUserInput : MonoBehaviour
         Selectable s2 = selected.GetComponent<Selectable>();
         float yOffset = 0.3f;
         if (!solitaireUIButton.clicked) {
-            
-            
-
             if (s2.top || (!s2.top && s1.value == 13)) {
                 yOffset = 0;
             }
@@ -266,6 +263,9 @@ public class SolitaireUserInput : MonoBehaviour
 
             slot1 = this.gameObject;
         } else {
+            if (s2.top || (!s2.top && s1.value == 13)) {
+                yOffset = 0;
+            }
             slot1.transform.position = new Vector3(selected.transform.position.x, selected.transform.position.y - yOffset, selected.transform.position.z - 0.01f);
             slot1.transform.parent = selected.transform;
             if (s1.inDeckPile) {
@@ -284,6 +284,7 @@ public class SolitaireUserInput : MonoBehaviour
                 solitaire.topPos[0].GetComponent<Selectable>().value = 13;
             }
         }
+        slot1 = this.gameObject;
     }
 
     bool Blocked(GameObject selected) {

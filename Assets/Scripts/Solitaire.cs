@@ -19,13 +19,13 @@ public class Solitaire : MonoBehaviour
     public List<string> tripsOnDisplay = new List<string>();
     public List<List<string>> deckTrips = new List<List<string>>();
 
-    private List<string> playSpace1 = new List<string>();
-    private List<string> playSpace2 = new List<string>();
-    private List<string> playSpace3 = new List<string>();
-    private List<string> playSpace4 = new List<string>();
-    private List<string> playSpace5 = new List<string>();
-    private List<string> playSpace6 = new List<string>();
-    private List<string> playSpace7 = new List<string>();
+    public List<string> playSpace1 = new List<string>();
+    public List<string> playSpace2 = new List<string>();
+    public List<string> playSpace3 = new List<string>();
+    public List<string> playSpace4 = new List<string>();
+    public List<string> playSpace5 = new List<string>();
+    public List<string> playSpace6 = new List<string>();
+    public List<string> playSpace7 = new List<string>();
 
     public List<string> deck;
     public List<string> discardPile = new List<string>();

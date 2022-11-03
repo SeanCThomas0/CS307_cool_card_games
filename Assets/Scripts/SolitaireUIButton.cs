@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class SolitaireUIButton : MonoBehaviour
 {
@@ -31,7 +32,9 @@ public class SolitaireUIButton : MonoBehaviour
         clicked = false;
         UpdateSprite[] cards = FindObjectsOfType<UpdateSprite>();
         foreach (UpdateSprite card in cards) {
-            Destroy(card.gameObject);
+            if (card.gameObject.name != "Card") {
+                Destroy(card.gameObject);
+            }
         }
         ClearTopValues();
         FindObjectOfType<Solitaire>().PlayCards();
@@ -71,5 +74,23 @@ public class SolitaireUIButton : MonoBehaviour
     public void Quit(string scene) {
         Debug.Log("Change to" + scene);
         SceneManager.LoadScene(scene);
+    }
+    public void Hint() {
+        GameObject space1Card = Instantiate(solitaire.cardPrefab, new Vector3(100, 100, 0), Quaternion.identity);
+        space1Card.name = solitaire.playSpace1.Last();
+        GameObject space2Card = Instantiate(solitaire.cardPrefab, new Vector3(100, 100, 0), Quaternion.identity);
+        space2Card.name = solitaire.playSpace2.Last();
+        GameObject space3Card = Instantiate(solitaire.cardPrefab, new Vector3(100, 100, 0), Quaternion.identity);
+        space3Card.name = solitaire.playSpace3.Last();
+        GameObject space4Card = Instantiate(solitaire.cardPrefab, new Vector3(100, 100, 0), Quaternion.identity);
+        space4Card.name = solitaire.playSpace4.Last();
+        GameObject space5Card = Instantiate(solitaire.cardPrefab, new Vector3(100, 100, 0), Quaternion.identity);
+        space5Card.name = solitaire.playSpace5.Last();
+        GameObject space6Card = Instantiate(solitaire.cardPrefab, new Vector3(100, 100, 0), Quaternion.identity);
+        space6Card.name = solitaire.playSpace6.Last();
+        GameObject space7Card = Instantiate(solitaire.cardPrefab, new Vector3(100, 100, 0), Quaternion.identity);
+        space7Card.name = solitaire.playSpace7.Last();
+        GameObject space8Card = Instantiate(solitaire.cardPrefab, new Vector3(100, 100, 0), Quaternion.identity);
+        space8Card.name = solitaire.tripsOnDisplay.Last();
     }
 }
