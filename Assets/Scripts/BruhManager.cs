@@ -14,6 +14,9 @@ public class BruhManager : MonoBehaviour
     public GameObject CompanionText;
     public GameObject OppText;
     public GameObject GameText;
+    public GameObject EasyButton;
+    public GameObject DiffButton;
+
     
     /* Global variables */ 
     //private
@@ -120,52 +123,130 @@ public class BruhManager : MonoBehaviour
             string badMessage = "Good Luck";
             //easy companion reccomendations
 
-            //start of good advice
-            if(playerColorConsecCount == 1) {
-                goodMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().frontColor;
-            } 
-            
-            if(playerNumberConsecCount == 1) {
-                goodMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().faceValue;
-            } 
+            Debug.Log("color count: " + playerColorConsecCount);
+            if(difficult == false) {
+                //start of good advice
+                if(playerColorConsecCount == 1) {
+                    goodMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().frontColor;
+                } 
+                
+                if(playerNumberConsecCount == 1) {
+                    goodMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().faceValue;
+                } 
 
-            if(playerGreaterConsecCount == 1) {
-                goodMessage = "Don't play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
-            }
+                if(playerGreaterConsecCount == 1) {
+                    goodMessage = "Don't play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
+                }
 
-            if(playerLowerConsecCount == 1) {
-                goodMessage = "Don't play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
-            }
+                if(playerLowerConsecCount == 1) {
+                    goodMessage = "Don't play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
+                }
 
-            if(playerMovesConsecCount == 5) {
-                goodMessage = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
-            }
+                if(playerMovesConsecCount == 4) {
+                    goodMessage = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
+                }
 
-            //start of bad advice
-            if(playerColorConsecCount == 1) {
-                goodMessage = "play another " + lastCardPlayed.GetComponent<Card>().frontColor;
-            } 
-            
-            if(playerNumberConsecCount == 1) {
-                goodMessage = "play another " + lastCardPlayed.GetComponent<Card>().faceValue;
-            } 
+                //start of bad advice
+                if(playerColorConsecCount == 1) {
+                    badMessage = "play another " + lastCardPlayed.GetComponent<Card>().frontColor;
+                } 
+                
+                if(playerNumberConsecCount == 1) {
+                    badMessage = "play another " + lastCardPlayed.GetComponent<Card>().faceValue;
+                } 
 
-            if(playerGreaterConsecCount == 1) {
-                goodMessage = "play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
-            }
+                if(playerGreaterConsecCount == 1) {
+                    badMessage = "play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
+                }
 
-            if(playerLowerConsecCount == 1) {
-                goodMessage = "play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
-            }
+                if(playerLowerConsecCount == 1) {
+                    badMessage = "play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
+                }
 
-            if(playerMovesConsecCount == 5) {
-                goodMessage = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
-            }
-
-            if(easyIndex <= 3) {
-                return goodMessage;
+                if(easyIndex <= 4) {
+                    return goodMessage;
+                } else {
+                    return badMessage;
+                }
             } else {
-                return badMessage;
+                int arrayCount = 0;
+                string[] goodArray = new string[6];
+
+                if(playerColorConsecCount == 1) {
+                    goodArray[arrayCount] = "Don't play another " + lastCardPlayed.GetComponent<Card>().frontColor;
+                    arrayCount++;
+                } 
+                
+                if(playerNumberConsecCount == 1) {
+                    goodArray[arrayCount] = "Don't play another " + lastCardPlayed.GetComponent<Card>().faceValue;
+                    arrayCount++;
+                } 
+
+                if(playerGreaterConsecCount == 1) {
+                    goodArray[arrayCount] = "Don't play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
+                    arrayCount++;
+                }
+
+                if(playerLowerConsecCount == 1) {
+                    goodArray[arrayCount] = "Don't play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
+                    arrayCount++;
+                }
+
+                if(playerMovesConsecCount == 4) {
+                    goodArray[arrayCount] = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
+                    arrayCount++;
+                }
+
+                arrayCount--;
+                if(arrayCount == -1) {
+                    goodMessage = "Play any card";
+                } else {
+                    easyIndex = rand.Next(0, arrayCount);
+                    goodMessage = goodArray[easyIndex];
+                }
+
+                //start of bad advice
+                arrayCount = 0;
+                string[] badArray = new string[5];
+
+                badArray[0] = "Good Luck";
+                arrayCount++;
+
+                if(playerColorConsecCount == 1) {
+                    badArray[arrayCount] = "play another " + lastCardPlayed.GetComponent<Card>().frontColor;
+                    arrayCount++;
+                } 
+                
+                if(playerNumberConsecCount == 1) {
+                    badArray[arrayCount] = "play another " + lastCardPlayed.GetComponent<Card>().faceValue;
+                    arrayCount++;
+                } 
+
+                if(playerGreaterConsecCount == 1) {
+                    badArray[arrayCount] = "play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
+                    arrayCount++;
+                }
+
+                if(playerLowerConsecCount == 1) {
+                    badArray[arrayCount] = "play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
+                    arrayCount++;
+                }
+
+                
+                arrayCount--;
+                if(arrayCount == -1) {
+                    badMessage = "Good Luck";
+                } else {
+                    easyIndex = rand.Next(0, arrayCount);
+                    badMessage = badArray[easyIndex];
+                }           
+
+                easyIndex = rand.Next(0, 9);
+                if(easyIndex <= 2) {
+                    return goodMessage;
+                } else {
+                    return badMessage;
+                }
             }
         } 
     }
@@ -173,10 +254,12 @@ public class BruhManager : MonoBehaviour
     public class ComputerComp{
         private int recs;
         public GameObject CompanionText;
+        private bool difficult;
 
-        public ComputerComp(GameObject CompanionText) {
+        public ComputerComp(bool difficult, GameObject CompanionText) {
             this.recs = 0;
             this.CompanionText = CompanionText;
+            this.difficult = difficult;
         }
 
         public void displayCompMessage() {
@@ -189,24 +272,62 @@ public class BruhManager : MonoBehaviour
             int easyIndex = rand.Next(0, 10);
             string recMessage = "Play any card";
             //easy companion reccomendations
-            if(playerColorConsecCount == 1) {
-                recMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().frontColor;
-            } 
-            
-            if(playerNumberConsecCount == 1) {
-                recMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().faceValue;
-            } 
+            if(difficult == false) {
+                if(playerColorConsecCount == 1) {
+                    recMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().frontColor;
+                } 
+                
+                if(playerNumberConsecCount == 1) {
+                    recMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().faceValue;
+                } 
 
-            if(playerGreaterConsecCount == 1) {
-                recMessage = "Don't play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
-            }
+                if(playerGreaterConsecCount == 1) {
+                    recMessage = "Don't play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
+                }
 
-            if(playerLowerConsecCount == 1) {
-                recMessage = "Don't play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
-            }
+                if(playerLowerConsecCount == 1) {
+                    recMessage = "Don't play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
+                }
 
-            if(playerMovesConsecCount == 5) {
-                recMessage = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
+                if(playerMovesConsecCount == 4) {
+                    recMessage = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
+                }
+            } else {
+                int arrayCount = 0;
+                string[] goodArray = new string[6];
+
+                if(playerColorConsecCount == 1) {
+                    goodArray[arrayCount] = "Don't play another " + lastCardPlayed.GetComponent<Card>().frontColor;
+                    arrayCount++;
+                } 
+                
+                if(playerNumberConsecCount == 1) {
+                    goodArray[arrayCount] = "Don't play another " + lastCardPlayed.GetComponent<Card>().faceValue;
+                    arrayCount++;
+                } 
+
+                if(playerGreaterConsecCount == 1) {
+                    goodArray[arrayCount] = "Don't play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
+                    arrayCount++;
+                }
+
+                if(playerLowerConsecCount == 1) {
+                    goodArray[arrayCount] = "Don't play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
+                    arrayCount++;
+                }
+
+                if(playerMovesConsecCount == 4) {
+                    goodArray[arrayCount] = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
+                    arrayCount++;
+                }
+
+                arrayCount--;
+                if(arrayCount == -1) {
+                    recMessage = "Play any card";
+                } else {
+                    easyIndex = rand.Next(0, arrayCount);
+                    recMessage = goodArray[easyIndex];
+                }
             }
 
             return recMessage;
@@ -242,6 +363,17 @@ public class BruhManager : MonoBehaviour
         }
     }
 
+    private void DisplayUserPlay(GameObject currentCard)
+    {
+        float x = userXPos;
+        float z = 100f;
+
+        
+        currentCard.transform.position = new Vector3(x + 420f, userYPos + 350f, z);
+
+        currentCard.SetActive(true);
+    }
+
     private void flipCard(GameObject currentCard) {
         currentCard.SetActive(false);
     }
@@ -274,23 +406,29 @@ public class BruhManager : MonoBehaviour
             if(currentState == 0) {
                 Debug.Log("state 0 starting");
                 //deal user their cards
-                Debug.Log("Player dealt cards");
-                GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Player cards dealt";
-                for(int i = 0; i < 7; i++) {
-                    userPlayer.addToHand(pool[i]);
-                    pool.RemoveAt(i);
+                GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Select a difficulty";
+                if(currentInput.Equals("DiffButton")) {
+                    GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Player cards dealt";
+                    for(int i = 0; i < 7; i++) {
+                        userPlayer.addToHand(pool[i]);
+                        pool.RemoveAt(i);
+                    }
+                    EasyButton.SetActive(false);
+                    DiffButton.SetActive(false);
+                    Debug.Log("Diffculty is: " + diff);
+                    opponent = new ComputerOpp(diff, OppText);
+                    companion = new ComputerComp(diff, CompanionText);
+                    DisplayOneHand(userPlayer);
+                    currentInput = "empty";
+                    currentState = 1;
                 }
-
-                DisplayOneHand(userPlayer);
-                currentInput = "empty";
-                currentState = 1;
             } else if(currentState == 1) {
                 Debug.Log("state 1 starting");
                 //have computer opponent give their message
                 opponent.displayOppMessage();
                 currentState = 2;
             } else if(currentState == 2) {
-                GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Enter the index of the card you'd like to play (1 is leftmost card)";
+                GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Enter the index of the card you'd like to play (1 is leftmost card), help, or click draw card button";
                 Debug.Log("state 2 starting");
                 //wait for user input
                 if(!currentInput.Equals("empty")) {
@@ -314,12 +452,22 @@ public class BruhManager : MonoBehaviour
                         Debug.Log(playerHand);
                         Debug.Log("recieved user input: " + currentInput);
                         if(currentInput.Equals("help")) {
-                            if(turnsSinceCompHelp >= 3) {
+                            if(diff == false) {
+                                if(turnsSinceCompHelp >= 3) {
                                 currentState = 3;
                                 turnsSinceCompHelp = 0;
+                                } else {
+                                    Debug.Log("Companion is on cooldown");
+                                    CompanionText.GetComponent<TMPro.TextMeshProUGUI>().text = "Companion is on cooldown";
+                                }
                             } else {
-                                Debug.Log("Companion is on cooldown");
-                                CompanionText.GetComponent<TMPro.TextMeshProUGUI>().text = "Companion is on cooldown";
+                                if(turnsSinceCompHelp >= 5) {
+                                    currentState = 3;
+                                    turnsSinceCompHelp = 0;
+                                } else {
+                                    Debug.Log("Companion is on cooldown");
+                                    CompanionText.GetComponent<TMPro.TextMeshProUGUI>().text = "Companion is on cooldown";
+                                }
                             }
                         } else if(currentInput.Equals("deck")) {
                             userPlayer.addToHand(pool[0]);
@@ -354,7 +502,7 @@ public class BruhManager : MonoBehaviour
                 if(playerChoiceIndex != -1) {
                     if(roundsPlayed == 0) {
                         lastCardPlayed = userPlayer.playCard(playerChoiceIndex - 1);
-                        flipCard(lastCardPlayed);
+                        DisplayUserPlay(lastCardPlayed);
                         DisplayOneHand(userPlayer);
                         if(lastCardPlayed.GetComponent<Card>().frontColor.Equals("Black")) {
                             playerBruhConsecCount = 1;
@@ -446,8 +594,9 @@ public class BruhManager : MonoBehaviour
                             //play card
                             playerBruhConsecCount = bruhSequenceChecker(playerBruhConsecCount, userPlayer.peekAtCard(playerChoiceIndex - 1));
                             Debug.Log("Secret count is: " + playerBruhConsecCount);
-                            lastCardPlayed = userPlayer.playCard(playerChoiceIndex - 1);
                             flipCard(lastCardPlayed);
+                            lastCardPlayed = userPlayer.playCard(playerChoiceIndex - 1);
+                            DisplayUserPlay(lastCardPlayed);
                             GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Your move to play " + lastCardPlayed.GetComponent<Card>().faceValue + " of " + lastCardPlayed.GetComponent<Card>().suitValueString + " was accepted";
                             playerMovesConsecCount++;
                         } else {
@@ -455,9 +604,12 @@ public class BruhManager : MonoBehaviour
                         }
                     }
                     roundsPlayed++;
+                } else {
+                    GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Drawing card";
                 }
                 DisplayOneHand(userPlayer);
                 turnsSinceCompHelp++;
+                CompanionText.GetComponent<TMPro.TextMeshProUGUI>().text = "";
 
                 currentState = 1;
             }
@@ -477,8 +629,6 @@ public class BruhManager : MonoBehaviour
     {
         Debug.Log("Bruh game Starting");
         cardDealer = CardDealer.GetComponent<CardDealer>();
-        opponent = new ComputerOpp(false, OppText);
-        companion = new ComputerComp(CompanionText);
         cardDealer.cardSize = Card.cardSize.HUGE;
         pool = cardDealer.RandomCards(52, 1, 13, true, true, true, true);
        
@@ -544,6 +694,11 @@ public class BruhManager : MonoBehaviour
 
     public void DifficultMode() {
         diff = true;
-        currentInput = "Button";
+        currentInput = "DiffButton";
+    }
+
+    public void EasyMode() {
+        diff = false;
+        currentInput = "DiffButton";
     }
 }
