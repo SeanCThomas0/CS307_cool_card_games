@@ -619,7 +619,7 @@ public class BruhManager : MonoBehaviour
 
     IEnumerator  sleepFunction() {
         sleeping = true;
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         sleeping = false;
         sleepRunning = false;
     }
