@@ -145,7 +145,7 @@ public class GoFishLogic : MonoBehaviour
         queue.Enqueue(turn);
 
         gameState = gameStates.PICK_PLAYER_TO_REQUEST;
-         //gameState = gameStates.DEMO_POOL_RAPID_FIRE; // to demonstrate win conditions
+        //gameState = gameStates.DEMO_POOL_RAPID_FIRE; // to demonstrate win conditions
         gameAlert = gameAlerts.NONE;
 
         gaveToBot = false;
@@ -260,6 +260,8 @@ public class GoFishLogic : MonoBehaviour
 
                 break;
             case gameStates.PICK_FROM_POOL:
+                // this.GetComponent<AudioSource>().Play();
+
                 if (pool.Count <= 0)
                 {
                     gameState = gameStates.END_GAME;
