@@ -24,12 +24,16 @@ public class UserPreferences : MonoBehaviour
     public GameObject errorText;
     private bool changeFailed;
 
+    private int numUnlocked;
+    private bool hasWon;
+
     void Start()
     {
         auth = FirebaseAuth.DefaultInstance;
         databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
 
         changeFailed = false;
+        numUnlocked = 0;
 
         RetrieveVarsFromFirebase();
 
@@ -44,35 +48,42 @@ public class UserPreferences : MonoBehaviour
 
     private async void RetrieveVarsFromFirebase()
     {
+        // GET SELECTED DESIGN
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/selected_design").GetValueAsync().ContinueWith(task =>
             {
                 if (task.IsCanceled)
                 {
-                    Debug.Log("card_set_to = blue_outline_simple");
+                    Debug.Log("get selected design cancelled");
                 }
                 if (task.IsFaulted)
                 {
-                    Debug.Log("card_set_to = blue_outline_simple");
+                    Debug.Log("get selected design faulted");
                 }
                 else
                 {
                     if (task.Result.Value != null)
                     {
                         SetVariable(task.Result.Value.ToString());
-                        Debug.Log("from firebase =" + customDesign);
+                        Debug.Log("from firebase (design) =" + customDesign);
+                    }
+                    else
+                    {
+                        SetVariable("blue_outline_simple");
+                        Debug.Log("nothing in firebase (design), set to =" + customDesign);
                     }
                 }
             });
 
+        // GET CARD SIZE
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/card_size").GetValueAsync().ContinueWith(task =>
         {
             if (task.IsCanceled)
             {
-                // Debug.Log("card_set_to = blue_outline_simple");
+                Debug.Log("get card size cancelled");
             }
             if (task.IsFaulted)
             {
-                // Debug.Log("card_set_to = blue_outline_simple");
+                Debug.Log("get card size faulted");
             }
             else
             {
@@ -80,7 +91,13 @@ public class UserPreferences : MonoBehaviour
                 {
                     cardSize = (Card.cardSize)Int32.Parse(task.Result.Value.ToString());
 
-                    Debug.Log("card size =" + cardSize);
+                    Debug.Log("from firebase (size) =" + cardSize);
+                }
+                else
+                {
+                    cardSize = Card.cardSize.DEFAULT;
+                    databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/card_size").SetValueAsync(1);
+                    Debug.Log("nothing in firebase (size), set to =" + cardSize);
                 }
             }
         });
@@ -97,6 +114,8 @@ public class UserPreferences : MonoBehaviour
                 cardSizeButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Large";
                 break;
         }
+
+        PositionCheck();
     }
 
     private async void DetermineUnlock()
@@ -106,11 +125,11 @@ public class UserPreferences : MonoBehaviour
         {
             if (task.IsCanceled)
             {
-                // Debug.Log("card_set_to = blue_outline_simple");
+                Debug.Log("unlock emoji cancelled");
             }
             if (task.IsFaulted)
             {
-                // Debug.Log("card_set_to = blue_outline_simple");
+                Debug.Log("unlock emoji faulted");
             }
             else
             {
@@ -119,6 +138,12 @@ public class UserPreferences : MonoBehaviour
                     if (Int32.Parse(task.Result.Value.ToString()) >= 5)
                     {
                         databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/emoji").SetValueAsync(true);
+                        numUnlocked++;
+                    }
+
+                    if (Int32.Parse(task.Result.Value.ToString()) > 0)
+                    {
+                        hasWon = true;
                     }
                 }
             }
@@ -129,11 +154,11 @@ public class UserPreferences : MonoBehaviour
         {
             if (task.IsCanceled)
             {
-                Debug.Log("cancelled");
+                Debug.Log("unlock fish cancelled");
             }
             if (task.IsFaulted)
             {
-                Debug.Log("faulted");
+                Debug.Log("unlock fish faulted");
             }
             else
             {
@@ -142,6 +167,7 @@ public class UserPreferences : MonoBehaviour
                     if (Int32.Parse(task.Result.Value.ToString()) >= 20)
                     {
                         databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/fish").SetValueAsync(true);
+                        numUnlocked++;
                     }
                 }
             }
@@ -152,11 +178,11 @@ public class UserPreferences : MonoBehaviour
         {
             if (task.IsCanceled)
             {
-                // Debug.Log("card_set_to = blue_outline_simple");
+                Debug.Log("unlock pets cancelled");
             }
             if (task.IsFaulted)
             {
-                // Debug.Log("card_set_to = blue_outline_simple");
+                Debug.Log("unlock pets faulted");
             }
             else
             {
@@ -165,6 +191,12 @@ public class UserPreferences : MonoBehaviour
                     if (Int32.Parse(task.Result.Value.ToString()) >= 5)
                     {
                         databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/pets").SetValueAsync(true);
+                        numUnlocked++;
+                    }
+
+                    if (Int32.Parse(task.Result.Value.ToString()) > 0)
+                    {
+                        hasWon = true;
                     }
                 }
             }
@@ -175,11 +207,11 @@ public class UserPreferences : MonoBehaviour
         {
             if (task.IsCanceled)
             {
-                // Debug.Log("card_set_to = blue_outline_simple");
+                Debug.Log("unlock purdue cancelled");
             }
             if (task.IsFaulted)
             {
-                // Debug.Log("card_set_to = blue_outline_simple");
+                Debug.Log("unlock purdue faulted");
             }
             else
             {
@@ -188,20 +220,22 @@ public class UserPreferences : MonoBehaviour
                     if (Int32.Parse(task.Result.Value.ToString()) >= 20)
                     {
                         databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/purdue").SetValueAsync(true);
+                        numUnlocked++;
                     }
                 }
             }
         });
 
+        // UNLOCK CHECKERED BLACK
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/win_count").GetValueAsync().ContinueWith(task =>
         {
             if (task.IsCanceled)
             {
-                // Debug.Log("card_set_to = blue_outline_simple");
+                Debug.Log("unlock checkered black cancelled");
             }
             if (task.IsFaulted)
             {
-                // Debug.Log("card_set_to = blue_outline_simple");
+                Debug.Log("unlock checkered black faulted");
             }
             else
             {
@@ -210,10 +244,28 @@ public class UserPreferences : MonoBehaviour
                     if (Int32.Parse(task.Result.Value.ToString()) >= 5)
                     {
                         databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/checkered_black").SetValueAsync(true);
+                        numUnlocked++;
+                    }
+
+                    if (Int32.Parse(task.Result.Value.ToString()) > 0)
+                    {
+                        hasWon = true;
                     }
                 }
             }
         });
+
+        // UNLOCK TURKSTRA
+        if (numUnlocked >= 15)
+        {
+            await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/turkstra").SetValueAsync(true);
+        }
+
+        // UNLOCK LOGO
+        if (hasWon)
+        {
+            await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/logo").SetValueAsync(true);
+        }
     }
 
     public async void ChangeCardSize()
@@ -244,15 +296,18 @@ public class UserPreferences : MonoBehaviour
         Debug.Log("clicked " + clickedName);
         errorText.SetActive(false);
 
+        DetermineUnlock();
+
+        // DETERMINE IF CLICKED DESIGN IS UNLOCKED
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/" + clickedName).GetValueAsync().ContinueWith(task =>
             {
                 if (task.IsCanceled)
                 {
-                    Debug.Log("card_set_to = blue_outline_simple");
+                    Debug.Log("unlock check cancelled");
                 }
                 if (task.IsFaulted)
                 {
-                    Debug.Log("card_set_to = blue_outline_simple");
+                    Debug.Log("unlock check faulted");
                 }
                 else
                 {
@@ -319,12 +374,61 @@ public class UserPreferences : MonoBehaviour
 
         if (changeFailed)
         {
+            switch (clickedName)
+            {
+                case "checkered_black":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "Win at least 5 games of Euchre to unlock this design. Please choose another design.";
+                    break;
+                case "checkered_red":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "You have not yet unlocked this design. Please choose another design.";
+                    break;
+                case "boilermaker_special":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "You have not yet unlocked this design. Please choose another design.";
+                    break;
+                case "candy_cane":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "You have not yet unlocked this design. Please choose another design.";
+                    break;
+                case "daddy_daniels":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "You have not yet unlocked this design. Please choose another design.";
+                    break;
+                case "dots":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "You have not yet unlocked this design. Please choose another design.";
+                    break;
+                case "emoji":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "Win at least 5 games of Solitaire to unlock this design. Please choose another design.";
+                    break;
+                case "fish":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "Achieve a set count of at least 20 in Go Fish to unlock this design. Please choose another design.";
+                    break;
+                case "food":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "You have not yet unlocked this design. Please choose another design.";
+                    break;
+                case "logo":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "Win at least once in any card game to unlock this design. Please choose another design.";
+                    break;
+                case "pets":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "Win at least 5 games of Go Fish to unlock this design. Please choose another design.";
+                    break;
+                case "purdue_pete":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "You have not yet unlocked this design. Please choose another design.";
+                    break;
+                case "purdue":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "Achieve a trick count of at least 20 in Euchre to unlock this design. Please choose another design.";
+                    break;
+                case "rick_roll":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "You have not yet unlocked this design. Please choose another design.";
+                    break;
+                case "turkstra":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "Unlock all other card designs to unlock this design. Please choose another design.";
+                    break;
+            }
+
             errorText.SetActive(true);
             changeFailed = false;
         }
         else
         {
-            Debug.Log("customDesign = " + customDesign);
+            Debug.Log("customDesign changed = " + customDesign);
             await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/selected_design").SetValueAsync(clickedName);
             PositionCheck();
         }
@@ -591,9 +695,8 @@ public class UserPreferences : MonoBehaviour
                 break;
         }
 
-        Debug.Log("customDesign = " + customDesign);
+        Debug.Log("customDesign set to = " + customDesign);
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/selected_design").SetValueAsync(setToString);
-
         PositionCheck();
     }
 }
