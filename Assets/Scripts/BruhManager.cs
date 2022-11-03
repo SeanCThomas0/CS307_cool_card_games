@@ -28,12 +28,12 @@ public class BruhManager : MonoBehaviour
 
     public int playerChoiceIndex = 0;
     public int roundsPlayed = 0;
-    public int playerColorConsecCount = 0;
-    public int playerNumberConsecCount = 0;
-    public int playerGreaterConsecCount = 0;
-    public int playerLowerConsecCount = 0;
-    public int playerBruhConsecCount = 0;
-    public int playerMovesConsecCount = 0; //for playing card >3 times
+    public static int playerColorConsecCount = 0;
+    public static int playerNumberConsecCount = 0;
+    public static int playerGreaterConsecCount = 0;
+    public static int playerLowerConsecCount = 0;
+    public static int playerBruhConsecCount = 0;
+    public static int playerMovesConsecCount = 0; //for playing card >3 times
     public int turnsSinceCompHelp = 3;
     public float userXPos = 300f;
     public float userYPos = 200f;
@@ -109,9 +109,65 @@ public class BruhManager : MonoBehaviour
         }
 
         public void displayOppMessage() {
-            OppText.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opp moves count: " + turnsCount;
+            OppText.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opponent says: " + recommendationOptions();
             turnsCount++;
         }
+
+        private string recommendationOptions() {
+            System.Random rand = new System.Random();
+            int easyIndex = rand.Next(0, 10);
+            string goodMessage = "Play any card";
+            string badMessage = "Good Luck";
+            //easy companion reccomendations
+
+            //start of good advice
+            if(playerColorConsecCount == 1) {
+                goodMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().frontColor;
+            } 
+            
+            if(playerNumberConsecCount == 1) {
+                goodMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().faceValue;
+            } 
+
+            if(playerGreaterConsecCount == 1) {
+                goodMessage = "Don't play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
+            }
+
+            if(playerLowerConsecCount == 1) {
+                goodMessage = "Don't play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
+            }
+
+            if(playerMovesConsecCount == 5) {
+                goodMessage = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
+            }
+
+            //start of bad advice
+            if(playerColorConsecCount == 1) {
+                goodMessage = "play another " + lastCardPlayed.GetComponent<Card>().frontColor;
+            } 
+            
+            if(playerNumberConsecCount == 1) {
+                goodMessage = "play another " + lastCardPlayed.GetComponent<Card>().faceValue;
+            } 
+
+            if(playerGreaterConsecCount == 1) {
+                goodMessage = "play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
+            }
+
+            if(playerLowerConsecCount == 1) {
+                goodMessage = "play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
+            }
+
+            if(playerMovesConsecCount == 5) {
+                goodMessage = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
+            }
+
+            if(easyIndex <= 3) {
+                return goodMessage;
+            } else {
+                return badMessage;
+            }
+        } 
     }
 
     public class ComputerComp{
@@ -124,9 +180,37 @@ public class BruhManager : MonoBehaviour
         }
 
         public void displayCompMessage() {
-            CompanionText.GetComponent<TMPro.TextMeshProUGUI>().text = "companion recommendations count: " + recs;
+            CompanionText.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer companion says: " + recommendationOptions();
             recs++;
         }
+
+        private string recommendationOptions() {
+            System.Random rand = new System.Random();
+            int easyIndex = rand.Next(0, 10);
+            string recMessage = "Play any card";
+            //easy companion reccomendations
+            if(playerColorConsecCount == 1) {
+                recMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().frontColor;
+            } 
+            
+            if(playerNumberConsecCount == 1) {
+                recMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().faceValue;
+            } 
+
+            if(playerGreaterConsecCount == 1) {
+                recMessage = "Don't play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
+            }
+
+            if(playerLowerConsecCount == 1) {
+                recMessage = "Don't play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
+            }
+
+            if(playerMovesConsecCount == 5) {
+                recMessage = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
+            }
+
+            return recMessage;
+        } 
     }
 
     private int bruhSequenceChecker(int bruhIndex, GameObject currCard) {
@@ -188,7 +272,7 @@ public class BruhManager : MonoBehaviour
         bool finished = checkForWinner();
         if(finished == false) {
             if(currentState == 0) {
-                //Debug.Log("state 0 starting");
+                Debug.Log("state 0 starting");
                 //deal user their cards
                 Debug.Log("Player dealt cards");
                 GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Player cards dealt";
@@ -201,13 +285,13 @@ public class BruhManager : MonoBehaviour
                 currentInput = "empty";
                 currentState = 1;
             } else if(currentState == 1) {
-                //Debug.Log("state 1 starting");
+                Debug.Log("state 1 starting");
                 //have computer opponent give their message
                 opponent.displayOppMessage();
                 currentState = 2;
             } else if(currentState == 2) {
                 GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Enter the index of the card you'd like to play (1 is leftmost card)";
-                //Debug.Log("state 2 starting");
+                Debug.Log("state 2 starting");
                 //wait for user input
                 if(!currentInput.Equals("empty")) {
                     int intInput = -1; //= int.Parse(currentInput);
@@ -232,6 +316,7 @@ public class BruhManager : MonoBehaviour
                         if(currentInput.Equals("help")) {
                             if(turnsSinceCompHelp >= 3) {
                                 currentState = 3;
+                                turnsSinceCompHelp = 0;
                             } else {
                                 Debug.Log("Companion is on cooldown");
                                 CompanionText.GetComponent<TMPro.TextMeshProUGUI>().text = "Companion is on cooldown";
@@ -243,11 +328,12 @@ public class BruhManager : MonoBehaviour
                             Debug.Log("deck draw");
                             playerChoiceIndex = -1;
                             playerMovesConsecCount = 0;
+                            currentState = 4;
                         } else {
                             playerChoiceIndex  = intInput;
+                            currentState = 4;
                         }
 
-                        currentState = 4;
                     } else {
                         Debug.Log("Invalid input");
                         GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid Input, choose to \"help\", click the deck button on the right, or enter a valid hand index for a card in your hand";
@@ -255,13 +341,13 @@ public class BruhManager : MonoBehaviour
                     currentInput = "empty";
                 }
             } else if(currentState == 3) {
-                //Debug.Log("state 3 starting");
+                Debug.Log("state 3 starting");
                 //if input asks for companion advice:
                 //give companion advice then reprompt the user to make a move
                 companion.displayCompMessage();
                 currentState = 2;
             } else if(currentState == 4) {
-                //Debug.Log("state 4 starting");
+                Debug.Log("state 4 starting");
                 //evaluate user input 
                 //if user input is valid accept or reject move and update counters
                 //once finished go back to state 1
@@ -371,6 +457,7 @@ public class BruhManager : MonoBehaviour
                     roundsPlayed++;
                 }
                 DisplayOneHand(userPlayer);
+                turnsSinceCompHelp++;
 
                 currentState = 1;
             }
