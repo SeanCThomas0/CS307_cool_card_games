@@ -10,6 +10,9 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private TMPro.TextMeshProUGUI volumeSliderText = null;
     [SerializeField] public GameObject clickSound;
     [SerializeField] public AudioSource guh;
+    [SerializeField] private Slider volumeSliderMusic = null;
+    [SerializeField] private TMPro.TextMeshProUGUI volumeSliderMusicText = null;
+    [SerializeField] public AudioSource UNOSONG1;
 
 
     // Start is called before the first frame update
@@ -39,6 +42,14 @@ public class SoundManager : MonoBehaviour
 
 
         
+    }
+
+    public void VolumeSliderMusic(float volume) {
+        volumeSliderMusicText.text=volume.ToString("0.0");
+
+        float volumeValue = volumeSlider.value;
+        PlayerPrefs.SetFloat("VolumeValue",volumeValue);
+        LoadValues();
     }
 
 
