@@ -1015,7 +1015,7 @@ GameObject:
   - component: {fileID: 707182330}
   - component: {fileID: 707182329}
   m_Layer: 5
-  m_Name: Easy (1)
+  m_Name: Exit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
