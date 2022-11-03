@@ -109,9 +109,65 @@ public class BruhManager : MonoBehaviour
         }
 
         public void displayOppMessage() {
-            OppText.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opp moves count: " + turnsCount;
+            OppText.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opponent says: " + recommendationOptions();
             turnsCount++;
         }
+
+        private string recommendationOptions() {
+            System.Random rand = new System.Random();
+            int easyIndex = rand.Next(0, 10);
+            string goodMessage = "Play any card";
+            string badMessage = "Good Luck";
+            //easy companion reccomendations
+
+            //start of good advice
+            if(playerColorConsecCount == 1) {
+                goodMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().frontColor;
+            } 
+            
+            if(playerNumberConsecCount == 1) {
+                goodMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().faceValue;
+            } 
+
+            if(playerGreaterConsecCount == 1) {
+                goodMessage = "Don't play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
+            }
+
+            if(playerLowerConsecCount == 1) {
+                goodMessage = "Don't play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
+            }
+
+            if(playerMovesConsecCount == 5) {
+                goodMessage = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
+            }
+
+            //start of bad advice
+            if(playerColorConsecCount == 1) {
+                goodMessage = "play another " + lastCardPlayed.GetComponent<Card>().frontColor;
+            } 
+            
+            if(playerNumberConsecCount == 1) {
+                goodMessage = "play another " + lastCardPlayed.GetComponent<Card>().faceValue;
+            } 
+
+            if(playerGreaterConsecCount == 1) {
+                goodMessage = "play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
+            }
+
+            if(playerLowerConsecCount == 1) {
+                goodMessage = "play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
+            }
+
+            if(playerMovesConsecCount == 5) {
+                goodMessage = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
+            }
+
+            if(easyIndex <= 3) {
+                return goodMessage;
+            } else {
+                return badMessage;
+            }
+        } 
     }
 
     public class ComputerComp{
@@ -260,6 +316,7 @@ public class BruhManager : MonoBehaviour
                         if(currentInput.Equals("help")) {
                             if(turnsSinceCompHelp >= 3) {
                                 currentState = 3;
+                                turnsSinceCompHelp = 0;
                             } else {
                                 Debug.Log("Companion is on cooldown");
                                 CompanionText.GetComponent<TMPro.TextMeshProUGUI>().text = "Companion is on cooldown";
@@ -400,6 +457,7 @@ public class BruhManager : MonoBehaviour
                     roundsPlayed++;
                 }
                 DisplayOneHand(userPlayer);
+                turnsSinceCompHelp++;
 
                 currentState = 1;
             }
