@@ -149,7 +149,7 @@ public class SolitaireUserInput : MonoBehaviour
         }
     }
 
-    bool Stackable(GameObject selected) {
+    public bool Stackable(GameObject selected) {
         Selectable s1 = slot1.GetComponent<Selectable>();
         Selectable s2 = selected.GetComponent<Selectable>();
         // compare them to see if they stack
@@ -192,7 +192,7 @@ public class SolitaireUserInput : MonoBehaviour
         return false;
     }
 
-    void Stack(GameObject selected) {
+    public void Stack(GameObject selected) {
         // if on top of King or empty bottom stack the cards in place
         // else stack the cards with a negative y offset
         Selectable s1 = slot1.GetComponent<Selectable>();

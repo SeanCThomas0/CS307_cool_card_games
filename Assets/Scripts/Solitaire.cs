@@ -15,6 +15,7 @@ public class Solitaire : MonoBehaviour
     public GameObject[] bottomPos;
     public GameObject[] topPos;
     public List<string>[] playSpaces;
+    public List<GameObject>[] gameSpaces;
     public List<string>[] tops;
     public List<string> tripsOnDisplay = new List<string>();
     public List<List<string>> deckTrips = new List<List<string>>();
@@ -27,6 +28,14 @@ public class Solitaire : MonoBehaviour
     public List<string> playSpace6 = new List<string>();
     public List<string> playSpace7 = new List<string>();
 
+    public List<GameObject> gameSpace1 = new List<GameObject>();
+    public List<GameObject> gameSpace2 = new List<GameObject>();
+    public List<GameObject> gameSpace3 = new List<GameObject>();
+    public List<GameObject> gameSpace4 = new List<GameObject>();
+    public List<GameObject> gameSpace5 = new List<GameObject>();
+    public List<GameObject> gameSpace6 = new List<GameObject>();
+    public List<GameObject> gameSpace7 = new List<GameObject>();
+
     public List<string> deck;
     public List<string> discardPile = new List<string>();
     private int deckLocation;
@@ -37,6 +46,7 @@ public class Solitaire : MonoBehaviour
     void Start()
     {
         playSpaces = new List<string>[] {playSpace1, playSpace2, playSpace3, playSpace4, playSpace5, playSpace6, playSpace7};
+        gameSpaces = new List<GameObject>[] {gameSpace1, gameSpace2, gameSpace3, gameSpace4, gameSpace5, gameSpace6, gameSpace7};
        PlayCards();
     }
 
@@ -87,9 +97,11 @@ public class Solitaire : MonoBehaviour
                 yield return new WaitForSeconds(0.01f);
                 GameObject newCard = Instantiate(cardPrefab, new Vector3(bottomPos[i].transform.position.x, bottomPos[i].transform.position.y - yOffset, bottomPos[i].transform.position.z - zOffset), Quaternion.identity, bottomPos[i].transform);
                 newCard.name = card;
+                gameSpaces[i].Add(newCard);
                 newCard.GetComponent<Selectable>().row = i;
                 if (card == playSpaces[i][playSpaces[i].Count - 1]) {
                     newCard.GetComponent<Selectable>().faceUp = true;
+                    
                 }
                 yOffset = yOffset + 0.3f;
                 zOffset = zOffset + 0.03f;
