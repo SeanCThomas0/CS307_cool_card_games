@@ -14,15 +14,31 @@ public class UserPreferences : MonoBehaviour
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
 
-    public Card.cardSize cardSize = Card.cardSize.DEFAULT;
-    public Card.customDesign customDesign = Card.customDesign.GREEN;
+    public Card.cardSize cardSize;
+    public Card.customDesign customDesign;
 
     public GameObject cardSizeButtonText;
     public GameObject checkDefault;
     public GameObject checkUnlocked;
 
-    List<string> unlockedDesigns;
     public GameObject errorText;
+    private bool changeFailed;
+
+    private int numUnlocked;
+    private bool hasWon;
+
+    void Start()
+    {
+        auth = FirebaseAuth.DefaultInstance;
+        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
+
+        changeFailed = false;
+        numUnlocked = 0;
+
+        RetrieveVarsFromFirebase();
+
+        DetermineUnlock();
+    }
 
     void OnDisable()
     {
@@ -30,14 +46,62 @@ public class UserPreferences : MonoBehaviour
         PlayerPrefs.SetInt("customDesign", (int)customDesign);
     }
 
-    void OnEnable()
+    private async void RetrieveVarsFromFirebase()
     {
-        cardSize = (Card.cardSize)PlayerPrefs.GetInt("cardSize");
-        customDesign = (Card.customDesign)PlayerPrefs.GetInt("customDesign");
-    }
+        // GET SELECTED DESIGN
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/selected_design").GetValueAsync().ContinueWith(task =>
+            {
+                if (task.IsCanceled)
+                {
+                    Debug.Log("get selected design cancelled");
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.Log("get selected design faulted");
+                }
+                else
+                {
+                    if (task.Result.Value != null)
+                    {
+                        SetVariable(task.Result.Value.ToString());
+                        Debug.Log("from firebase (design) =" + customDesign);
+                    }
+                    else
+                    {
+                        SetVariable("blue_outline_simple");
+                        Debug.Log("nothing in firebase (design), set to =" + customDesign);
+                    }
+                }
+            });
 
-    void Start()
-    {
+        // GET CARD SIZE
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/card_size").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("get card size cancelled");
+            }
+            if (task.IsFaulted)
+            {
+                Debug.Log("get card size faulted");
+            }
+            else
+            {
+                if (task.Result.Value != null)
+                {
+                    cardSize = (Card.cardSize)Int32.Parse(task.Result.Value.ToString());
+
+                    Debug.Log("from firebase (size) =" + cardSize);
+                }
+                else
+                {
+                    cardSize = Card.cardSize.DEFAULT;
+                    databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/card_size").SetValueAsync(1);
+                    Debug.Log("nothing in firebase (size), set to =" + cardSize);
+                }
+            }
+        });
+
         switch (cardSize)
         {
             case Card.cardSize.SMALL:
@@ -50,370 +114,324 @@ public class UserPreferences : MonoBehaviour
                 cardSizeButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Large";
                 break;
         }
-
-        auth = FirebaseAuth.DefaultInstance;
-        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
-
-        unlockedDesigns = new List<string>();
-
-        DetermineUnlock();
 
         PositionCheck();
     }
 
     private async void DetermineUnlock()
     {
-        // string curUsername = null;
-        // databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("user_data/username").GetValueAsync().ContinueWith(task =>
-        // {
-        //     if (task.IsCanceled)
-        //     {
-        //         Debug.Log("UserPreferences.cs curUsername canceled");
-        //     }
-        //     if (task.IsFaulted)
-        //     {
-        //         Debug.Log("UserPreferences.cs curUsername faulted");
-        //     }
-        //     else
-        //     {
-        //         curUsername = task.Result.Value.ToString();
-        //         Debug.Log("username: " + curUsername);
-        //     }
-        // });
-
-        string cardToCheck = "blue_outline_simple";
-        for (int i = 0; i < 15; i++)
+        // UNLOCK EMOJI
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/solitaire/win_count").GetValueAsync().ContinueWith(task =>
         {
-            switch (i)
+            if (task.IsCanceled)
             {
-                case 0:
-                    cardToCheck = "checkered_red";
-                    break;
-                case 1:
-                    cardToCheck = "boilermaker_special";
-                    break;
-                case 2:
-                    cardToCheck = "candy_cane";
-                    break;
-                case 3:
-                    cardToCheck = "daddy_daniels";
-                    break;
-                case 4:
-                    cardToCheck = "dots";
-                    break;
-                case 5:
-                    cardToCheck = "emoji";
-                    break;
-                case 6:
-                    cardToCheck = "fish";
-                    break;
-                case 7:
-                    cardToCheck = "food";
-                    break;
-                case 8:
-                    cardToCheck = "logo";
-                    break;
-                case 9:
-                    cardToCheck = "pets";
-                    break;
-                case 10:
-                    cardToCheck = "purdue_pete";
-                    break;
-                case 11:
-                    cardToCheck = "purdue";
-                    break;
-                case 12:
-                    cardToCheck = "rick_roll";
-                    break;
-                case 13:
-                    cardToCheck = "turkstra";
-                    break;
-                case 14:
-                    cardToCheck = "checkered_black";
-                    break;
+                Debug.Log("unlock emoji cancelled");
             }
-
-            await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/" + cardToCheck).GetValueAsync().ContinueWith(task =>
+            if (task.IsFaulted)
             {
-                if (task.IsCanceled)
+                Debug.Log("unlock emoji faulted");
+            }
+            else
+            {
+                if (task.Result.Value != null)
                 {
-                    Debug.Log("card_set_to = blue_outline_simple");
-                }
-                if (task.IsFaulted)
-                {
-                    Debug.Log("card_set_to = blue_outline_simple");
-                }
-                else
-                {
-                    if (task.Result.Value != null && (bool)task.Result.Value)
+                    if (Int32.Parse(task.Result.Value.ToString()) >= 5)
                     {
-                        unlockedDesigns.Add(cardToCheck);
-                        Debug.Log("unlocked = " + unlockedDesigns[unlockedDesigns.Count - 1]);
+                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/emoji").SetValueAsync(true);
+                        numUnlocked++;
+                    }
+
+                    if (Int32.Parse(task.Result.Value.ToString()) > 0)
+                    {
+                        hasWon = true;
                     }
                 }
-            });
+            }
+        });
+
+        // UNLOCK FISH
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/set_count").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("unlock fish cancelled");
+            }
+            if (task.IsFaulted)
+            {
+                Debug.Log("unlock fish faulted");
+            }
+            else
+            {
+                if (task.Result.Value != null)
+                {
+                    if (Int32.Parse(task.Result.Value.ToString()) >= 20)
+                    {
+                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/fish").SetValueAsync(true);
+                        numUnlocked++;
+                    }
+                }
+            }
+        });
+
+        // UNLOCK PETS
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/win_count").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("unlock pets cancelled");
+            }
+            if (task.IsFaulted)
+            {
+                Debug.Log("unlock pets faulted");
+            }
+            else
+            {
+                if (task.Result.Value != null)
+                {
+                    if (Int32.Parse(task.Result.Value.ToString()) >= 5)
+                    {
+                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/pets").SetValueAsync(true);
+                        numUnlocked++;
+                    }
+
+                    if (Int32.Parse(task.Result.Value.ToString()) > 0)
+                    {
+                        hasWon = true;
+                    }
+                }
+            }
+        });
+
+        // UNLOCK PURDUE
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/trick_count").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("unlock purdue cancelled");
+            }
+            if (task.IsFaulted)
+            {
+                Debug.Log("unlock purdue faulted");
+            }
+            else
+            {
+                if (task.Result.Value != null)
+                {
+                    if (Int32.Parse(task.Result.Value.ToString()) >= 20)
+                    {
+                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/purdue").SetValueAsync(true);
+                        numUnlocked++;
+                    }
+                }
+            }
+        });
+
+        // UNLOCK CHECKERED BLACK
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/win_count").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("unlock checkered black cancelled");
+            }
+            if (task.IsFaulted)
+            {
+                Debug.Log("unlock checkered black faulted");
+            }
+            else
+            {
+                if (task.Result.Value != null)
+                {
+                    if (Int32.Parse(task.Result.Value.ToString()) >= 5)
+                    {
+                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/checkered_black").SetValueAsync(true);
+                        numUnlocked++;
+                    }
+
+                    if (Int32.Parse(task.Result.Value.ToString()) > 0)
+                    {
+                        hasWon = true;
+                    }
+                }
+            }
+        });
+
+        // UNLOCK TURKSTRA
+        if (numUnlocked >= 15)
+        {
+            await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/turkstra").SetValueAsync(true);
+        }
+
+        // UNLOCK LOGO
+        if (hasWon)
+        {
+            await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/logo").SetValueAsync(true);
         }
     }
 
-    public void ChangeCardSize()
+    public async void ChangeCardSize()
     {
         switch (cardSize)
         {
             case Card.cardSize.SMALL:
                 cardSize = Card.cardSize.DEFAULT;
                 cardSizeButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Default";
+                await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/card_size").SetValueAsync(1);
                 break;
             case Card.cardSize.DEFAULT:
                 cardSize = Card.cardSize.LARGE;
                 cardSizeButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Large";
+                await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/card_size").SetValueAsync(2);
                 break;
             case Card.cardSize.LARGE:
                 cardSize = Card.cardSize.SMALL;
                 cardSizeButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Small";
+                await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/card_size").SetValueAsync(0);
                 break;
         }
     }
 
-    public void ChangeDesign()
+    public async void ChangeDesign()
     {
         string clickedName = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name;
         Debug.Log("clicked " + clickedName);
+        errorText.SetActive(false);
 
-        switch (clickedName)
+        DetermineUnlock();
+
+        // DETERMINE IF CLICKED DESIGN IS UNLOCKED
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/" + clickedName).GetValueAsync().ContinueWith(task =>
+            {
+                if (task.IsCanceled)
+                {
+                    Debug.Log("unlock check cancelled");
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.Log("unlock check faulted");
+                }
+                else
+                {
+                    if (task.Result.Value != null && (bool)task.Result.Value)
+                    {
+                        SetVariable(clickedName);
+                    }
+                    else
+                    {
+                        switch (clickedName)
+                        {
+                            case "blue":
+                                customDesign = Card.customDesign.BLUE;
+                                break;
+                            case "blue_outline":
+                                customDesign = Card.customDesign.BLUE_OUTLINE;
+                                break;
+                            case "blue_outline_pattern":
+                                customDesign = Card.customDesign.BLUE_OUTLINE_PATTERN;
+                                break;
+                            case "blue_outline_simple":
+                                customDesign = Card.customDesign.BLUE_OUTLINE_SIMPLE;
+                                break;
+                            case "blue_pattern":
+                                customDesign = Card.customDesign.BLUE_PATTERN;
+                                break;
+                            case "green":
+                                customDesign = Card.customDesign.GREEN;
+                                break;
+                            case "green_outline":
+                                customDesign = Card.customDesign.GREEN_OUTLINE;
+                                break;
+                            case "green_outline_pattern":
+                                customDesign = Card.customDesign.GREEN_OUTLINE_PATTERN;
+                                break;
+                            case "green_outline_simple":
+                                customDesign = Card.customDesign.GREEN_OUTLINE_SIMPLE;
+                                break;
+                            case "green_pattern":
+                                customDesign = Card.customDesign.GREEN_PATTERN;
+                                break;
+                            case "red":
+                                customDesign = Card.customDesign.RED;
+                                break;
+                            case "red_outline":
+                                customDesign = Card.customDesign.RED_OUTLINE;
+                                break;
+                            case "red_outline_pattern":
+                                customDesign = Card.customDesign.RED_OUTLINE_PATTERN;
+                                break;
+                            case "red_outline_simple":
+                                customDesign = Card.customDesign.RED_OUTLINE_SIMPLE;
+                                break;
+                            case "red_pattern":
+                                customDesign = Card.customDesign.RED_PATTERN;
+                                break;
+                            default:
+                                changeFailed = true;
+                                break;
+                        }
+                    }
+                }
+            });
+
+        if (changeFailed)
         {
-            case "blue":
-                customDesign = Card.customDesign.BLUE;
-                errorText.SetActive(false);
-                break;
-            case "blue_outline":
-                customDesign = Card.customDesign.BLUE_OUTLINE;
-                errorText.SetActive(false);
-                break;
-            case "blue_outline_pattern":
-                customDesign = Card.customDesign.BLUE_OUTLINE_PATTERN;
-                errorText.SetActive(false);
-                break;
-            case "blue_outline_simple":
-                customDesign = Card.customDesign.BLUE_OUTLINE_SIMPLE;
-                errorText.SetActive(false);
-                break;
-            case "blue_pattern":
-                customDesign = Card.customDesign.BLUE_PATTERN;
-                errorText.SetActive(false);
-                break;
-            case "green":
-                customDesign = Card.customDesign.GREEN;
-                errorText.SetActive(false);
-                break;
-            case "green_outline":
-                customDesign = Card.customDesign.GREEN_OUTLINE;
-                errorText.SetActive(false);
-                break;
-            case "green_outline_pattern":
-                customDesign = Card.customDesign.GREEN_OUTLINE_PATTERN;
-                errorText.SetActive(false);
-                break;
-            case "green_outline_simple":
-                customDesign = Card.customDesign.GREEN_OUTLINE_SIMPLE;
-                errorText.SetActive(false);
-                break;
-            case "green_pattern":
-                customDesign = Card.customDesign.GREEN_PATTERN;
-                errorText.SetActive(false);
-                break;
-            case "red":
-                customDesign = Card.customDesign.RED;
-                errorText.SetActive(false);
-                break;
-            case "red_outline":
-                customDesign = Card.customDesign.RED_OUTLINE;
-                errorText.SetActive(false);
-                break;
-            case "red_outline_pattern":
-                customDesign = Card.customDesign.RED_OUTLINE_PATTERN;
-                errorText.SetActive(false);
-                break;
-            case "red_outline_simple":
-                customDesign = Card.customDesign.RED_OUTLINE_SIMPLE;
-                errorText.SetActive(false);
-                break;
-            case "red_pattern":
-                customDesign = Card.customDesign.RED_PATTERN;
-                errorText.SetActive(false);
-                break;
-            case "checkered_black":
-                if (unlockedDesigns.Contains("checkered_black"))
-                {
-                    customDesign = Card.customDesign.CHECKER_BLACK;
-                    errorText.SetActive(false);
-                }
-                else
-                {
-                    errorText.SetActive(true);
-                }
-                break;
-            case "checkered_red":
-                if (unlockedDesigns.Contains("checkered_red"))
-                {
-                    customDesign = Card.customDesign.CHECKER_RED;
-                    errorText.SetActive(false);
-                }
-                else
-                {
-                    errorText.SetActive(true);
-                }
-                break;
-            case "boilermaker_special":
-                if (unlockedDesigns.Contains("boilermaker_special"))
-                {
-                    customDesign = Card.customDesign.BOILERMAKER_SPECIAL;
-                    errorText.SetActive(false);
-                }
-                else
-                {
-                    errorText.SetActive(true);
-                }
-                break;
-            case "candy_cane":
-                if (unlockedDesigns.Contains("candy_cane"))
-                {
-                    customDesign = Card.customDesign.CANDY_CANE;
-                    errorText.SetActive(false);
-                }
-                else
-                {
-                    errorText.SetActive(true);
-                }
-                break;
-            case "daddy_daniels":
-                if (unlockedDesigns.Contains("daddy_daniels"))
-                {
-                    customDesign = Card.customDesign.DADDY_DANIELS;
-                    errorText.SetActive(false);
-                }
-                else
-                {
-                    errorText.SetActive(true);
-                }
-                break;
-            case "dots":
-                if (unlockedDesigns.Contains("dots"))
-                {
-                    customDesign = Card.customDesign.DOTS;
-                    errorText.SetActive(false);
-                }
-                else
-                {
-                    errorText.SetActive(true);
-                }
-                break;
-            case "emoji":
-                if (unlockedDesigns.Contains("emoji"))
-                {
-                    customDesign = Card.customDesign.EMOJI;
-                    errorText.SetActive(false);
-                }
-                else
-                {
-                    errorText.SetActive(true);
-                }
-                break;
-            case "fish":
-                if (unlockedDesigns.Contains("fish"))
-                {
-                    customDesign = Card.customDesign.FISH;
-                    errorText.SetActive(false);
-                }
-                else
-                {
-                    errorText.SetActive(true);
-                }
-                break;
-            case "food":
-                if (unlockedDesigns.Contains("food"))
-                {
-                    customDesign = Card.customDesign.FOOD;
-                    errorText.SetActive(false);
-                }
-                else
-                {
-                    errorText.SetActive(true);
-                }
-                break;
-            case "logo":
-                if (unlockedDesigns.Contains("logo"))
-                {
-                    customDesign = Card.customDesign.LOGO;
-                    errorText.SetActive(false);
-                }
-                else
-                {
-                    errorText.SetActive(true);
-                }
-                break;
-            case "pets":
-                if (unlockedDesigns.Contains("pets"))
-                {
-                    customDesign = Card.customDesign.PETS;
-                    errorText.SetActive(false);
-                }
-                else
-                {
-                    errorText.SetActive(true);
-                }
-                break;
-            case "purdue_pete":
-                if (unlockedDesigns.Contains("purdue_pete"))
-                {
-                    customDesign = Card.customDesign.PURDUE_PETE;
-                    errorText.SetActive(false);
-                }
-                else
-                {
-                    errorText.SetActive(true);
-                }
-                break;
-            case "purdue":
-                if (unlockedDesigns.Contains("purdue"))
-                {
-                    customDesign = Card.customDesign.PURDUE;
-                    errorText.SetActive(false);
-                }
-                else
-                {
-                    errorText.SetActive(true);
-                }
-                break;
-            case "rick_roll":
-                if (unlockedDesigns.Contains("rick_roll"))
-                {
-                    customDesign = Card.customDesign.RICK_ROLL;
-                    errorText.SetActive(false);
-                }
-                else
-                {
-                    errorText.SetActive(true);
-                }
-                break;
-            case "turkstra":
-                if (unlockedDesigns.Contains("turkstra"))
-                {
-                    customDesign = Card.customDesign.TURKSTRA;
-                    errorText.SetActive(false);
-                }
-                else
-                {
-                    errorText.SetActive(true);
-                }
-                break;
-        }
+            switch (clickedName)
+            {
+                case "checkered_black":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "Win at least 5 games of Euchre to unlock this design. Please choose another design.";
+                    break;
+                case "checkered_red":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "You have not yet unlocked this design. Please choose another design.";
+                    break;
+                case "boilermaker_special":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "You have not yet unlocked this design. Please choose another design.";
+                    break;
+                case "candy_cane":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "You have not yet unlocked this design. Please choose another design.";
+                    break;
+                case "daddy_daniels":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "You have not yet unlocked this design. Please choose another design.";
+                    break;
+                case "dots":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "You have not yet unlocked this design. Please choose another design.";
+                    break;
+                case "emoji":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "Win at least 5 games of Solitaire to unlock this design. Please choose another design.";
+                    break;
+                case "fish":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "Achieve a set count of at least 20 in Go Fish to unlock this design. Please choose another design.";
+                    break;
+                case "food":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "You have not yet unlocked this design. Please choose another design.";
+                    break;
+                case "logo":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "Win at least once in any card game to unlock this design. Please choose another design.";
+                    break;
+                case "pets":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "Win at least 5 games of Go Fish to unlock this design. Please choose another design.";
+                    break;
+                case "purdue_pete":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "You have not yet unlocked this design. Please choose another design.";
+                    break;
+                case "purdue":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "Achieve a trick count of at least 20 in Euchre to unlock this design. Please choose another design.";
+                    break;
+                case "rick_roll":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "You have not yet unlocked this design. Please choose another design.";
+                    break;
+                case "turkstra":
+                    errorText.GetComponent<TMPro.TextMeshProUGUI>().text = "Unlock all other card designs to unlock this design. Please choose another design.";
+                    break;
+            }
 
-        if (!errorText.activeSelf)
+            errorText.SetActive(true);
+            changeFailed = false;
+        }
+        else
         {
-            databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/selected_design").SetValueAsync(clickedName);
+            Debug.Log("customDesign changed = " + customDesign);
+            await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/selected_design").SetValueAsync(clickedName);
+            PositionCheck();
         }
-
-        PositionCheck();
     }
 
     private void PositionCheck()
@@ -572,10 +590,113 @@ public class UserPreferences : MonoBehaviour
                 break;
         }
 
-        
+
     }
-    public void setResolution() {
+
+    public void setResolution()
+    {
         Screen.SetResolution(640, 480, FullScreenMode.MaximizedWindow);
         Debug.Log("Change Resolution");
+    }
+
+    private async void SetVariable(string setToString)
+    {
+        switch (setToString)
+        {
+            case "blue":
+                customDesign = Card.customDesign.BLUE;
+                break;
+            case "blue_outline":
+                customDesign = Card.customDesign.BLUE_OUTLINE;
+                break;
+            case "blue_outline_pattern":
+                customDesign = Card.customDesign.BLUE_OUTLINE_PATTERN;
+                break;
+            case "blue_outline_simple":
+                customDesign = Card.customDesign.BLUE_OUTLINE_SIMPLE;
+                break;
+            case "blue_pattern":
+                customDesign = Card.customDesign.BLUE_PATTERN;
+                break;
+            case "green":
+                customDesign = Card.customDesign.GREEN;
+                break;
+            case "green_outline":
+                customDesign = Card.customDesign.GREEN_OUTLINE;
+                break;
+            case "green_outline_pattern":
+                customDesign = Card.customDesign.GREEN_OUTLINE_PATTERN;
+                break;
+            case "green_outline_simple":
+                customDesign = Card.customDesign.GREEN_OUTLINE_SIMPLE;
+                break;
+            case "green_pattern":
+                customDesign = Card.customDesign.GREEN_PATTERN;
+                break;
+            case "red":
+                customDesign = Card.customDesign.RED;
+                break;
+            case "red_outline":
+                customDesign = Card.customDesign.RED_OUTLINE;
+                break;
+            case "red_outline_pattern":
+                customDesign = Card.customDesign.RED_OUTLINE_PATTERN;
+                break;
+            case "red_outline_simple":
+                customDesign = Card.customDesign.RED_OUTLINE_SIMPLE;
+                break;
+            case "red_pattern":
+                customDesign = Card.customDesign.RED_PATTERN;
+                break;
+            case "checkered_black":
+                customDesign = Card.customDesign.CHECKER_BLACK;
+                break;
+            case "checkered_red":
+                customDesign = Card.customDesign.CHECKER_RED;
+                break;
+            case "boilermaker_special":
+                customDesign = Card.customDesign.BOILERMAKER_SPECIAL;
+                break;
+            case "candy_cane":
+                customDesign = Card.customDesign.CANDY_CANE;
+                break;
+            case "daddy_daniels":
+                customDesign = Card.customDesign.DADDY_DANIELS;
+                break;
+            case "dots":
+                customDesign = Card.customDesign.DOTS;
+                break;
+            case "emoji":
+                customDesign = Card.customDesign.EMOJI;
+                break;
+            case "fish":
+                customDesign = Card.customDesign.FISH;
+                break;
+            case "food":
+                customDesign = Card.customDesign.FOOD;
+                break;
+            case "logo":
+                customDesign = Card.customDesign.LOGO;
+                break;
+            case "pets":
+                customDesign = Card.customDesign.PETS;
+                break;
+            case "purdue_pete":
+                customDesign = Card.customDesign.PURDUE_PETE;
+                break;
+            case "purdue":
+                customDesign = Card.customDesign.PURDUE;
+                break;
+            case "rick_roll":
+                customDesign = Card.customDesign.RICK_ROLL;
+                break;
+            case "turkstra":
+                customDesign = Card.customDesign.TURKSTRA;
+                break;
+        }
+
+        Debug.Log("customDesign set to = " + customDesign);
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/selected_design").SetValueAsync(setToString);
+        PositionCheck();
     }
 }
