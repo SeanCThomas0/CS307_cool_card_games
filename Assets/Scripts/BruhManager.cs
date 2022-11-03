@@ -692,6 +692,10 @@ public class BruhManager : MonoBehaviour
         }
     }
 
+    public void UseExitButton() {
+        SceneManager.LoadScene("Scenes/MainMenu");
+    }
+
     public void DifficultMode() {
         diff = true;
         currentInput = "DiffButton";
