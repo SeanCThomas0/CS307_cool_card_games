@@ -27,6 +27,9 @@ EditorBuildSettings:
     path: Assets/Scenes/GameInstructions.unity
     guid: 04f9b83177059284f939b39462626524
   - enabled: 1
+    path: Assets/Scenes/BruhGame.unity
+    guid: 0b759e1ad4bda284b8f95a9a560762bc
+  - enabled: 1
     path: Assets/Scenes/GoFish.unity
     guid: 520c40cae671245d3a80c6ffcdbe8b0f
   m_configObjects: {}

@@ -69,9 +69,59 @@ public class GoFishLogic : MonoBehaviour
     private int curUserSetCount = 0;
     private bool updatedDatabase;
 
+    [SerializeField] public AudioSource ClickSound;
+    [SerializeField] public AudioSource WinSound;
+    [SerializeField] public AudioSource CardSound;
+    [SerializeField] public AudioSource Music;
+
+
+    private UserPreferences.backgroundColor backgroundColor;
+    public GameObject mainCam;
+
+    void OnEnable()
+    {
+        backgroundColor = (UserPreferences.backgroundColor)PlayerPrefs.GetInt("backgroundColor");
+
+        switch (backgroundColor)
+        {
+            case UserPreferences.backgroundColor.GREEN:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(49, 121, 58, 255);
+                break;
+            case UserPreferences.backgroundColor.BLUE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(43, 100, 159, 255);
+                break;
+            case UserPreferences.backgroundColor.RED:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(222, 50, 73, 255);
+                break;
+            case UserPreferences.backgroundColor.ORANGE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(226, 119, 28, 255);
+                break;
+            case UserPreferences.backgroundColor.PURPLE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(120, 37, 217, 255);
+                break;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        /*
+        *Sean Audio stuff
+        *
+        *
+        *
+        */
+        float volumeValue = PlayerPrefs.GetFloat("VolumeValue");
+        ClickSound.volume = volumeValue;
+        WinSound.volume = volumeValue;
+        CardSound.volume = volumeValue / 3;
+
+
+
+
+
+
+
         // get a randomized standard deck of cards
         cardDealer = cardDealerController.GetComponent<CardDealer>();
         pool = cardDealer.RandomCards(52);
@@ -145,7 +195,7 @@ public class GoFishLogic : MonoBehaviour
         queue.Enqueue(turn);
 
         gameState = gameStates.PICK_PLAYER_TO_REQUEST;
-         //gameState = gameStates.DEMO_POOL_RAPID_FIRE; // to demonstrate win conditions
+        //gameState = gameStates.DEMO_POOL_RAPID_FIRE; // to demonstrate win conditions
         gameAlert = gameAlerts.NONE;
 
         gaveToBot = false;
@@ -239,6 +289,7 @@ public class GoFishLogic : MonoBehaviour
         switch (gameState)
         {
             case gameStates.PICK_PLAYER_TO_REQUEST:
+
                 if (gameAlert == gameAlerts.PICK_PLAYER)
                 {
                     guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Please select a player other than yourself.";
@@ -260,6 +311,8 @@ public class GoFishLogic : MonoBehaviour
 
                 break;
             case gameStates.PICK_FROM_POOL:
+                // this.GetComponent<AudioSource>().Play();
+
                 if (pool.Count <= 0)
                 {
                     gameState = gameStates.END_GAME;
@@ -377,6 +430,7 @@ public class GoFishLogic : MonoBehaviour
                         //updates current user's win count
                         if (players[i].GetComponent<Player>().userID.Equals("1") && !updatedDatabase)
                         {
+                            WinSound.Play();
                             databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/win_count").SetValueAsync(++curUserWinCount);
                         }
                         winningPlayers.Add(players[i]);
@@ -403,6 +457,7 @@ public class GoFishLogic : MonoBehaviour
                         guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "The pool is empty. Game over. " + winningPlayers[0].GetComponent<Player>().userID + ", " + winningPlayers[1].GetComponent<Player>().userID + ", " + winningPlayers[2].GetComponent<Player>().userID + ", and " + winningPlayers[2].GetComponent<Player>().userID + " tie with " + winningPlayers[0].GetComponent<Player>().numOfSetsOfFour + " sets.";
                         break;
                 }
+                Music.Pause();
 
                 quitButton.SetActive(false);
                 exitButton.SetActive(true);
@@ -538,6 +593,7 @@ public class GoFishLogic : MonoBehaviour
                         {
                             gameAlert = gameAlerts.PICK_PLAYER;
                         }
+                        ClickSound.Play();
                         break;
 
                     case gameStates.PICK_NUM_TO_REQEUST:
@@ -559,6 +615,7 @@ public class GoFishLogic : MonoBehaviour
                         {
                             gameAlert = gameAlerts.PICK_NUM;
                         }
+                        ClickSound.Play();
                         break;
 
                     case gameStates.PICK_FROM_POOL:
@@ -567,11 +624,13 @@ public class GoFishLogic : MonoBehaviour
                             PickFromPool(hit.collider.gameObject);
                             DetermineNextPlayer();
                             gameAlert = gameAlerts.NONE;
+                            CardSound.Play();
                         }
                         else
                         {
                             gameAlert = gameAlerts.PICK_POOL;
                         }
+
                         break;
 
                     case gameStates.OUT_OF_CARDS:
@@ -593,6 +652,7 @@ public class GoFishLogic : MonoBehaviour
                             RequestCards(hit.collider.gameObject);
                             gaveToBot = true;
                             gameAlert = gameAlerts.NONE;
+                            ClickSound.Play();
                         }
                         else if (!containBotRequest && hit.collider.gameObject.name.Equals("Fish"))
                         {
@@ -604,6 +664,7 @@ public class GoFishLogic : MonoBehaviour
                             PickFromPool(pool[UnityEngine.Random.Range(0, pool.Count)]);
                             DetermineNextPlayer();
                             gameAlert = gameAlerts.NONE;
+                            ClickSound.Play();
                         }
                         else
                         {

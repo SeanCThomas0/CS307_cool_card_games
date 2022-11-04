@@ -16,10 +16,13 @@ public class InstructionsScript : MonoBehaviour
     public GameObject TextBox1;
     public GameObject TextBox2;
 
+
+
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log("Rules Page Opened");
+
     }
 
     // Update is called once per frame
