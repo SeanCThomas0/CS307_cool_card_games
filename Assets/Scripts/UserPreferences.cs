@@ -9,6 +9,15 @@ using UnityEngine.UI;
 
 public class UserPreferences : MonoBehaviour
 {
+    public enum backgroundColor
+    {
+        GREEN,
+        BLUE,
+        ORANGE,
+        RED,
+        PURPLE
+    }
+
     private string DATA_URL = "https://cool-card-games-default-rtdb.firebaseio.com/";
 
     private DatabaseReference databaseReference;
@@ -16,6 +25,7 @@ public class UserPreferences : MonoBehaviour
 
     public Card.cardSize cardSize;
     public Card.customDesign customDesign;
+    public backgroundColor backColor;
 
     public GameObject cardSizeButtonText;
     public GameObject checkDefault;
@@ -23,6 +33,7 @@ public class UserPreferences : MonoBehaviour
 
     public GameObject errorText;
     private bool changeFailed;
+    public GameObject mainCam;
 
     private int numUnlocked;
     private bool hasWon;
@@ -44,6 +55,7 @@ public class UserPreferences : MonoBehaviour
     {
         PlayerPrefs.SetInt("cardSize", (int)cardSize);
         PlayerPrefs.SetInt("customDesign", (int)customDesign);
+        PlayerPrefs.SetInt("backgroundColor", (int)backColor);
     }
 
     private async void RetrieveVarsFromFirebase()
@@ -63,12 +75,12 @@ public class UserPreferences : MonoBehaviour
                 {
                     if (task.Result.Value != null)
                     {
-                        SetVariable(task.Result.Value.ToString());
+                        SetCustomDesignVariable(task.Result.Value.ToString());
                         Debug.Log("from firebase (design) =" + customDesign);
                     }
                     else
                     {
-                        SetVariable("blue_outline_simple");
+                        SetCustomDesignVariable("blue_outline_simple");
                         Debug.Log("nothing in firebase (design), set to =" + customDesign);
                     }
                 }
@@ -115,7 +127,86 @@ public class UserPreferences : MonoBehaviour
                 break;
         }
 
+        // GET BACKGROUND COLOR
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/background_color").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("get background color cancelled");
+            }
+            if (task.IsFaulted)
+            {
+                Debug.Log("get background color faulted");
+            }
+            else
+            {
+                if (task.Result.Value != null)
+                {
+                    backColor = (backgroundColor)Int32.Parse(task.Result.Value.ToString());
+
+                    Debug.Log("from firebase (background) =" + backColor);
+                }
+                else
+                {
+                    backColor = backgroundColor.GREEN;
+                    Debug.Log("nothing in firebase (background), set to =" + backColor);
+                }
+            }
+        });
+
+        SetBackgroundVariable();
+
         PositionCheck();
+    }
+
+    private void SetBackgroundVariable()
+    {
+        switch (backColor)
+        {
+            case backgroundColor.GREEN:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(49, 121, 58, 255);
+                break;
+            case backgroundColor.BLUE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(43, 100, 159, 255);
+                break;
+            case backgroundColor.RED:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(222, 50, 73, 255);
+                break;
+            case backgroundColor.ORANGE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(226, 119, 28, 255);
+                break;
+            case backgroundColor.PURPLE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(120, 37, 217, 255);
+                break;
+        }
+
+        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/background_color").SetValueAsync((int)backColor);
+    }
+
+    public void ChangeBackgroundColor()
+    {
+        string clickedName = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name;
+
+        switch (clickedName)
+        {
+            case "green":
+                backColor = backgroundColor.GREEN;
+                break;
+            case "blue":
+                backColor = backgroundColor.BLUE;
+                break;
+            case "red":
+                backColor = backgroundColor.RED;
+                break;
+            case "orange":
+                backColor = backgroundColor.ORANGE;
+                break;
+            case "purple":
+                backColor = backgroundColor.PURPLE;
+                break;
+        }
+
+        SetBackgroundVariable();
     }
 
     private async void DetermineUnlock()
@@ -313,7 +404,7 @@ public class UserPreferences : MonoBehaviour
                 {
                     if (task.Result.Value != null && (bool)task.Result.Value)
                     {
-                        SetVariable(clickedName);
+                        SetCustomDesignVariable(clickedName);
                     }
                     else
                     {
@@ -599,7 +690,7 @@ public class UserPreferences : MonoBehaviour
         Debug.Log("Change Resolution");
     }
 
-    private async void SetVariable(string setToString)
+    private async void SetCustomDesignVariable(string setToString)
     {
         switch (setToString)
         {
