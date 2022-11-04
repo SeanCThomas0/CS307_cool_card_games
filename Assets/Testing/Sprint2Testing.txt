@@ -602,3 +602,50 @@ Instructions:
 Expected Result:
 1. The user should see the game as it was before they hit the hint button
 ______________________________________________________________________________
+Test Case 33: Sound should play when user presses a button
+System: Cool Card Games
+Module: Entire program
+Severity: 1
+
+Instructions:
+1. User presses any button
+
+Expected Result:Sound effect is heard
+______________________________________________________________________________
+Test Case 34: Music should play when a scene is loaded
+System: Cool Card Games
+Module: Entire program
+Severity: 1
+
+Instructions:
+1. User logins to the main menu
+
+Expected Result:Music starts playing until they load another scene
+______________________________________________________________________________
+Test Case 35: Volume sliders should effect volume of sound effects and music
+System: Cool Card Games
+Module: Entire program
+Severity: 2
+
+Instructions:
+1. User logins to the main menu
+2. User clicks settings button
+3. User Moves the sound effect volume and or music volume sliders
+
+
+Expected Result:The music and sound effect volumes will change with respect
+to how the user has moved the sliders.
+______________________________________________________________________________
+Test Case 36: Win sound effect should play when user wins a card game
+System: Cool Card Games
+Module: All card games
+Severity: 2
+
+Instructions:
+1. User plays a game
+2. User makes a play that results in them winning the game
+
+
+Expected Result:The music should stop playing and a sound effect for winning
+should be played
+______________________________________________________________________________
