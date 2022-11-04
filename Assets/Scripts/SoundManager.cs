@@ -37,8 +37,12 @@ public class SoundManager : MonoBehaviour
     }
     void LoadValues() {
         float volumeValue = PlayerPrefs.GetFloat("VolumeValue");
+        float volumeValueMusic = PlayerPrefs.GetFloat("VolumeValueMusic");
         volumeSlider.value = volumeValue;
+        volumeSliderMusic.value =volumeValueMusic;
+
         guh.volume=volumeValue;
+        UNOSONG1.volume = volumeValueMusic /4;
 
 
         
@@ -47,8 +51,8 @@ public class SoundManager : MonoBehaviour
     public void VolumeSliderMusic(float volume) {
         volumeSliderMusicText.text=volume.ToString("0.0");
 
-        float volumeValue = volumeSlider.value;
-        PlayerPrefs.SetFloat("VolumeValue",volumeValue);
+        float volumeValue = volumeSliderMusic.value;
+        PlayerPrefs.SetFloat("VolumeValueMusic",volumeValue);
         LoadValues();
     }
 
