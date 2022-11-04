@@ -1,0 +1,604 @@
+﻿Test Cases
+Cool Card Games
+Team 11: Grant Larsen, Jonathan Maskew, Isaac Stephan, Tommy Nguyen, Sean Thomas, Juan Diaz
+________________
+
+
+Test Case 1: Select a pre-set custom card back design
+System: Cool Card Games
+Module: CardDealer
+Severity: 3
+
+
+Instructions:
+1. After logging in, selection “Options” from the Main Menu
+2. Next to Card Backs, select “Choose…”
+3. Select a new design
+4. Click “Back” twice to return to Main Menu
+5. Click “Play”
+6. Select any of the card games
+
+
+Expected Result:
+1. Game should begin and any cards showing the back should show the custom selected option for the duration of the session.
+________________
+
+
+Test Case 2: Toggle the size of the cards
+System: Cool Card Games
+Module: CardDealer
+Severity: 3
+
+
+Instructions:
+2. After logging in, selection “Options” from the Main Menu
+3. Next to Card Size, click the button to toggle the size options
+4. Click “Back” twice to return to Main Menu
+5. Click “Play”
+6. Select any of the card games
+
+
+Expected Result:
+1. Game should begin with the card size equivalent to the size shown on the options page for the duration of the session.
+________________
+
+
+Test Case 3: Select an unlocked card back design
+System: Cool Card Games
+Module: CardDealer
+Severity: 3
+
+
+Instructions:
+1. After logging in, selection “Options” from the Main Menu
+2. Next to Card Backs, select “Choose…”
+3. Select “Next page”
+4. Select a new design
+5. Click “Back” twice to return to Main Menu
+6. Click “Play”
+7. Select any of the card games
+
+
+Expected Result:
+1. Game should begin with the card size equivalent to the size shown on the options page for the duration of the session.
+________________
+
+
+Test Case 4: Select a locked card back design
+System: Cool Card Games
+Module: CardDealer
+Severity: 3
+
+
+Instructions:
+1. After logging in, selection “Options” from the Main Menu
+2. Next to Card Backs, select “Choose…”
+3. Select “Next page”
+4. Select a new design
+
+
+Expected Result:
+1. Error should show alerting user to the fact that they have not yet unlocked this design and how to unlock it.
+2. Card design should not change within any game
+3. Should remain on card design selection page allowing user to select again from the unlocked cards.
+________________
+
+
+Test Case 5: Open Solitaire news article
+System: Cool Card Games
+Module: News
+Severity: 3
+
+
+Instructions:
+1. The user should click play
+2. If the user is not signed in or signed up, the user should do so, else the user should sign in
+3. When in the main menu page, the user should click on “News” button
+4. When in the News page, the user should click the “Solitaire News” button
+5. When prompted if the user would like to be redirected to a website, the user should click the “yes” button
+
+
+Expected Result:
+1. User should be redirected to news article about the game Solitaire.
+________________
+
+
+Test Case 6: Do not open Solitaire news article
+System: Cool Card Games
+Module: News
+Severity: 3
+
+
+Instructions:
+1. The user should click play
+2. If the user is not signed in or signed up, the user should do so, else the user should sign in
+3. When in the main menu page, the user should click on “News” button
+4. When in the News page, the user should click the “Solitaire News” button
+5. When prompted if the user would like to be redirected to a website, the user should click the “no” button
+
+
+Expected Result:
+1. User should not be redirected to news article about the game Solitaire.
+2. User should be returned to the News page to be able to select another game to see news for.
+________________
+
+
+Test Case 7: Open Go Fish news article
+System: Cool Card Games
+Module: News
+Severity: 3
+
+
+Instructions:
+1. The user should click play
+2. If the user is not signed in or signed up, the user should do so, else the user should sign in
+3. When in the main menu page, the user should click on “News” button
+4. When in the News page, the user should click the “Go Fish News” button
+5. When prompted if the user would like to be redirected to a website, the user should click the “yes” button
+
+
+Expected Result:
+1. User should be redirected to news article about the game Go Fish.
+________________
+
+
+Test Case 8: Do not open Go Fish news article
+System: Cool Card Games
+Module: News
+Severity: 3
+
+
+Instructions:
+1. The user should click play
+2. If the user is not signed in or signed up, the user should do so, else the user should sign in
+3. When in the main menu page, the user should click on “News” button
+4. When in the News page, the user should click the “Go Fish News” button
+5. When prompted if the user would like to be redirected to a website, the user should click the “no” button
+
+
+Expected Result:
+1. User should not be redirected to news article about the game Go Fish.
+2. User should be returned to the News page to be able to select another game to see news for.
+________________
+
+
+Test Case 9: Open Poker news article
+System: Cool Card Games
+Module: News
+Severity: 3
+
+
+Instructions:
+1. The user should click play
+2. If the user is not signed in or signed up, the user should do so, else the user should sign in
+3. When in the main menu page, the user should click on “News” button
+4. When in the News page, the user should click the “Poker News” button
+5. When prompted if the user would like to be redirected to a website, the user should click the “yes” button
+
+
+Expected Result:
+1. User should be redirected to news article about the game Poker.
+________________
+
+
+Test Case 10: Do not open Poker news article
+System: Cool Card Games
+Module: News
+Severity: 3
+
+
+Instructions:
+1. The user should click play
+2. If the user is not signed in or signed up, the user should do so, else the user should sign in
+3. When in the main menu page, the user should click on “News” button
+4. When in the News page, the user should click the “Poker News” button
+5. When prompted if the user would like to be redirected to a website, the user should click the “no” button
+
+
+Expected Result:
+1. User should not be redirected to news article about the game Poker.
+2. User should be returned to the News page to be able to select another game to see news for.
+________________
+
+
+Test Case 11: Open Euchre news article
+System: Cool Card Games
+Module: News
+Severity: 3
+
+
+Instructions:
+1. The user should click play
+2. If the user is not signed in or signed up, the user should do so, else the user should sign in
+3. When in the main menu page, the user should click on “News” button
+4. When in the News page, the user should click the “Euchre News” button
+5. When prompted if the user would like to be redirected to a website, the user should click the “yes” button
+
+
+Expected Result:
+1. User should be redirected to news article about the game Euchre.
+________________
+
+
+Test Case 12: Do not open Euchre news article
+System: Cool Card Games
+Module: News
+Severity: 3
+
+
+Instructions:
+1. The user should click play
+2. If the user is not signed in or signed up, the user should do so, else the user should sign in
+3. When in the main menu page, the user should click on “News” button
+4. When in the News page, the user should click the “Euchre News” button
+5. When prompted if the user would like to be redirected to a website, the user should click the “no” button
+
+
+Expected Result:
+1. User should not be redirected to news article about the game Euchre.
+2. User should be returned to the News page to be able to select another game to see news for.
+________________
+
+
+Test Case 13: Do not reset statistics
+System: Cool Card Games
+Module: Database
+Severity: 3
+
+
+Instructions:
+1. The user should click play
+2. If the user is not signed in or signed up, the user should do so, else the user should sign in
+3. When in the main menu page, the user should click on “Options” button
+4. When in the options page, the user should click on “Account” button
+5. When in the account page, the user should click on “Reset Statistics” button
+6. When prompted if they would like to reset their statistics, the user should click on “no” button
+
+
+Expected Result:
+1. The user’s game statistics should not be reset.
+2. The user should be brought back to the account page to see all account settings.
+______________________________________________________________________________
+Test Case 14: Do reset statistics
+System: Cool Card Games
+Module: Database
+Severity: 3
+
+
+Instructions:
+1. The user should click play
+2. If the user is not signed in or signed up, the user should do so, else the user should sign in
+3. When in the main menu page, the user should click on “Options” button
+4. When in the options page, the user should click on “Account” button
+5. When in the account page, the user should click on “Reset Statistics” button
+6. When prompted if they would like to reset their statistics, the user should click on “yes” button
+
+
+Expected Result:
+1. The user’s game statistics should be reset.
+2. The user should be brought back to the account page to see all account settings.
+______________________________________________________________________________
+Test Case 15: Do reset password
+System: Cool Card Games
+Module: Rankings
+Severity: 2
+
+
+Instructions:
+1. The user should be viewing the login page.
+2. The user should select the forgotten password button.
+3. When in the forgotten password page, the user should enter their email into the text box and click the “Send Email” button.
+4. The user should view their inbox for their given email and view the email from CoolCardGames regarding their forgotten password.
+5. The user should open the link provided in the forgotten password email.
+6. The user should enter a new password and select save.
+Expected Result:
+1. The user’s password should be set to the new password.
+2. The user is now able to login to CoolCardGames using their email and new password.
+______________________________________________________________________________
+Test Case 16: Do not reset password
+System: Cool Card Games
+Module: Rankings
+Severity: 3
+
+
+Instructions:
+1. The user should be viewing the login page.
+2. The user should select the forgotten password button.
+3. When in the forgotten password page, the user should enter their email into the text box and click the “Back” button.
+Expected Result:
+1. The user should be brought back to the login page.
+2. The user’s password should still be the old password.
+______________________________________________________________________________
+Test Case 17: Reset password wrong email
+System: Cool Card Games
+Module: Rankings
+Severity: 3
+
+
+Instructions:
+1. The user should be viewing the login page.
+2. The user should select the forgotten password button.
+3. When in the forgotten password page, the user should enter an invalid email into the text box and click the “Send Email” button.
+Expected Result:
+1. The user should be given the appropriate error message (invalid email or account doesn’t exist if the email is valid but there is no account linked to the email).
+2. The user’s password should still be the old password.
+______________________________________________________________________________
+Test Case 18: Do not delete account
+System: Cool Card Games
+Module: Database
+Severity: 3
+
+
+Instructions:
+1. The user should click play.
+2. If the user is not signed in or signed up, the user should do so, else the user should sign in.
+3. When in the main menu page, the user should click on the “Options” button.
+4. When in the options page, the user should click on the “Account” button.
+5. When in the account page, the user should click on the “Delete Account ” button.
+6. When prompted if they would like to delete their account, the user should click on the “no” button.
+
+
+Expected Result:
+1. The user’s account and data should not be deleted.
+2. The user should be brought back to the account page to see all account settings.
+______________________________________________________________________________
+Test Case 19: Do delete account
+System: Cool Card Games
+Module: Database
+Severity: 3
+
+
+Instructions:
+1. The user should click play
+2. If the user is not signed in or signed up, the user should do so, else the user should sign in
+3. When in the main menu page, the user should click on “Options” button
+4. When in the options page, the user should click on “Account” button
+5. When in the account page, the user should click on “Delete Account” button
+6. When prompted if they would like to delete their account, the user should click on the “yes” button.
+
+
+Expected Result:
+1. The user’s account and account data will be removed from all Firebase systems.
+2. The user should be brought back to the login page.
+3. If the user were to try and login using their email and password, they will be given an error that their email and/or password is invalid.
+______________________________________________________________________________
+Test Case 20: View Solitaire Wins Rankings
+System: Cool Card Games
+Module: Database
+Severity: 3
+
+
+Instructions:
+1. The user should be viewing the main menu page.
+2. The user should select the “Rankings” button.
+3. The user should select the “Solitaire” button.
+4. The user should select the “Wins” button.
+
+
+Expected Result:
+1. The user should now be viewing the Solitaire Wins Rankings.
+2. Any user with data in the Firebase database in ~/game_statistics/solitaire/wins path should have said data displayed in the rankings page in order of ascending rank.
+3. If the user has no data in that path, they shouldn’t have an entry on the rankings board and their ranking on the individual rankings should have a ranking and stat of “n/a”
+4. If the user has data in that path, they should have an entry on the rankings board and their ranking on the individual rankings should be equivalent to the ranking on the rankings board.
+______________________________________________________________________________
+Test Case 21: Refresh Solitaire Wins Rankings
+System: Cool Card Games
+Module: Database
+Severity: 3
+
+
+Instructions:
+1. The user should be viewing the Solitaire Wins Rankings page.
+2. Update the wins statistic of any user with a Solitaire Wins statistic in the Firebase database with the path ~/game_statistics/solitaire/wins path.
+3. The user should select the “Refresh” button.
+
+
+Expected Result:
+1. The user should be able to view that updated statistic in the rankings board.
+2. If the updated statistic should change that user’s rank on the rankings board, then they will be moved accordingly to maintain ascending rank order.
+______________________________________________________________________________
+Test Case 22: Navigate to the Rules Page from the Main Menu
+System: Cool Card Games
+Module: Rules Page
+Severity: 2
+
+
+Instructions:
+1. The user should be on the main menu page of the game
+2. The user wants to access the rules page from the main menu page by clicking the Rules button
+
+
+Expected Result:
+3. When the User clicks the rules button on the homepage they should be redirected to the scene housing the instructions for each game 
+4. Once the scene loading has finished the user should be greeted with a page that has a button for each game in the application, a blank textbox, and an exit button
+
+
+______________________________________________________________________________
+Test Case 23: View the rules for each game once a user is on the rules page
+System: Cool Card Games
+Module: Rules Page
+Severity: 2
+
+
+Instructions:
+1. The user should be on the rules page with all buttons displayed
+2. The user chooses to select a game rules button
+
+
+Expected Result:
+3. When the User clicks the rules button for a given game the scrollable text box is populated with the game rules from each game’s respective text file
+4. If the User decides to continue reading the rules for a game that our out of the text box they can click and drag the scroll bar or use a mouse scroll to move down in the text box
+5. If a user decides to click another game’s rules button after previously selecting another button the text box should replace the old rules with the newly selected rules
+
+
+______________________________________________________________________________
+Test Case 24: Exit back to the main menu from the rules page
+System: Cool Card Games
+Module: Rules Page
+Severity: 2
+
+
+Instructions:
+6. The user should be on the rules page with all buttons displayed
+7. The user chooses to go back to the main menu page with the exit button on the rules page
+
+
+Expected Result:
+8. When the User clicks the exit button on the rules page they should be redirected back to the home page of the game
+9. The user should be able to navigate to any other directory or scene they would have been able to access if they had simply started on the main menu page
+
+
+______________________________________________________________________________
+Test Case 25: Bruh card game accepts user input 
+System: Cool Card Games
+Module: Bruh Card Game
+Severity: 2
+
+
+Instructions:
+10. The user should be on the bruh game scene and already selected the difficulty for the game
+11. The user has been prompted to enter their game input in and are ready to send a valid input
+
+
+Expected Result:
+12. When the user enters a valid card index to play then that card should be evaluated based on the rules of the Bruh card game and the user should be told whether that play follows the rules of bruh or if they will be penalized due to it being an incorrect play
+13. When the user clicks on the draw from deck button a card should be added to their hand and removed from the card pool. That card should be playable if it follows the secret rules of Bruh
+14. When the user types help into the input field they should receive the correct advice from the companion and be prompted again to enter an input
+
+
+______________________________________________________________________________
+Test Case 26: Bruh card game denies invalid user input 
+System: Cool Card Games
+Module: Bruh Card Game
+Severity: 2
+
+
+Instructions:
+15. The user should be on the bruh game scene and already selected the difficulty for the game
+16. The user has been prompted to enter their game input in and are about to send an invalid input
+
+
+Expected Result:
+17. When the user enters an invalid card index to play then the user is told that it is an invalid input and are prompted to enter a valid input (this is different than entering a card that doesn’t follow the game rules, as there is no card associated with the index)
+18. When the user enters a random string of letters that isn’t one of the recognized valid inputs they are told it is an invalid input and are prompted to enter a valid input
+
+
+______________________________________________________________________________
+Test Case 27: Bruh card game tells the user the result of the game once they have won
+System: Cool Card Games
+Module: Bruh Card Game
+Severity: 2
+
+
+Instructions:
+19. The user should have played multiple rounds of the bruh card game
+20. The user is about to reach one of the two win conditions
+
+
+Expected Result:
+21. When the user gets rid of all the cards in their hand the game messages textbox should tell the user that they have won
+22. When the user follows the Bruh card game secret sequence to win, they should be prompted with a win and be told they have found the secret ending
+23. If a user attempts to draw a card or make any other input that action should be denied
+24. The User should be allowed to exit back to the main menu once the game ending message has been shown
+
+
+______________________________________________________________________________
+Test Case 28: Bruh card game tells the user the result of the game once they have lost
+System: Cool Card Games
+Module: Bruh Card Game
+Severity: 2
+
+
+Instructions:
+25. The user should have played multiple rounds of the bruh card game
+26. The user is about to reach the lose condition
+
+
+Expected Result:
+27. When the user accumulates 14 cards they should be told that they have lost the game 
+28. If a user attempts to draw a card or make any other input that action should be denied
+29. The User should be allowed to exit back to the main menu once the game ending message has been shown
+
+
+______________________________________________________________________________
+Test Case 29: Bruh card game difficulty is selected 
+System: Cool Card Games
+Module: Bruh Card Game
+Severity: 2
+
+
+Instructions:
+30. The user is at the start of the bruh card game
+31. The user is about to select the difficulty they would like to play with
+
+
+Expected Result:
+32. The user should be prompted with two difficulty options to play the game with
+33. If the user selects easy difficulty the AI’s decision making will be set to a setting that uses more consistent actions, and the companion cool down will only be 3 turns
+34. If the user selects difficult difficulty the AI’s decision making will be set to a setting that uses more random actions, and the companion cool down will only be 5 turns
+
+
+______________________________________________________________________________
+Test Case 30: Bruh card game companion ai is prompted to help
+System: Cool Card Games
+Module: Bruh Card Game
+Severity: 2
+
+
+Instructions:
+35. The user is in the section of the bruh card game where they have to give user input
+36. The user inputs help into the input bar to prompt the companion ai
+
+
+Expected Result:
+37. if the AI companion is still on cooldown the companion message should tell the user that it can’t help and that it is on cooldown
+38. if the AI can display a message it should send a decision that will help the user in one aspect of the game based on the rules counters
+
+
+______________________________________________________________________________
+Test Case 31: Bruh card game enemy ai is prompted
+System: Cool Card Games
+Module: Bruh Card Game
+Severity: 2
+
+
+Instructions:
+39. The user is in the section of the bruh card game where they have to give user input
+40. The enemy ai is preparing to send a message to the user player that will either give bad advice or good advice
+
+
+Expected Result:
+41. The enemy AI generates both a correct and incorrect piece of advice for the user to use
+42. the enemy AI uses a random decision making system to either send a helpful or hurtful piece of advice
+43. if a user makes input to the companion or a card play, the enemy ai should not give a response until that move has been evaluated by the system to see if it follows the rules of bruh or not
+______________________________________________________________________________
+Test Case 32: Hint Button gives hint
+System: Cool Card Games
+Module: Solitaire Card Game
+Severity: 2
+
+
+Instructions:
+1. When the user is playing a game of Solitaire, when they do not know what to do, they should hit the hint button
+2. When the hint button is hit, they should see a verification page that asks if they are sure they want a hint
+3. The user should hit the yes button on the verification page
+
+
+Expected Result:
+1. The user should see that one move has been made for them as a hint to where to go next
+______________________________________________________________________________
+Test Case 33: Hint Button does not give hint
+System: Cool Card Games
+Module: Solitaire Card Game
+Severity: 2
+
+
+Instructions:
+1. When the user is playing a game of Solitaire, when they do not know what to do, they should hit the hint button
+2. When the hint button is hit, they should see a verification page that asks if they are sure they want a hint
+3. The user should hit the no button on the verification page
+
+
+Expected Result:
+1. The user should see the game as it was before they hit the hint button
+______________________________________________________________________________
