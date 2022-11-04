@@ -4,18 +4,38 @@ using UnityEngine;
 using Firebase.Auth;
 using Firebase.Database;
 using System;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ScoreKeeper : MonoBehaviour
 {
+
+
+
     public Selectable[] topStacks;
     public GameObject highScorePanel;
     private bool scoreUpdated = false;
     Database database;
     Firebase.Auth.FirebaseUser user;
     int win_count;
+
+    public AudioSource CardSound;
+    public AudioSource WinSound;
+    public AudioSource ClickSound;
+
+
+
+
     // Start is called before the first frame update
     void Start()
     {
+        float volumeValue = PlayerPrefs.GetFloat("VolumeValue");
+
+
+
+
+
+
         database = new Database();
         user = FirebaseAuth.DefaultInstance.CurrentUser;
         DatabaseReference userRef = FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(user.UserId);
@@ -49,6 +69,7 @@ public class ScoreKeeper : MonoBehaviour
     void Update()
     {
         if (HasWon() && !scoreUpdated) {
+            //WinSound.Play();
             Win();
         }
     }

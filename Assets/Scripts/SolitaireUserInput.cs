@@ -13,9 +13,26 @@ public class SolitaireUserInput : MonoBehaviour
     private float doubleClickTime = 0.3f;
     private int clickCount = 0;
     public SolitaireUIButton solitaireUIButton;
+
+   // [SerializeField] public AudioSource ClickSound;
+    //[SerializeField] public AudioSource WinSound;
+    //[SerializeField] public AudioSource CardSound;
+    //[SerializeField] public AudioSource Music;
+
+
+
+
     // Start is called before the first frame update
     void Start()
     {
+        //float volumeValue = PlayerPrefs.GetFloat("VolumeValue");
+        //ClickSound.volume = volumeValue;
+        //WinSound.volume = volumeValue;
+        //CardSound.volume = volumeValue / 3;
+
+
+
+
         solitaire = FindObjectOfType<Solitaire>();
         solitaireUIButton = FindObjectOfType<SolitaireUIButton>();
         slot1 = this.gameObject;
