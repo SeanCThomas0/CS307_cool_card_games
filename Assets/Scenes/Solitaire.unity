@@ -262,6 +262,7 @@ MonoBehaviour:
   gameSpace7: []
   deck: []
   discardPile: []
+  mainCam: {fileID: 237735810}
 --- !u!82 &120727424 stripped
 AudioSource:
   m_CorrespondingSourceObject: {fileID: 3661771821366976177, guid: d36873d63705ecd4ca27b7882d83096a, type: 3}
@@ -4311,6 +4312,7 @@ MonoBehaviour:
   gameSpace7: []
   deck: []
   discardPile: []
+  mainCam: {fileID: 0}
 --- !u!4 &1534643203
 Transform:
   m_ObjectHideFlags: 0
