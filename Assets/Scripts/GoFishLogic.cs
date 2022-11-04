@@ -75,6 +75,32 @@ public class GoFishLogic : MonoBehaviour
     [SerializeField] public AudioSource Music;
 
 
+    private UserPreferences.backgroundColor backgroundColor;
+    public GameObject mainCam;
+
+    void OnEnable()
+    {
+        backgroundColor = (UserPreferences.backgroundColor)PlayerPrefs.GetInt("backgroundColor");
+
+        switch (backgroundColor)
+        {
+            case UserPreferences.backgroundColor.GREEN:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(49, 121, 58, 255);
+                break;
+            case UserPreferences.backgroundColor.BLUE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(43, 100, 159, 255);
+                break;
+            case UserPreferences.backgroundColor.RED:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(222, 50, 73, 255);
+                break;
+            case UserPreferences.backgroundColor.ORANGE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(226, 119, 28, 255);
+                break;
+            case UserPreferences.backgroundColor.PURPLE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(120, 37, 217, 255);
+                break;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -86,9 +112,9 @@ public class GoFishLogic : MonoBehaviour
         *
         */
         float volumeValue = PlayerPrefs.GetFloat("VolumeValue");
-        ClickSound.volume=volumeValue;
-        WinSound.volume=volumeValue;
-        CardSound.volume=volumeValue/3;
+        ClickSound.volume = volumeValue;
+        WinSound.volume = volumeValue;
+        CardSound.volume = volumeValue / 3;
 
 
 
@@ -169,7 +195,7 @@ public class GoFishLogic : MonoBehaviour
         queue.Enqueue(turn);
 
         gameState = gameStates.PICK_PLAYER_TO_REQUEST;
-         //gameState = gameStates.DEMO_POOL_RAPID_FIRE; // to demonstrate win conditions
+        //gameState = gameStates.DEMO_POOL_RAPID_FIRE; // to demonstrate win conditions
         gameAlert = gameAlerts.NONE;
 
         gaveToBot = false;
@@ -285,6 +311,8 @@ public class GoFishLogic : MonoBehaviour
 
                 break;
             case gameStates.PICK_FROM_POOL:
+                // this.GetComponent<AudioSource>().Play();
+
                 if (pool.Count <= 0)
                 {
                     gameState = gameStates.END_GAME;

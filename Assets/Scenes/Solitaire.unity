@@ -259,6 +259,7 @@ MonoBehaviour:
   gameSpace7: []
   deck: []
   discardPile: []
+  mainCam: {fileID: 237735810}
 --- !u!1 &141422051
 GameObject:
   m_ObjectHideFlags: 0
@@ -4179,6 +4180,7 @@ MonoBehaviour:
   gameSpace7: []
   deck: []
   discardPile: []
+  mainCam: {fileID: 0}
 --- !u!4 &1534643203
 Transform:
   m_ObjectHideFlags: 0

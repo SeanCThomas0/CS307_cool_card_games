@@ -17,8 +17,8 @@ public class BruhManager : MonoBehaviour
     public GameObject EasyButton;
     public GameObject DiffButton;
 
-    
-    /* Global variables */ 
+
+    /* Global variables */
     //private
     private CardDealer cardDealer;
 
@@ -50,73 +50,114 @@ public class BruhManager : MonoBehaviour
     public ComputerOpp opponent;
     public ComputerComp companion;
 
+    private UserPreferences.backgroundColor backgroundColor;
+    public GameObject mainCam;
+
+    void OnEnable()
+    {
+        backgroundColor = (UserPreferences.backgroundColor)PlayerPrefs.GetInt("backgroundColor");
+
+        switch (backgroundColor)
+        {
+            case UserPreferences.backgroundColor.GREEN:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(49, 121, 58, 255);
+                break;
+            case UserPreferences.backgroundColor.BLUE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(43, 100, 159, 255);
+                break;
+            case UserPreferences.backgroundColor.RED:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(222, 50, 73, 255);
+                break;
+            case UserPreferences.backgroundColor.ORANGE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(226, 119, 28, 255);
+                break;
+            case UserPreferences.backgroundColor.PURPLE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(120, 37, 217, 255);
+                break;
+        }
+    }
+
     /* User player class */
-    public class CardPlayer {
+    public class CardPlayer
+    {
         private List<GameObject> hand;
         private string userID;
 
-        public CardPlayer(string userID) {
+        public CardPlayer(string userID)
+        {
             hand = new List<GameObject>();
             this.userID = userID;
         }
 
-        public List<GameObject> getHandList() {
+        public List<GameObject> getHandList()
+        {
             return hand;
         }
-        
-        public string getUserID() {
+
+        public string getUserID()
+        {
             return userID;
         }
 
-        public void printHand() {
+        public void printHand()
+        {
             int count = 1;
             Debug.Log("\n" + userID + "Current hand:");
-            foreach (GameObject currentCard in hand) {
+            foreach (GameObject currentCard in hand)
+            {
                 Debug.Log(count + ": " + currentCard.GetComponent<Card>().faceValue + " of " + currentCard.GetComponent<Card>().suitValueString);
                 count++;
             }
         }
 
-        public void addToHand(GameObject cardToAdd) {
+        public void addToHand(GameObject cardToAdd)
+        {
             hand.Add(cardToAdd);
         }
 
-        public GameObject removeFromHand(int indexInHand) {
-            GameObject returnCard = (GameObject) hand[indexInHand];
+        public GameObject removeFromHand(int indexInHand)
+        {
+            GameObject returnCard = (GameObject)hand[indexInHand];
             hand.RemoveAt(indexInHand);
             return returnCard;
         }
 
-        public GameObject peekAtCard(int indexInHand) {
-            GameObject returnCard = (GameObject) hand[indexInHand];
+        public GameObject peekAtCard(int indexInHand)
+        {
+            GameObject returnCard = (GameObject)hand[indexInHand];
             return returnCard;
         }
 
         /*gets card value and removes it from the User's hand*/
-        public GameObject playCard(int indexInHand) {
+        public GameObject playCard(int indexInHand)
+        {
             GameObject returnCard = removeFromHand(indexInHand);
             pool.Add(returnCard);
             return returnCard;
         }
     }
 
-    public class ComputerOpp{
+    public class ComputerOpp
+    {
         private bool difficult;
         private int turnsCount;
         public GameObject OppText;
 
-        public ComputerOpp(bool difficult, GameObject OppText) {
+        public ComputerOpp(bool difficult, GameObject OppText)
+        {
             this.difficult = diff;
             this.turnsCount = 0;
             this.OppText = OppText;
         }
 
-        public void displayOppMessage() {
+        public void displayOppMessage()
+        {
             OppText.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opponent says: " + recommendationOptions();
             turnsCount++;
         }
 
-        private string recommendationOptions() {
+        private string recommendationOptions()
+        {
             System.Random rand = new System.Random();
             int easyIndex = rand.Next(0, 10);
             string goodMessage = "Play any card";
@@ -124,83 +165,106 @@ public class BruhManager : MonoBehaviour
             //easy companion reccomendations
 
             Debug.Log("color count: " + playerColorConsecCount);
-            if(difficult == false) {
+            if (difficult == false)
+            {
                 //start of good advice
-                if(playerColorConsecCount == 1) {
+                if (playerColorConsecCount == 1)
+                {
                     goodMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().frontColor;
-                } 
-                
-                if(playerNumberConsecCount == 1) {
-                    goodMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().faceValue;
-                } 
+                }
 
-                if(playerGreaterConsecCount == 1) {
+                if (playerNumberConsecCount == 1)
+                {
+                    goodMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().faceValue;
+                }
+
+                if (playerGreaterConsecCount == 1)
+                {
                     goodMessage = "Don't play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
                 }
 
-                if(playerLowerConsecCount == 1) {
+                if (playerLowerConsecCount == 1)
+                {
                     goodMessage = "Don't play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
                 }
 
-                if(playerMovesConsecCount == 4) {
+                if (playerMovesConsecCount == 4)
+                {
                     goodMessage = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
                 }
 
                 //start of bad advice
-                if(playerColorConsecCount == 1) {
+                if (playerColorConsecCount == 1)
+                {
                     badMessage = "play another " + lastCardPlayed.GetComponent<Card>().frontColor;
-                } 
-                
-                if(playerNumberConsecCount == 1) {
-                    badMessage = "play another " + lastCardPlayed.GetComponent<Card>().faceValue;
-                } 
+                }
 
-                if(playerGreaterConsecCount == 1) {
+                if (playerNumberConsecCount == 1)
+                {
+                    badMessage = "play another " + lastCardPlayed.GetComponent<Card>().faceValue;
+                }
+
+                if (playerGreaterConsecCount == 1)
+                {
                     badMessage = "play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
                 }
 
-                if(playerLowerConsecCount == 1) {
+                if (playerLowerConsecCount == 1)
+                {
                     badMessage = "play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
                 }
 
-                if(easyIndex <= 4) {
+                if (easyIndex <= 4)
+                {
                     return goodMessage;
-                } else {
+                }
+                else
+                {
                     return badMessage;
                 }
-            } else {
+            }
+            else
+            {
                 int arrayCount = 0;
                 string[] goodArray = new string[6];
 
-                if(playerColorConsecCount == 1) {
+                if (playerColorConsecCount == 1)
+                {
                     goodArray[arrayCount] = "Don't play another " + lastCardPlayed.GetComponent<Card>().frontColor;
                     arrayCount++;
-                } 
-                
-                if(playerNumberConsecCount == 1) {
+                }
+
+                if (playerNumberConsecCount == 1)
+                {
                     goodArray[arrayCount] = "Don't play another " + lastCardPlayed.GetComponent<Card>().faceValue;
                     arrayCount++;
-                } 
+                }
 
-                if(playerGreaterConsecCount == 1) {
+                if (playerGreaterConsecCount == 1)
+                {
                     goodArray[arrayCount] = "Don't play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
                     arrayCount++;
                 }
 
-                if(playerLowerConsecCount == 1) {
+                if (playerLowerConsecCount == 1)
+                {
                     goodArray[arrayCount] = "Don't play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
                     arrayCount++;
                 }
 
-                if(playerMovesConsecCount == 4) {
+                if (playerMovesConsecCount == 4)
+                {
                     goodArray[arrayCount] = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
                     arrayCount++;
                 }
 
                 arrayCount--;
-                if(arrayCount == -1) {
+                if (arrayCount == -1)
+                {
                     goodMessage = "Play any card";
-                } else {
+                }
+                else
+                {
                     easyIndex = rand.Next(0, arrayCount);
                     goodMessage = goodArray[easyIndex];
                 }
@@ -212,136 +276,174 @@ public class BruhManager : MonoBehaviour
                 badArray[0] = "Good Luck";
                 arrayCount++;
 
-                if(playerColorConsecCount == 1) {
+                if (playerColorConsecCount == 1)
+                {
                     badArray[arrayCount] = "play another " + lastCardPlayed.GetComponent<Card>().frontColor;
                     arrayCount++;
-                } 
-                
-                if(playerNumberConsecCount == 1) {
+                }
+
+                if (playerNumberConsecCount == 1)
+                {
                     badArray[arrayCount] = "play another " + lastCardPlayed.GetComponent<Card>().faceValue;
                     arrayCount++;
-                } 
+                }
 
-                if(playerGreaterConsecCount == 1) {
+                if (playerGreaterConsecCount == 1)
+                {
                     badArray[arrayCount] = "play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
                     arrayCount++;
                 }
 
-                if(playerLowerConsecCount == 1) {
+                if (playerLowerConsecCount == 1)
+                {
                     badArray[arrayCount] = "play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
                     arrayCount++;
                 }
 
-                
+
                 arrayCount--;
-                if(arrayCount == -1) {
+                if (arrayCount == -1)
+                {
                     badMessage = "Good Luck";
-                } else {
+                }
+                else
+                {
                     easyIndex = rand.Next(0, arrayCount);
                     badMessage = badArray[easyIndex];
-                }           
+                }
 
                 easyIndex = rand.Next(0, 9);
-                if(easyIndex <= 2) {
+                if (easyIndex <= 2)
+                {
                     return goodMessage;
-                } else {
+                }
+                else
+                {
                     return badMessage;
                 }
             }
-        } 
+        }
     }
 
-    public class ComputerComp{
+    public class ComputerComp
+    {
         private int recs;
         public GameObject CompanionText;
         private bool difficult;
 
-        public ComputerComp(bool difficult, GameObject CompanionText) {
+        public ComputerComp(bool difficult, GameObject CompanionText)
+        {
             this.recs = 0;
             this.CompanionText = CompanionText;
             this.difficult = difficult;
         }
 
-        public void displayCompMessage() {
+        public void displayCompMessage()
+        {
             CompanionText.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer companion says: " + recommendationOptions();
             recs++;
         }
 
-        private string recommendationOptions() {
+        private string recommendationOptions()
+        {
             System.Random rand = new System.Random();
             int easyIndex = rand.Next(0, 10);
             string recMessage = "Play any card";
             //easy companion reccomendations
-            if(difficult == false) {
-                if(playerColorConsecCount == 1) {
+            if (difficult == false)
+            {
+                if (playerColorConsecCount == 1)
+                {
                     recMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().frontColor;
-                } 
-                
-                if(playerNumberConsecCount == 1) {
-                    recMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().faceValue;
-                } 
+                }
 
-                if(playerGreaterConsecCount == 1) {
+                if (playerNumberConsecCount == 1)
+                {
+                    recMessage = "Don't play another " + lastCardPlayed.GetComponent<Card>().faceValue;
+                }
+
+                if (playerGreaterConsecCount == 1)
+                {
                     recMessage = "Don't play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
                 }
 
-                if(playerLowerConsecCount == 1) {
+                if (playerLowerConsecCount == 1)
+                {
                     recMessage = "Don't play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
                 }
 
-                if(playerMovesConsecCount == 4) {
+                if (playerMovesConsecCount == 4)
+                {
                     recMessage = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
                 }
-            } else {
+            }
+            else
+            {
                 int arrayCount = 0;
                 string[] goodArray = new string[6];
 
-                if(playerColorConsecCount == 1) {
+                if (playerColorConsecCount == 1)
+                {
                     goodArray[arrayCount] = "Don't play another " + lastCardPlayed.GetComponent<Card>().frontColor;
                     arrayCount++;
-                } 
-                
-                if(playerNumberConsecCount == 1) {
+                }
+
+                if (playerNumberConsecCount == 1)
+                {
                     goodArray[arrayCount] = "Don't play another " + lastCardPlayed.GetComponent<Card>().faceValue;
                     arrayCount++;
-                } 
+                }
 
-                if(playerGreaterConsecCount == 1) {
+                if (playerGreaterConsecCount == 1)
+                {
                     goodArray[arrayCount] = "Don't play a card greater than " + lastCardPlayed.GetComponent<Card>().faceValue;
                     arrayCount++;
                 }
 
-                if(playerLowerConsecCount == 1) {
+                if (playerLowerConsecCount == 1)
+                {
                     goodArray[arrayCount] = "Don't play a card less than " + lastCardPlayed.GetComponent<Card>().faceValue;
                     arrayCount++;
                 }
 
-                if(playerMovesConsecCount == 4) {
+                if (playerMovesConsecCount == 4)
+                {
                     goodArray[arrayCount] = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
                     arrayCount++;
                 }
 
                 arrayCount--;
-                if(arrayCount == -1) {
+                if (arrayCount == -1)
+                {
                     recMessage = "Play any card";
-                } else {
+                }
+                else
+                {
                     easyIndex = rand.Next(0, arrayCount);
                     recMessage = goodArray[easyIndex];
                 }
             }
 
             return recMessage;
-        } 
+        }
     }
 
-    private int bruhSequenceChecker(int bruhIndex, GameObject currCard) {
-        if(bruhIndex == 0 && currCard.GetComponent<Card>().frontColor.Equals("Black")) {
+    private int bruhSequenceChecker(int bruhIndex, GameObject currCard)
+    {
+        if (bruhIndex == 0 && currCard.GetComponent<Card>().frontColor.Equals("Black"))
+        {
             return 1;
-        } else if(bruhIndex == 1 && currCard.GetComponent<Card>().frontColor.Equals("Red")) {
+        }
+        else if (bruhIndex == 1 && currCard.GetComponent<Card>().frontColor.Equals("Red"))
+        {
             return 2;
-        } else if(bruhIndex == 2 && currCard.GetComponent<Card>().numValue < lastCardPlayed.GetComponent<Card>().numValue) {
+        }
+        else if (bruhIndex == 2 && currCard.GetComponent<Card>().numValue < lastCardPlayed.GetComponent<Card>().numValue)
+        {
             return 3;
-        } else if(bruhIndex == 3 && currCard.GetComponent<Card>().numValue > lastCardPlayed.GetComponent<Card>().numValue) {
+        }
+        else if (bruhIndex == 3 && currCard.GetComponent<Card>().numValue > lastCardPlayed.GetComponent<Card>().numValue)
+        {
             return 4;
         }
         return 0;
@@ -368,48 +470,59 @@ public class BruhManager : MonoBehaviour
         float x = userXPos;
         float z = 100f;
 
-        
+
         currentCard.transform.position = new Vector3(x + 420f, userYPos + 350f, z);
 
         currentCard.SetActive(true);
     }
 
-    private void flipCard(GameObject currentCard) {
+    private void flipCard(GameObject currentCard)
+    {
         currentCard.SetActive(false);
     }
 
     /* abstracted methods */
-    public bool checkForWinner() { 
+    public bool checkForWinner()
+    {
         //Debug.Log("Check winner");
-        if(userPlayer.getHandList().Count >= 14) {
+        if (userPlayer.getHandList().Count >= 14)
+        {
             gameEnded = true;
             playerWin = false;
             return true;
-        } else if((userPlayer.getHandList().Count <= 0 || playerBruhConsecCount == 4) && currentState != 0) {
+        }
+        else if ((userPlayer.getHandList().Count <= 0 || playerBruhConsecCount == 4) && currentState != 0)
+        {
             gameEnded = true;
             playerWin = true;
             Debug.Log("Player wins");
             GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "You Win!!!";
-            if(playerBruhConsecCount == 4) {
+            if (playerBruhConsecCount == 4)
+            {
                 Debug.Log("You found the secret ending!");
                 GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "You Win!!! You found the secret ending!";
             }
             return true;
         }
         return false;
-    } 
-    
+    }
 
-    public void gameLoop() {
+
+    public void gameLoop()
+    {
         bool finished = checkForWinner();
-        if(finished == false) {
-            if(currentState == 0) {
+        if (finished == false)
+        {
+            if (currentState == 0)
+            {
                 Debug.Log("state 0 starting");
                 //deal user their cards
                 GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Select a difficulty";
-                if(currentInput.Equals("DiffButton")) {
+                if (currentInput.Equals("DiffButton"))
+                {
                     GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Player cards dealt";
-                    for(int i = 0; i < 7; i++) {
+                    for (int i = 0; i < 7; i++)
+                    {
                         userPlayer.addToHand(pool[i]);
                         pool.RemoveAt(i);
                     }
@@ -422,25 +535,32 @@ public class BruhManager : MonoBehaviour
                     currentInput = "empty";
                     currentState = 1;
                 }
-            } else if(currentState == 1) {
+            }
+            else if (currentState == 1)
+            {
                 Debug.Log("state 1 starting");
                 //have computer opponent give their message
                 opponent.displayOppMessage();
                 currentState = 2;
-            } else if(currentState == 2) {
+            }
+            else if (currentState == 2)
+            {
                 GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Enter the index of the card you'd like to play (1 is leftmost card), help, or click draw card button";
                 Debug.Log("state 2 starting");
                 //wait for user input
-                if(!currentInput.Equals("empty")) {
+                if (!currentInput.Equals("empty"))
+                {
                     int intInput = -1; //= int.Parse(currentInput);
 
-                    if(currentInput.Equals("1") || currentInput.Equals("2") || currentInput.Equals("3") || currentInput.Equals("4") || currentInput.Equals("5") 
-                    || currentInput.Equals("6") || currentInput.Equals("7") || currentInput.Equals("8") || currentInput.Equals("9") || currentInput.Equals("10") 
-                    || currentInput.Equals("11") || currentInput.Equals("12") || currentInput.Equals("13") || currentInput.Equals("14")) {
+                    if (currentInput.Equals("1") || currentInput.Equals("2") || currentInput.Equals("3") || currentInput.Equals("4") || currentInput.Equals("5")
+                    || currentInput.Equals("6") || currentInput.Equals("7") || currentInput.Equals("8") || currentInput.Equals("9") || currentInput.Equals("10")
+                    || currentInput.Equals("11") || currentInput.Equals("12") || currentInput.Equals("13") || currentInput.Equals("14"))
+                    {
                         intInput = int.Parse(currentInput);
                     }
 
-                    if(currentInput.Equals("deck") || currentInput.Equals("help") || (intInput > 0 && intInput <= userPlayer.getHandList().Count)) {
+                    if (currentInput.Equals("deck") || currentInput.Equals("help") || (intInput > 0 && intInput <= userPlayer.getHandList().Count))
+                    {
                         string playerHand = "";
                         for (int i = 0; i < userPlayer.getHandList().Count; i++)
                         {
@@ -451,25 +571,37 @@ public class BruhManager : MonoBehaviour
                         }
                         Debug.Log(playerHand);
                         Debug.Log("recieved user input: " + currentInput);
-                        if(currentInput.Equals("help")) {
-                            if(diff == false) {
-                                if(turnsSinceCompHelp >= 3) {
-                                currentState = 3;
-                                turnsSinceCompHelp = 0;
-                                } else {
-                                    Debug.Log("Companion is on cooldown");
-                                    CompanionText.GetComponent<TMPro.TextMeshProUGUI>().text = "Companion is on cooldown";
-                                }
-                            } else {
-                                if(turnsSinceCompHelp >= 5) {
+                        if (currentInput.Equals("help"))
+                        {
+                            if (diff == false)
+                            {
+                                if (turnsSinceCompHelp >= 3)
+                                {
                                     currentState = 3;
                                     turnsSinceCompHelp = 0;
-                                } else {
+                                }
+                                else
+                                {
                                     Debug.Log("Companion is on cooldown");
                                     CompanionText.GetComponent<TMPro.TextMeshProUGUI>().text = "Companion is on cooldown";
                                 }
                             }
-                        } else if(currentInput.Equals("deck")) {
+                            else
+                            {
+                                if (turnsSinceCompHelp >= 5)
+                                {
+                                    currentState = 3;
+                                    turnsSinceCompHelp = 0;
+                                }
+                                else
+                                {
+                                    Debug.Log("Companion is on cooldown");
+                                    CompanionText.GetComponent<TMPro.TextMeshProUGUI>().text = "Companion is on cooldown";
+                                }
+                            }
+                        }
+                        else if (currentInput.Equals("deck"))
+                        {
                             userPlayer.addToHand(pool[0]);
                             pool.RemoveAt(0);
                             //pool[0].SetActive(true);
@@ -477,117 +609,159 @@ public class BruhManager : MonoBehaviour
                             playerChoiceIndex = -1;
                             playerMovesConsecCount = 0;
                             currentState = 4;
-                        } else {
-                            playerChoiceIndex  = intInput;
+                        }
+                        else
+                        {
+                            playerChoiceIndex = intInput;
                             currentState = 4;
                         }
 
-                    } else {
+                    }
+                    else
+                    {
                         Debug.Log("Invalid input");
                         GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid Input, choose to \"help\", click the deck button on the right, or enter a valid hand index for a card in your hand";
                     }
                     currentInput = "empty";
                 }
-            } else if(currentState == 3) {
+            }
+            else if (currentState == 3)
+            {
                 Debug.Log("state 3 starting");
                 //if input asks for companion advice:
                 //give companion advice then reprompt the user to make a move
                 companion.displayCompMessage();
                 currentState = 2;
-            } else if(currentState == 4) {
+            }
+            else if (currentState == 4)
+            {
                 Debug.Log("state 4 starting");
                 //evaluate user input 
                 //if user input is valid accept or reject move and update counters
                 //once finished go back to state 1
-                if(playerChoiceIndex != -1) {
-                    if(roundsPlayed == 0) {
+                if (playerChoiceIndex != -1)
+                {
+                    if (roundsPlayed == 0)
+                    {
                         lastCardPlayed = userPlayer.playCard(playerChoiceIndex - 1);
                         DisplayUserPlay(lastCardPlayed);
                         DisplayOneHand(userPlayer);
-                        if(lastCardPlayed.GetComponent<Card>().frontColor.Equals("Black")) {
+                        if (lastCardPlayed.GetComponent<Card>().frontColor.Equals("Black"))
+                        {
                             playerBruhConsecCount = 1;
                         }
                         GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Your move to play " + lastCardPlayed.GetComponent<Card>().faceValue + " of " + lastCardPlayed.GetComponent<Card>().suitValueString + " was accepted";
 
                         playerMovesConsecCount++;
-                    } else {
+                    }
+                    else
+                    {
                         bool invalid = false;
                         //add adjustments to see what counts would be with peek
-                        if(playerColorConsecCount == 1) {
-                            if(userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().frontColor.Equals("Black") && 
-                            lastCardPlayed.GetComponent<Card>().frontColor.Equals("Black")) {
+                        if (playerColorConsecCount == 1)
+                        {
+                            if (userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().frontColor.Equals("Black") &&
+                            lastCardPlayed.GetComponent<Card>().frontColor.Equals("Black"))
+                            {
                                 invalid = true;
                                 userPlayer.addToHand(pool[0]);
                                 pool.RemoveAt(0);
                                 Debug.Log("consec color broken");
                             }
 
-                            if(userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().frontColor.Equals("Red") && 
-                            lastCardPlayed.GetComponent<Card>().frontColor.Equals("Red")) {
+                            if (userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().frontColor.Equals("Red") &&
+                            lastCardPlayed.GetComponent<Card>().frontColor.Equals("Red"))
+                            {
                                 invalid = true;
                                 userPlayer.addToHand(pool[0]);
                                 pool.RemoveAt(0);
                                 Debug.Log("consec color broken");
                             }
-                            
-                        } else if(playerNumberConsecCount == 1) {
-                            if(userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().numValue == lastCardPlayed.GetComponent<Card>().numValue) {
+
+                        }
+                        else if (playerNumberConsecCount == 1)
+                        {
+                            if (userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().numValue == lastCardPlayed.GetComponent<Card>().numValue)
+                            {
                                 invalid = true;
                                 userPlayer.addToHand(pool[0]);
                                 pool.RemoveAt(0);
                                 Debug.Log("consec number broken");
                             }
-                        } else if(playerGreaterConsecCount == 1) {
-                            if(userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().numValue > lastCardPlayed.GetComponent<Card>().numValue) {
+                        }
+                        else if (playerGreaterConsecCount == 1)
+                        {
+                            if (userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().numValue > lastCardPlayed.GetComponent<Card>().numValue)
+                            {
                                 invalid = true;
                                 userPlayer.addToHand(pool[0]);
                                 pool.RemoveAt(0);
                                 Debug.Log("consec greater broken");
                             }
-                        } else if(playerLowerConsecCount == 1) {
-                            if(userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().numValue < lastCardPlayed.GetComponent<Card>().numValue) {
+                        }
+                        else if (playerLowerConsecCount == 1)
+                        {
+                            if (userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().numValue < lastCardPlayed.GetComponent<Card>().numValue)
+                            {
                                 invalid = true;
                                 userPlayer.addToHand(pool[0]);
                                 pool.RemoveAt(0);
                                 Debug.Log("consec lower broken");
                             }
-                        } else if(playerMovesConsecCount == 5) { //needs to be 5
+                        }
+                        else if (playerMovesConsecCount == 5)
+                        { //needs to be 5
                             invalid = true;
                             userPlayer.addToHand(pool[0]);
                             pool.RemoveAt(0);
                             playerMovesConsecCount = 0;
                             Debug.Log("consec moves w/out draw broken");
-                        }  
+                        }
 
-                        if(invalid == false) {
+                        if (invalid == false)
+                        {
                             //first
-                            if(userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().frontColor.Equals("Black") && 
-                            lastCardPlayed.GetComponent<Card>().frontColor.Equals("Black")) {
+                            if (userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().frontColor.Equals("Black") &&
+                            lastCardPlayed.GetComponent<Card>().frontColor.Equals("Black"))
+                            {
                                 playerColorConsecCount++;
-                            } else if(userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().frontColor.Equals("Red") && 
-                            lastCardPlayed.GetComponent<Card>().frontColor.Equals("Red")) {
+                            }
+                            else if (userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().frontColor.Equals("Red") &&
+                            lastCardPlayed.GetComponent<Card>().frontColor.Equals("Red"))
+                            {
                                 playerColorConsecCount++;
-                            } else {
+                            }
+                            else
+                            {
                                 playerColorConsecCount = 0;
                             }
                             //second
-                            if(userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().numValue == lastCardPlayed.GetComponent<Card>().numValue) {
+                            if (userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().numValue == lastCardPlayed.GetComponent<Card>().numValue)
+                            {
                                 playerNumberConsecCount++;
-                            } else {
+                            }
+                            else
+                            {
                                 playerNumberConsecCount = 0;
                             }
 
                             //third
-                            if(userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().numValue > lastCardPlayed.GetComponent<Card>().numValue) {
+                            if (userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().numValue > lastCardPlayed.GetComponent<Card>().numValue)
+                            {
                                 playerGreaterConsecCount++;
-                            } else {
+                            }
+                            else
+                            {
                                 playerGreaterConsecCount = 0;
                             }
 
                             //fourth
-                            if(userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().numValue < lastCardPlayed.GetComponent<Card>().numValue) {
+                            if (userPlayer.peekAtCard(playerChoiceIndex - 1).GetComponent<Card>().numValue < lastCardPlayed.GetComponent<Card>().numValue)
+                            {
                                 playerLowerConsecCount++;
-                            } else {
+                            }
+                            else
+                            {
                                 playerLowerConsecCount = 0;
                             }
 
@@ -599,12 +773,16 @@ public class BruhManager : MonoBehaviour
                             DisplayUserPlay(lastCardPlayed);
                             GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Your move to play " + lastCardPlayed.GetComponent<Card>().faceValue + " of " + lastCardPlayed.GetComponent<Card>().suitValueString + " was accepted";
                             playerMovesConsecCount++;
-                        } else {
+                        }
+                        else
+                        {
                             GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "That move did not follow the rules of Bruh! Adding a card to your hand as a penalty";
                         }
                     }
                     roundsPlayed++;
-                } else {
+                }
+                else
+                {
                     GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Drawing card";
                 }
                 DisplayOneHand(userPlayer);
@@ -614,10 +792,11 @@ public class BruhManager : MonoBehaviour
                 currentState = 1;
             }
         }
-        
+
     }
 
-    IEnumerator  sleepFunction() {
+    IEnumerator sleepFunction()
+    {
         sleeping = true;
         yield return new WaitForSeconds(1);
         sleeping = false;
@@ -631,77 +810,103 @@ public class BruhManager : MonoBehaviour
         cardDealer = CardDealer.GetComponent<CardDealer>();
         cardDealer.cardSize = Card.cardSize.HUGE;
         pool = cardDealer.RandomCards(52, 1, 13, true, true, true, true);
-       
-        foreach(GameObject cards in pool) {
-            if(cards.GetComponent<Card>().suitValue == Card.suit.CLUBS) {
+
+        foreach (GameObject cards in pool)
+        {
+            if (cards.GetComponent<Card>().suitValue == Card.suit.CLUBS)
+            {
                 cards.GetComponent<Card>().suitValueString = "Clubs";
                 cards.GetComponent<Card>().frontColor = "Black";
-            } else if(cards.GetComponent<Card>().suitValue == Card.suit.HEARTS) {
+            }
+            else if (cards.GetComponent<Card>().suitValue == Card.suit.HEARTS)
+            {
                 cards.GetComponent<Card>().suitValueString = "Hearts";
                 cards.GetComponent<Card>().frontColor = "Red";
-            } else if(cards.GetComponent<Card>().suitValue == Card.suit.DIAMONDS) {
+            }
+            else if (cards.GetComponent<Card>().suitValue == Card.suit.DIAMONDS)
+            {
                 cards.GetComponent<Card>().suitValueString = "Diamonds";
                 cards.GetComponent<Card>().frontColor = "Red";
-            } else if(cards.GetComponent<Card>().suitValue == Card.suit.SPADES) {
+            }
+            else if (cards.GetComponent<Card>().suitValue == Card.suit.SPADES)
+            {
                 cards.GetComponent<Card>().suitValueString = "Spades";
                 cards.GetComponent<Card>().frontColor = "Black";
             }
 
-            if(cards.GetComponent<Card>().numValue == 1) {
+            if (cards.GetComponent<Card>().numValue == 1)
+            {
                 cards.GetComponent<Card>().faceValue = "Ace";
-            } else if(cards.GetComponent<Card>().numValue == 11) {
+            }
+            else if (cards.GetComponent<Card>().numValue == 11)
+            {
                 cards.GetComponent<Card>().faceValue = "Jack";
-            } else if(cards.GetComponent<Card>().numValue == 12) {
+            }
+            else if (cards.GetComponent<Card>().numValue == 12)
+            {
                 cards.GetComponent<Card>().faceValue = "Queen";
-            } else if(cards.GetComponent<Card>().numValue == 13) {
+            }
+            else if (cards.GetComponent<Card>().numValue == 13)
+            {
                 cards.GetComponent<Card>().faceValue = "King";
-            } else {
+            }
+            else
+            {
                 cards.GetComponent<Card>().faceValue = cards.GetComponent<Card>().numValue.ToString();
             }
-            
+
         }
 
         userPlayer = new CardPlayer("1");
         currentState = 0;
     }
-    
+
     // Update is called once per frame
     void Update()
     {
         //Debug.Log("sleep value: " + sleeping);
-        if(sleeping == false) {
+        if (sleeping == false)
+        {
             gameLoop();
-        } 
-        if(sleepRunning == false){
+        }
+        if (sleepRunning == false)
+        {
             sleepRunning = true;
             StartCoroutine(sleepFunction());
         }
     }
 
-    public void OnEnter(string userInput) {
-        if(currentState == 2) {
-            Debug.Log("User entered " + userInput); 
+    public void OnEnter(string userInput)
+    {
+        if (currentState == 2)
+        {
+            Debug.Log("User entered " + userInput);
             currentInput = userInput;
         }
     }
 
-    public void DeckClick() {
-        if(currentState == 2) {
-            Debug.Log("deck draw"); 
+    public void DeckClick()
+    {
+        if (currentState == 2)
+        {
+            Debug.Log("deck draw");
             currentInput = "deck";
         }
     }
 
-    public void UseExitButton() {
+    public void UseExitButton()
+    {
         SceneManager.LoadScene("Scenes/MainMenu");
     }
 
-    public void DifficultMode() {
+    public void DifficultMode()
+    {
         diff = true;
         currentInput = "DiffButton";
     }
 
-    public void EasyMode() {
+    public void EasyMode()
+    {
         diff = false;
         currentInput = "DiffButton";
     }
