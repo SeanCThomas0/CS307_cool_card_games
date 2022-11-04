@@ -69,9 +69,33 @@ public class GoFishLogic : MonoBehaviour
     private int curUserSetCount = 0;
     private bool updatedDatabase;
 
+    [SerializeField] public AudioSource ClickSound;
+    [SerializeField] public AudioSource WinSound;
+    [SerializeField] public AudioSource CardSound;
+    [SerializeField] public AudioSource Music;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
+        /*
+        *Sean Audio stuff
+        *
+        *
+        *
+        */
+        float volumeValue = PlayerPrefs.GetFloat("VolumeValue");
+        ClickSound.volume=volumeValue;
+        WinSound.volume=volumeValue;
+        CardSound.volume=volumeValue/3;
+
+
+
+
+
+
+
         // get a randomized standard deck of cards
         cardDealer = cardDealerController.GetComponent<CardDealer>();
         pool = cardDealer.RandomCards(52);
@@ -239,6 +263,7 @@ public class GoFishLogic : MonoBehaviour
         switch (gameState)
         {
             case gameStates.PICK_PLAYER_TO_REQUEST:
+
                 if (gameAlert == gameAlerts.PICK_PLAYER)
                 {
                     guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Please select a player other than yourself.";
@@ -377,6 +402,7 @@ public class GoFishLogic : MonoBehaviour
                         //updates current user's win count
                         if (players[i].GetComponent<Player>().userID.Equals("1") && !updatedDatabase)
                         {
+                            WinSound.Play();
                             databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/win_count").SetValueAsync(++curUserWinCount);
                         }
                         winningPlayers.Add(players[i]);
@@ -403,6 +429,7 @@ public class GoFishLogic : MonoBehaviour
                         guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "The pool is empty. Game over. " + winningPlayers[0].GetComponent<Player>().userID + ", " + winningPlayers[1].GetComponent<Player>().userID + ", " + winningPlayers[2].GetComponent<Player>().userID + ", and " + winningPlayers[2].GetComponent<Player>().userID + " tie with " + winningPlayers[0].GetComponent<Player>().numOfSetsOfFour + " sets.";
                         break;
                 }
+                Music.Pause();
 
                 quitButton.SetActive(false);
                 exitButton.SetActive(true);
@@ -538,6 +565,7 @@ public class GoFishLogic : MonoBehaviour
                         {
                             gameAlert = gameAlerts.PICK_PLAYER;
                         }
+                        ClickSound.Play();
                         break;
 
                     case gameStates.PICK_NUM_TO_REQEUST:
@@ -559,6 +587,7 @@ public class GoFishLogic : MonoBehaviour
                         {
                             gameAlert = gameAlerts.PICK_NUM;
                         }
+                        ClickSound.Play();
                         break;
 
                     case gameStates.PICK_FROM_POOL:
@@ -567,11 +596,13 @@ public class GoFishLogic : MonoBehaviour
                             PickFromPool(hit.collider.gameObject);
                             DetermineNextPlayer();
                             gameAlert = gameAlerts.NONE;
+                            CardSound.Play();
                         }
                         else
                         {
                             gameAlert = gameAlerts.PICK_POOL;
                         }
+
                         break;
 
                     case gameStates.OUT_OF_CARDS:
@@ -593,6 +624,7 @@ public class GoFishLogic : MonoBehaviour
                             RequestCards(hit.collider.gameObject);
                             gaveToBot = true;
                             gameAlert = gameAlerts.NONE;
+                            ClickSound.Play();
                         }
                         else if (!containBotRequest && hit.collider.gameObject.name.Equals("Fish"))
                         {
@@ -604,6 +636,7 @@ public class GoFishLogic : MonoBehaviour
                             PickFromPool(pool[UnityEngine.Random.Range(0, pool.Count)]);
                             DetermineNextPlayer();
                             gameAlert = gameAlerts.NONE;
+                            ClickSound.Play();
                         }
                         else
                         {
