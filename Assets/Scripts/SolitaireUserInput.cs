@@ -222,7 +222,7 @@ public class SolitaireUserInput : MonoBehaviour
         // else stack the cards with a negative y offset
         Selectable s1 = slot1.GetComponent<Selectable>();
         Selectable s2 = selected.GetComponent<Selectable>();
-        float yOffset = 0.3f;
+        float yOffset = 15f;
         if (!solitaireUIButton.clicked) {
             if (s2.top || (!s2.top && s1.value == 13)) {
                 yOffset = 0;

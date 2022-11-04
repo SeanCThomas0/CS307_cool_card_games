@@ -14,6 +14,7 @@ public class ScoreKeeper : MonoBehaviour
 
     public Selectable[] topStacks;
     public GameObject highScorePanel;
+    public GameObject gamePanel;
     private bool scoreUpdated = false;
     Database database;
     Firebase.Auth.FirebaseUser user;
@@ -91,6 +92,8 @@ public class ScoreKeeper : MonoBehaviour
     void Win() {
         scoreUpdated = true;
         highScorePanel.SetActive(true);
+        gamePanel.SetActive(false);
+
         print("You have won!");
         win_count++;
         database.SetUserScore(user, "solitaire", "win_count", win_count);
