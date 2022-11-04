@@ -190,7 +190,7 @@ public class BruhManager : MonoBehaviour
 
                 if (playerMovesConsecCount == 4)
                 {
-                    goodMessage = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
+                    goodMessage = "Draw a card";
                 }
 
                 //start of bad advice
@@ -254,7 +254,7 @@ public class BruhManager : MonoBehaviour
 
                 if (playerMovesConsecCount == 4)
                 {
-                    goodArray[arrayCount] = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
+                    goodArray[arrayCount] = "Draw a card ";
                     arrayCount++;
                 }
 
@@ -374,7 +374,7 @@ public class BruhManager : MonoBehaviour
 
                 if (playerMovesConsecCount == 4)
                 {
-                    recMessage = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
+                    recMessage = "Draw a card";
                 }
             }
             else
@@ -408,7 +408,7 @@ public class BruhManager : MonoBehaviour
 
                 if (playerMovesConsecCount == 4)
                 {
-                    goodArray[arrayCount] = "Draw a card " + lastCardPlayed.GetComponent<Card>().faceValue;
+                    goodArray[arrayCount] = "Draw a card ";
                     arrayCount++;
                 }
 
@@ -445,6 +445,10 @@ public class BruhManager : MonoBehaviour
         else if (bruhIndex == 3 && currCard.GetComponent<Card>().numValue > lastCardPlayed.GetComponent<Card>().numValue)
         {
             return 4;
+        }
+        if (currCard.GetComponent<Card>().frontColor.Equals("Black"))
+        {
+            return 1;
         }
         return 0;
     }
@@ -485,13 +489,7 @@ public class BruhManager : MonoBehaviour
     public bool checkForWinner()
     {
         //Debug.Log("Check winner");
-        if (userPlayer.getHandList().Count >= 14)
-        {
-            gameEnded = true;
-            playerWin = false;
-            return true;
-        }
-        else if ((userPlayer.getHandList().Count <= 0 || playerBruhConsecCount == 4) && currentState != 0)
+        if ((userPlayer.getHandList().Count <= 0 || playerBruhConsecCount == 4) && currentState != 0)
         {
             gameEnded = true;
             playerWin = true;
@@ -511,11 +509,11 @@ public class BruhManager : MonoBehaviour
     public void gameLoop()
     {
         bool finished = checkForWinner();
-        if (finished == false)
+        if (finished == false && gameEnded == false)
         {
             if (currentState == 0)
             {
-                Debug.Log("state 0 starting");
+                //Debug.Log("state 0 starting");
                 //deal user their cards
                 GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Select a difficulty";
                 if (currentInput.Equals("DiffButton"))
@@ -538,15 +536,23 @@ public class BruhManager : MonoBehaviour
             }
             else if (currentState == 1)
             {
-                Debug.Log("state 1 starting");
-                //have computer opponent give their message
-                opponent.displayOppMessage();
-                currentState = 2;
+                if (userPlayer.getHandList().Count >= 14)
+                {
+                    gameEnded = true;
+                    playerWin = false;
+                    currentState = 5;
+                    GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "You lost!!! you gained 14 cards";
+                } else {
+                    //Debug.Log("state 1 starting");
+                    //have computer opponent give their message
+                    opponent.displayOppMessage();
+                    currentState = 2;
+                }
             }
             else if (currentState == 2)
             {
                 GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "Enter the index of the card you'd like to play (1 is leftmost card), help, or click draw card button";
-                Debug.Log("state 2 starting");
+                //Debug.Log("state 2 starting");
                 //wait for user input
                 if (!currentInput.Equals("empty"))
                 {
@@ -627,7 +633,7 @@ public class BruhManager : MonoBehaviour
             }
             else if (currentState == 3)
             {
-                Debug.Log("state 3 starting");
+                //Debug.Log("state 3 starting");
                 //if input asks for companion advice:
                 //give companion advice then reprompt the user to make a move
                 companion.displayCompMessage();
@@ -635,7 +641,7 @@ public class BruhManager : MonoBehaviour
             }
             else if (currentState == 4)
             {
-                Debug.Log("state 4 starting");
+                //Debug.Log("state 4 starting");
                 //evaluate user input 
                 //if user input is valid accept or reject move and update counters
                 //once finished go back to state 1
