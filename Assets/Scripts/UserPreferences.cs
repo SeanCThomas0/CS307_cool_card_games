@@ -684,12 +684,6 @@ public class UserPreferences : MonoBehaviour
 
     }
 
-    public void setResolution()
-    {
-        Screen.SetResolution(640, 480, FullScreenMode.MaximizedWindow);
-        Debug.Log("Change Resolution");
-    }
-
     private async void SetCustomDesignVariable(string setToString)
     {
         switch (setToString)
