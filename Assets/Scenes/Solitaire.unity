@@ -146,9 +146,8 @@ MonoBehaviour:
   - {fileID: 218690464}
   - {fileID: 337529309}
   highScorePanel: {fileID: 603142777}
-  CardSound: {fileID: 0}
-  WinSound: {fileID: 0}
-  ClickSound: {fileID: 0}
+  WinSound: {fileID: 321845296}
+  Music: {fileID: 1761572087}
 --- !u!114 &105804281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -164,6 +163,8 @@ MonoBehaviour:
   slot1: {fileID: 0}
   wrongMove: {fileID: 1941268590}
   solitaireUIButton: {fileID: 0}
+  CardSound: {fileID: 120727424}
+  ClickSound: {fileID: 1162488544}
 --- !u!114 &105804282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -411,7 +412,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 278526708041556344, guid: 55ab888bc324ff24d93c7a69f405281b, type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 278526708041556344, guid: 55ab888bc324ff24d93c7a69f405281b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3424,7 +3425,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7629815774702039994, guid: 549e246419bb597479fd5d285a20b94e, type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 7629815774702039994, guid: 549e246419bb597479fd5d285a20b94e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4266,6 +4267,8 @@ MonoBehaviour:
   slot1: {fileID: 0}
   wrongMove: {fileID: 1941268590}
   solitaireUIButton: {fileID: 0}
+  CardSound: {fileID: 0}
+  ClickSound: {fileID: 0}
 --- !u!114 &1534643202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4346,9 +4349,8 @@ MonoBehaviour:
   - {fileID: 218690464}
   - {fileID: 337529309}
   highScorePanel: {fileID: 603142777}
-  CardSound: {fileID: 120727424}
   WinSound: {fileID: 321845296}
-  ClickSound: {fileID: 1162488544}
+  Music: {fileID: 0}
 --- !u!1001 &1562006409
 PrefabInstance:
   m_ObjectHideFlags: 0

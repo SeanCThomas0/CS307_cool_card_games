@@ -19,9 +19,9 @@ public class ScoreKeeper : MonoBehaviour
     Firebase.Auth.FirebaseUser user;
     int win_count;
 
-    public AudioSource CardSound;
-    public AudioSource WinSound;
-    public AudioSource ClickSound;
+    [SerializeField] public AudioSource WinSound;
+    [SerializeField] public AudioSource Music;
+ 
 
 
 
@@ -30,6 +30,7 @@ public class ScoreKeeper : MonoBehaviour
     void Start()
     {
         float volumeValue = PlayerPrefs.GetFloat("VolumeValue");
+        WinSound.volume = volumeValue;
 
 
 
@@ -69,7 +70,8 @@ public class ScoreKeeper : MonoBehaviour
     void Update()
     {
         if (HasWon() && !scoreUpdated) {
-            //WinSound.Play();
+            WinSound.Play();
+            Music.Pause();
             Win();
         }
     }
