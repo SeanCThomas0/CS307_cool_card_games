@@ -213,13 +213,17 @@ public class GameManagerEuchre : MonoBehaviour
             for (int i = 0; i < hand.Count; i++)
             {
                 GameObject currentCard = (GameObject)hand[i];
-                if (currentCard.GetComponent<Card>().suitValueString.Equals(leadSuit))
+                if (currentCard.GetComponent<Card>().suitValueString.Equals(leadSuit) && !currentCard.GetComponent<Card>().faceValue.Equals("Jack"))
                 {
                     leadSuitFound = true;
                 }
                 else if (leadSuit.Equals(trumpSuit) && getJackPair(trumpSuit, currentCard))
                 {
                     leadSuitFound = true;
+                } else if(currentCard.GetComponent<Card>().faceValue.Equals("Jack")) {
+                    if(trumpSuit.Equals(leadSuit) && currentCard.GetComponent<Card>().suitValueString.Equals(trumpSuit)) {
+                        leadSuitFound = true;
+                    }
                 }
             }
             return leadSuitFound;
@@ -963,6 +967,7 @@ public class GameManagerEuchre : MonoBehaviour
         auth = FirebaseAuth.DefaultInstance;
         databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
         databaseUpdated = false;
+        
         databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/win_count").GetValueAsync().ContinueWith(task =>
         {
             if (task.IsCanceled)
@@ -996,6 +1001,7 @@ public class GameManagerEuchre : MonoBehaviour
                 Debug.Log("trick_count = " + curUserTrickCount);
             }
         });
+        
     }
 
     private bool getJackValue(string trumpSuit, GameObject jack)
@@ -1036,6 +1042,7 @@ public class GameManagerEuchre : MonoBehaviour
 
     private int getTrickWinner(string trumpSuit, GameObject[] playedCards)
     {
+        Debug.Log(playedCards.Length);
         int maxScore = 0;
         int maxIndex = 0;
         string leadSuit = getCardSuit(playedCards[0], trumpSuit);
@@ -1044,7 +1051,7 @@ public class GameManagerEuchre : MonoBehaviour
         {
             int currentScore = 0;
             flipCard(playedCards[cardIndex]);
-            if (playedCards[cardIndex].GetComponent<Card>().suitValueString.Equals(leadSuit))
+            if (getCardSuit(playedCards[cardIndex], trumpSuit).Equals(leadSuit))
             {
                 currentScore += 16;
             }
@@ -1068,6 +1075,7 @@ public class GameManagerEuchre : MonoBehaviour
             {
                 currentScore += playedCards[cardIndex].GetComponent<Card>().numValue;
             }
+            Debug.Log(playedCards[cardIndex].GetComponent<Card>().faceValue + " of " + playedCards[cardIndex].GetComponent<Card>().suitValue + " Value is: " + currentScore);
             if (currentScore > maxScore)
             {
                 maxIndex = cardIndex;
@@ -1508,11 +1516,11 @@ public class GameManagerEuchre : MonoBehaviour
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Team one wins the hand!";
                     if (oneTrickScore == 5 || trumpChosingTeam == 2)
                     {
-                        teamOneScore += 5; //is normally 2 
+                        teamOneScore += 2; //is normally 2 
                     }
                     else
                     {
-                        teamOneScore += 5; //is normally 1 
+                        teamOneScore += 1; //is normally 1 
                     }
                 }
                 else
@@ -1521,11 +1529,11 @@ public class GameManagerEuchre : MonoBehaviour
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Team two wins the hand!";
                     if (twoTrickScore == 5 || trumpChosingTeam == 1)
                     {
-                        teamTwoScore += 5; //is normally 2 
+                        teamTwoScore += 2; //is normally 2 
                     }
                     else
                     {
-                        teamTwoScore += 5; //is normally 1 
+                        teamTwoScore += 1; //is normally 1 
                     }
                 }
                 oneTrickScore = 0;
