@@ -18,14 +18,14 @@ that responds to the different event of the chatClient.
 public class ChatManager : MonoBehaviour, IChatClientListener
 {
     private ChatClient chatClient;
-    
+
     public TMP_InputField msgInput;
     public TMP_Text msgArea;
 
     public TMP_InputField toInput;
-    
+
     public TMP_InputField usernameInputField;
-    
+
     [SerializeField]
     private GameObject joinChatButton;
 
@@ -42,27 +42,55 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public static string username;
     //public static Action<PhotonStatus> OnStatusUpdated = delegate { };
 
-    
+    private UserPreferences.backgroundColor backgroundColor;
+    public GameObject mainCam;
+
+    void OnEnable()
+    {
+        backgroundColor = (UserPreferences.backgroundColor)PlayerPrefs.GetInt("backgroundColor");
+
+        switch (backgroundColor)
+        {
+            case UserPreferences.backgroundColor.GREEN:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(49, 121, 58, 255);
+                break;
+            case UserPreferences.backgroundColor.BLUE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(43, 100, 159, 255);
+                break;
+            case UserPreferences.backgroundColor.RED:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(222, 50, 73, 255);
+                break;
+            case UserPreferences.backgroundColor.ORANGE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(226, 119, 28, 255);
+                break;
+            case UserPreferences.backgroundColor.PURPLE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(120, 37, 217, 255);
+                break;
+        }
+    }
+
+
 
     // Start is called before the first frame update
     void Start()
     {
         Application.runInBackground = true;
-        if(string.IsNullOrEmpty(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat))
+        if (string.IsNullOrEmpty(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat))
         {
             Debug.LogError("No AppID Provided");
             return;
         }
 
         //if in new scene, reconnect the chat client
-        if(chatClient == null && !string.IsNullOrEmpty(username)) {
+        if (chatClient == null && !string.IsNullOrEmpty(username))
+        {
             ConnectToServer();
             //OnConnected();
             //OnSubscribed(new string[] {"Chatroom"}, new bool[] {true});
         }
-        
-        
-        
+
+
+
     }
 
     // Update is called once per frame
@@ -79,13 +107,14 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         Debug.Log("Connecting");
         chatClient = new ChatClient(this);
-        
+
         //Connect to Photon Server and set username to input field
-        if(string.IsNullOrEmpty(username)) {
+        if (string.IsNullOrEmpty(username))
+        {
             username = usernameInputField.text;
         }
         chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new Photon.Chat.AuthenticationValues(username));
-        
+
     }
 
     public void DisconnectFromServer()
@@ -98,41 +127,43 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
 
         //check to send message publicly or privately
-        if(string.IsNullOrEmpty(toInput.text)) {
+        if (string.IsNullOrEmpty(toInput.text))
+        {
             chatClient.PublishMessage("Chatroom", "<color=black>" + username + ": " + msgInput.text + "</color>");
-            
+
         }
-        else {
+        else
+        {
             chatClient.SendPrivateMessage(toInput.text, username + ": " + msgInput.text + "</color>");
             Debug.Log("Target: " + toInput.text);
         }
-        
-        
+
+
         //reset message input field
         msgInput.text = "";
-        
+
     }
 
     public void Join()
     {
-       
+
     }
 
     public void Leave()
     {
-        chatClient.Unsubscribe(new string[] {PhotonNetwork.CurrentRoom.Name});
+        chatClient.Unsubscribe(new string[] { PhotonNetwork.CurrentRoom.Name });
         chatClient.SetOnlineStatus(ChatUserStatus.Offline);
         Debug.Log("Leave");
     }
-    
+
     public void DebugReturn(DebugLevel level, string message)
     {
-        
+
     }
 
     public void OnDisconnected()
     {
-        chatClient.Unsubscribe(new string[] {PhotonNetwork.CurrentRoom.Name});
+        chatClient.Unsubscribe(new string[] { PhotonNetwork.CurrentRoom.Name });
         chatClient.SetOnlineStatus(ChatUserStatus.Offline);
         Debug.Log("Disconnected");
     }
@@ -141,13 +172,14 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public void OnConnected()
     {
         Debug.Log("Connected and Subscribed");
-        chatClient.Subscribe(new string[] {"Chatroom"});
+        chatClient.Subscribe(new string[] { "Chatroom" });
         chatClient.SetOnlineStatus(ChatUserStatus.Online);
         chatClient.PublishMessage("Chatroom", "<color=black>" + username + ": " + "joined" + "</color>");
     }
 
     //when button is pressed, join chatroom
-    public void JoinChatRoom() {
+    public void JoinChatRoom()
+    {
         joinChatButton.SetActive(false);
         usernameInput.SetActive(false);
         chatRoomImage.SetActive(true);
@@ -156,7 +188,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void OnChatStateChange(ChatState state)
     {
-        
+
     }
     //when publish message is called and messages are received, display them in chatroom
     public void OnGetMessages(string channelName, string[] senders, object[] messages)
@@ -181,19 +213,19 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         Debug.Log("Received Private");
         if (string.IsNullOrEmpty(msgArea.text))
-            {
-                msgArea.text += "<color=black>(Private) " + message;
-            }
-            else
-            {
-                msgArea.text += "\r\n" + "<color=black>(Private) " + message;
-            }
+        {
+            msgArea.text += "<color=black>(Private) " + message;
+        }
+        else
+        {
+            msgArea.text += "\r\n" + "<color=black>(Private) " + message;
+        }
     }
 
     public void OnSubscribed(string[] channels, bool[] results)
     {
         Debug.Log("Subcribed");
-        
+
     }
 
     public void OnUnsubscribed(string[] channels)
@@ -208,15 +240,18 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         GameObject friendUpdate = friends[0];
         foreach (GameObject friend in friends)
         {
-            if (user.Equals(friend.GetComponentInChildren<TMP_Text>().text)) {
+            if (user.Equals(friend.GetComponentInChildren<TMP_Text>().text))
+            {
                 friendUpdate = friend;
                 break;
             }
         }
-        if (status == 0) {
+        if (status == 0)
+        {
             friendUpdate.GetComponent<Image>().color = Color.red;
         }
-        else {
+        else
+        {
             friendUpdate.GetComponent<Image>().color = Color.green;
         }
         //PhotonStatus newStatus = new PhotonStatus(user, status, (string) message);
@@ -225,24 +260,27 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void OnUserSubscribed(string channel, string user)
     {
-        
+
     }
 
     public void OnUserUnsubscribed(string channel, string user)
     {
-        
+
     }
 
     //check if message contains inappropriate words and replace them with asterisks
-    public void checkMessage(TMP_InputField inputField) {
+    public void checkMessage(TMP_InputField inputField)
+    {
         string message = inputField.text;
-        string[] bannedWords = new string[] {"ass", "bitch", "fuck", "hell", "sex", "shit"};
+        string[] bannedWords = new string[] { "ass", "bitch", "fuck", "hell", "sex", "shit" };
 
-        foreach (string word in bannedWords) {
+        foreach (string word in bannedWords)
+        {
             string asterisk = "";
-            
 
-            if (message.Contains(word)) {
+
+            if (message.Contains(word))
+            {
                 //determine length of asterisk string
                 for (int i = 0; i < word.Length; i++)
                 {
@@ -251,10 +289,10 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                 message = message.Replace(word.Replace(" ", "").Replace(".", ""), asterisk);
             }
         }
-        
+
         //set input field text to new message with asterisks
-        inputField.text = message;    
-        
+        inputField.text = message;
+
     }
 
 
@@ -273,19 +311,22 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     private Transform contentContainer;
     bool removeFriendbool = false;
 
-    public void addPreviousFriends(string[] friends) {
+    public void addPreviousFriends(string[] friends)
+    {
 
     }
 
     //add friend by userID and put into friend list while sending friend request
-    public void addFriend() {
+    public void addFriend()
+    {
         //check if friend is already added
-        if (friendList.Contains(addFriendInput.text)) {
+        if (friendList.Contains(addFriendInput.text))
+        {
             chatClient.SendPrivateMessage(username, addFriendInput.text + " is already a friend!</color>");
             return;
         }
         friendList.Add(addFriendInput.text);
-        chatClient.AddFriends(new []{addFriendInput.text});
+        chatClient.AddFriends(new[] { addFriendInput.text });
         GameObject friend = Instantiate(friendObjectButton);
         friend.transform.SetParent(contentContainer);
         friend.SetActive(true);
@@ -297,30 +338,35 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     }
 
-    public void removeFriend(GameObject friendButton) {
-        if (!removeFriendbool) {
+    public void removeFriend(GameObject friendButton)
+    {
+        if (!removeFriendbool)
+        {
             return;
         }
 
         Destroy(friendButton);
         friendList.Remove(friendButton.GetComponentInChildren<TMP_Text>().text);
-        chatClient.AddFriends(new []{friendButton.GetComponentInChildren<TMP_Text>().text});
+        chatClient.AddFriends(new[] { friendButton.GetComponentInChildren<TMP_Text>().text });
         removeFriendbool = false;
     }
 
-    public void removeFriendButtonClicked() {
+    public void removeFriendButtonClicked()
+    {
         chatClient.SendPrivateMessage(username, "Select a friend to remove.");
         removeFriendbool = true;
     }
 
     //clicking on friend allows you to message the friend
-    public void sendFriendMessage(GameObject button) {
+    public void sendFriendMessage(GameObject button)
+    {
         Debug.Log(button.GetComponentInChildren<TMP_Text>().text);
         toInput.text = button.GetComponentInChildren<TMP_Text>().text;
     }
 
     //change to main menu scene
-    public void changeToMainMenuScene() {
+    public void changeToMainMenuScene()
+    {
         SceneManager.LoadScene("MainMenu");
     }
 

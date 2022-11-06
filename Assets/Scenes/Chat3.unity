@@ -1303,7 +1303,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &373283518
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3835,6 +3835,7 @@ MonoBehaviour:
   usernameInput: {fileID: 364202527}
   chatRoomImage: {fileID: 791549340}
   friendSceneButton: {fileID: 1830729599}
+  mainCam: {fileID: 893467873}
   addFriendInput: {fileID: 0}
   addFriendButton: {fileID: 0}
   friendObjectButton: {fileID: 0}
