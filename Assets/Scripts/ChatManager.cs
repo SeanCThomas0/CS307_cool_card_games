@@ -40,6 +40,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     private GameObject friendSceneButton;
 
     public static string username;
+    //public static Action<PhotonStatus> OnStatusUpdated = delegate { };
 
     
 
@@ -121,6 +122,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         chatClient.Unsubscribe(new string[] {PhotonNetwork.CurrentRoom.Name});
         chatClient.SetOnlineStatus(ChatUserStatus.Offline);
+        Debug.Log("Leave");
     }
     
     public void DebugReturn(DebugLevel level, string message)
@@ -130,7 +132,9 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void OnDisconnected()
     {
-        
+        chatClient.Unsubscribe(new string[] {PhotonNetwork.CurrentRoom.Name});
+        chatClient.SetOnlineStatus(ChatUserStatus.Offline);
+        Debug.Log("Disconnected");
     }
 
     //when Connect is called, subscribe user to the chatroom
@@ -199,7 +203,24 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     public void OnStatusUpdate(string user, int status, bool gotMessage, object message)
     {
-        
+        Debug.Log("OnStatusUpdate: " + user + "changed to " + status);
+        GameObject[] friends = GameObject.FindGameObjectsWithTag("Friend");
+        GameObject friendUpdate = friends[0];
+        foreach (GameObject friend in friends)
+        {
+            if (user.Equals(friend.GetComponentInChildren<TMP_Text>().text)) {
+                friendUpdate = friend;
+                break;
+            }
+        }
+        if (status == 0) {
+            friendUpdate.GetComponent<Image>().color = Color.red;
+        }
+        else {
+            friendUpdate.GetComponent<Image>().color = Color.green;
+        }
+        //PhotonStatus newStatus = new PhotonStatus(user, status, (string) message);
+        //OnStatusUpdated?.Invoke(newStatus);
     }
 
     public void OnUserSubscribed(string channel, string user)
@@ -250,8 +271,9 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     private GameObject friendObjectButton;
     [SerializeField]
     private Transform contentContainer;
+    bool removeFriendbool = false;
 
-    public void AddFriends(string[] friends) {
+    public void addPreviousFriends(string[] friends) {
 
     }
 
@@ -263,6 +285,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             return;
         }
         friendList.Add(addFriendInput.text);
+        chatClient.AddFriends(new []{addFriendInput.text});
         GameObject friend = Instantiate(friendObjectButton);
         friend.transform.SetParent(contentContainer);
         friend.SetActive(true);
@@ -272,6 +295,22 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         chatClient.SendPrivateMessage(addFriendInput.text, username + " has sent a friend request! Add them back"
         + " by typing the username and pressing add friend in the friend list menu.</color>");
 
+    }
+
+    public void removeFriend(GameObject friendButton) {
+        if (!removeFriendbool) {
+            return;
+        }
+
+        Destroy(friendButton);
+        friendList.Remove(friendButton.GetComponentInChildren<TMP_Text>().text);
+        chatClient.AddFriends(new []{friendButton.GetComponentInChildren<TMP_Text>().text});
+        removeFriendbool = false;
+    }
+
+    public void removeFriendButtonClicked() {
+        chatClient.SendPrivateMessage(username, "Select a friend to remove.");
+        removeFriendbool = true;
     }
 
     //clicking on friend allows you to message the friend
