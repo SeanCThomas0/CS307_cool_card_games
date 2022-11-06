@@ -14,14 +14,15 @@ public class ScoreKeeper : MonoBehaviour
 
     public Selectable[] topStacks;
     public GameObject highScorePanel;
+    public GameObject gamePanel;
     private bool scoreUpdated = false;
     Database database;
     Firebase.Auth.FirebaseUser user;
     int win_count;
 
-    public AudioSource CardSound;
-    public AudioSource WinSound;
-    public AudioSource ClickSound;
+    [SerializeField] public AudioSource WinSound;
+    [SerializeField] public AudioSource Music;
+ 
 
 
 
@@ -30,6 +31,7 @@ public class ScoreKeeper : MonoBehaviour
     void Start()
     {
         float volumeValue = PlayerPrefs.GetFloat("VolumeValue");
+        WinSound.volume = volumeValue;
 
 
 
@@ -69,7 +71,8 @@ public class ScoreKeeper : MonoBehaviour
     void Update()
     {
         if (HasWon() && !scoreUpdated) {
-            //WinSound.Play();
+            WinSound.Play();
+            Music.Pause();
             Win();
         }
     }
@@ -89,6 +92,8 @@ public class ScoreKeeper : MonoBehaviour
     void Win() {
         scoreUpdated = true;
         highScorePanel.SetActive(true);
+        gamePanel.SetActive(false);
+
         print("You have won!");
         win_count++;
         database.SetUserScore(user, "solitaire", "win_count", win_count);

@@ -53,6 +53,11 @@ public class BruhManager : MonoBehaviour
     private UserPreferences.backgroundColor backgroundColor;
     public GameObject mainCam;
 
+    [SerializeField] public AudioSource ClickSound;
+    [SerializeField] public AudioSource WinSound;
+    [SerializeField] public AudioSource CardSound;
+    [SerializeField] public AudioSource Music;
+
     void OnEnable()
     {
         backgroundColor = (UserPreferences.backgroundColor)PlayerPrefs.GetInt("backgroundColor");
@@ -495,6 +500,8 @@ public class BruhManager : MonoBehaviour
             playerWin = true;
             Debug.Log("Player wins");
             GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "You Win!!!";
+            Music.Pause();
+            WinSound.Play();
             if (playerBruhConsecCount == 4)
             {
                 Debug.Log("You found the secret ending!");
@@ -612,6 +619,7 @@ public class BruhManager : MonoBehaviour
                             pool.RemoveAt(0);
                             //pool[0].SetActive(true);
                             Debug.Log("deck draw");
+                            CardSound.Play();
                             playerChoiceIndex = -1;
                             playerMovesConsecCount = 0;
                             currentState = 4;
@@ -812,6 +820,14 @@ public class BruhManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        float volumeValue = PlayerPrefs.GetFloat("VolumeValue");
+        ClickSound.volume = volumeValue;
+        WinSound.volume = volumeValue;
+        CardSound.volume = volumeValue / 3;
+
+
+
         Debug.Log("Bruh game Starting");
         cardDealer = CardDealer.GetComponent<CardDealer>();
         cardDealer.cardSize = Card.cardSize.HUGE;

@@ -423,9 +423,12 @@ public class GoFishLogic : MonoBehaviour
                     }
                 }
 
-                for (int i = 1; i < players.Length; i++)
+                winningPlayers.Add(maxPlayer);
+
+                for (int i = 0; i < players.Length; i++)
                 {
-                    if (players[i].GetComponent<Player>().numOfSetsOfFour >= maxPlayer.GetComponent<Player>().numOfSetsOfFour)
+                    Debug.Log(players[i] + " " + players[i].GetComponent<Player>().numOfSetsOfFour);
+                    if (players[i].GetComponent<Player>().numOfSetsOfFour >= maxPlayer.GetComponent<Player>().numOfSetsOfFour && players[i] != maxPlayer)
                     {
                         //updates current user's win count
                         if (players[i].GetComponent<Player>().userID.Equals("1") && !updatedDatabase)
@@ -436,6 +439,7 @@ public class GoFishLogic : MonoBehaviour
                         winningPlayers.Add(players[i]);
                     }
                 }
+
                 //database has been updated and doesn't need to be updated again this game
                 updatedDatabase = true;
 

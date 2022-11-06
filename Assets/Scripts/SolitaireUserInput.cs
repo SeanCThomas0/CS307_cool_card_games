@@ -19,16 +19,18 @@ public class SolitaireUserInput : MonoBehaviour
     //[SerializeField] public AudioSource CardSound;
     //[SerializeField] public AudioSource Music;
 
+    [SerializeField] public AudioSource CardSound;
+    [SerializeField] public AudioSource ClickSound;
+
 
 
 
     // Start is called before the first frame update
     void Start()
     {
-        //float volumeValue = PlayerPrefs.GetFloat("VolumeValue");
-        //ClickSound.volume = volumeValue;
-        //WinSound.volume = volumeValue;
-        //CardSound.volume = volumeValue / 3;
+        float volumeValue = PlayerPrefs.GetFloat("VolumeValue");
+        ClickSound.volume = volumeValue;
+        CardSound.volume = volumeValue / 3;
 
 
 
@@ -61,19 +63,25 @@ public class SolitaireUserInput : MonoBehaviour
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -10));
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (hit) {
+                
                 //what has been hit? I.E. Deck/Card/EmptySlot/ETC...
                 if (hit.collider.CompareTag("Deck")) {
                     //clicked Deck
+                    CardSound.Play();
                     Deck();
                 } else if (hit.collider.CompareTag("Card")) {
                     //clicked Card
+                    ClickSound.Play();
                     Card(hit.collider.gameObject);
                 } else if (hit.collider.CompareTag("Top")) {
                     //clicked Top
+                    ClickSound.Play();
                     Top(hit.collider.gameObject);
                 } else if (hit.collider.CompareTag("Bottom")) {
                     //clicked Bottom
+                    ClickSound.Play();
                     Bottom(hit.collider.gameObject);
+                    
                 }
             }
         }
@@ -214,7 +222,7 @@ public class SolitaireUserInput : MonoBehaviour
         // else stack the cards with a negative y offset
         Selectable s1 = slot1.GetComponent<Selectable>();
         Selectable s2 = selected.GetComponent<Selectable>();
-        float yOffset = 0.3f;
+        float yOffset = 15f;
         if (!solitaireUIButton.clicked) {
             if (s2.top || (!s2.top && s1.value == 13)) {
                 yOffset = 0;

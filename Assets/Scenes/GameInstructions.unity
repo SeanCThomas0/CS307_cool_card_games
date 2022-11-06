@@ -482,6 +482,7 @@ MonoBehaviour:
   ExitButton: {fileID: 0}
   TextBox1: {fileID: 1430259719}
   TextBox2: {fileID: 1818059907}
+  mainCam: {fileID: 915623916}
 --- !u!1 &312997430
 GameObject:
   m_ObjectHideFlags: 0
@@ -2518,7 +2519,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1629487967
 RectTransform:
   m_ObjectHideFlags: 0

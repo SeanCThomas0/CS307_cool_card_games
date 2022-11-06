@@ -19,6 +19,7 @@ public class GameManagerEuchre : MonoBehaviour
     public GameObject ExperiencedButton;
     public GameObject EasyButton;
     private CardDealer cardDealer;
+    public bool game_won = false;
 
     /*Temporary card class for testing to be replaced with CardDealer script*/
     public float userXPos = -7;
@@ -27,6 +28,12 @@ public class GameManagerEuchre : MonoBehaviour
 
     private UserPreferences.backgroundColor backgroundColor;
     public GameObject mainCam;
+
+    
+    [SerializeField] public AudioSource ClickSound;
+    [SerializeField] public AudioSource WinSound;
+    [SerializeField] public AudioSource CardSound;
+    [SerializeField] public AudioSource Music;
 
     void OnEnable()
     {
@@ -815,6 +822,15 @@ public class GameManagerEuchre : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
+
+        float volumeValue = PlayerPrefs.GetFloat("VolumeValue");
+        ClickSound.volume = volumeValue;
+        WinSound.volume = volumeValue;
+        CardSound.volume = volumeValue / 3;
+
+
+
         cardDealer = CardDealer.GetComponent<CardDealer>();
 
         Debug.Log("Euchre Game Starting");
@@ -1130,6 +1146,7 @@ public class GameManagerEuchre : MonoBehaviour
                         {
                             currentPlayer.printHand();
                             DisplayOneHand(currentPlayer);
+                            CardSound.Play();
                             printed = true;
                             Debug.Log("Choose to pick up top card or pass");
                             GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Choose to pick up top card or pass";
@@ -1551,6 +1568,12 @@ public class GameManagerEuchre : MonoBehaviour
     {
         if (teamOneScore >= 10)
         {
+            if(!game_won){
+                Music.Pause();
+                WinSound.Play();
+                game_won=true;
+            }
+
             string message = "Team 1 wins!";
             GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Team 1 wins!";
             Debug.Log(message);

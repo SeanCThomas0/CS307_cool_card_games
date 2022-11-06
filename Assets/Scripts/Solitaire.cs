@@ -141,7 +141,7 @@ public class Solitaire : MonoBehaviour
                     newCard.GetComponent<Selectable>().faceUp = true;
 
                 }
-                yOffset = yOffset + 0.3f;
+                yOffset = yOffset + 15f;
                 zOffset = zOffset + 0.03f;
                 discardPile.Add(card);
             }
@@ -218,12 +218,12 @@ public class Solitaire : MonoBehaviour
         if (deckLocation < trips)
         {
             tripsOnDisplay.Clear();
-            float xOffset = -2.5f;
+            float xOffset = -125f;
             float zOffset = -0.2f;
             foreach (string card in deckTrips[deckLocation])
             {
                 GameObject newTopCard = Instantiate(cardPrefab, new Vector3(deckButton.transform.position.x + xOffset, deckButton.transform.position.y, deckButton.transform.position.z + zOffset), Quaternion.identity, deckButton.transform);
-                xOffset -= 0.5f;
+                xOffset -= 25f;
                 zOffset -= 0.2f;
                 newTopCard.name = card;
                 tripsOnDisplay.Add(card);
