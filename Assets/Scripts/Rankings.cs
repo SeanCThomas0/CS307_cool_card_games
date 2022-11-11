@@ -14,7 +14,7 @@ using TMPro;
 
 public class Rankings : MonoBehaviour
 {
-    private string DATA_URL = "https://cool-card-games-default-rtdb.firebaseio.com/";
+    //private string DATA_URL = "https://cool-card-games-default-rtdb.firebaseio.com/";
 
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
