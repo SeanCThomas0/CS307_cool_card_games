@@ -16,9 +16,10 @@ public class ScoreKeeper : MonoBehaviour
     public GameObject highScorePanel;
     public GameObject gamePanel;
     private bool scoreUpdated = false;
-    Database database;
+    //Database database;
     Firebase.Auth.FirebaseUser user;
     int win_count;
+    DatabaseReference userRef;
 
     [SerializeField] public AudioSource WinSound;
     [SerializeField] public AudioSource Music;
@@ -35,12 +36,8 @@ public class ScoreKeeper : MonoBehaviour
 
 
 
-
-
-
-        database = new Database();
         user = FirebaseAuth.DefaultInstance.CurrentUser;
-        DatabaseReference userRef = FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(user.UserId);
+        userRef = FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(user.UserId);
 
         userRef.Child("game_statistics").Child("solitaire").Child("win_count").GetValueAsync().ContinueWith(task =>
         {
@@ -96,7 +93,8 @@ public class ScoreKeeper : MonoBehaviour
 
         print("You have won!");
         win_count++;
-        database.SetUserScore(user, "solitaire", "win_count", win_count);
+        userRef.Child("game_statistics/solitaire/win_count").SetValueAsync(win_count);
+
         Debug.Log("New win_count: " + win_count);
     }
 }

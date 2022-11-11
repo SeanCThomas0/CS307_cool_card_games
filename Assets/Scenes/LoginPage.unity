@@ -847,8 +847,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1853743485}
-        m_TargetAssemblyTypeName: AuthController, Assembly-CSharp
-        m_MethodName: Login
+        m_TargetAssemblyTypeName: AuthController, Scripts
+        m_MethodName: LoginButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3216,8 +3216,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1853743485}
-        m_TargetAssemblyTypeName: AuthController, Assembly-CSharp
-        m_MethodName: CreateAccount
+        m_TargetAssemblyTypeName: AuthController, Scripts
+        m_MethodName: RegisterButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
