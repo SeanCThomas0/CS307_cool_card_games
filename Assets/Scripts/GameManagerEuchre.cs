@@ -967,6 +967,10 @@ public class GameManagerEuchre : MonoBehaviour
         auth = FirebaseAuth.DefaultInstance;
         databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
         databaseUpdated = false;
+
+        if (auth.CurrentUser == null) {
+            Debug.Log("Current user = null");
+        }
         
         databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/win_count").GetValueAsync().ContinueWith(task =>
         {
