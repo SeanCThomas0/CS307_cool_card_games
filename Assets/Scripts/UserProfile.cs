@@ -9,6 +9,7 @@ using Firebase.Storage;
 
 public class UserProfile : MonoBehaviour
 {
+    public GameObject picture;
     RawImage profilePic;
     string errorPicUrl = "https://firebasestorage.googleapis.com/v0/b/cool-card-games.appspot.com/o/profile_icons%2FNuvola_apps_error.svg.png?alt=media&token=1a6dcef1-3e45-4290-b0d5-7059f3b1a9aa";
     FirebaseUser user;
@@ -18,7 +19,7 @@ public class UserProfile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        profilePic = gameObject.GetComponent<RawImage>();
+        profilePic = picture.GetComponent<RawImage>();
         user = FirebaseAuth.DefaultInstance.CurrentUser;
         string profilePicUrl = errorPicUrl;
         if (user.PhotoUrl != null)
