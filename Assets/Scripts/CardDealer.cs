@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Firebase.Auth;
 using Firebase.Database;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -27,11 +28,13 @@ public class CardDealer : MonoBehaviour
 
     public Card.cardSize cardSize;
     public Card.customDesign customDesign;
+    public string uploadUrl;
 
     void OnEnable()
     {
         cardSize = (Card.cardSize)PlayerPrefs.GetInt("cardSize");
         customDesign = (Card.customDesign)PlayerPrefs.GetInt("customDesign");
+        uploadUrl = PlayerPrefs.GetString("uploadUrl");
     }
 
     /*
@@ -712,6 +715,9 @@ public class CardDealer : MonoBehaviour
                 case Card.customDesign.TURKSTRA:
                     card.GetComponent<SpriteRenderer>().sprite = custom[14];
                     break;
+                case Card.customDesign.UPLOAD:
+                    StartCoroutine(LoadImageFromFirebase(card, uploadUrl));
+                    break;
             }
         }
 
@@ -779,5 +785,44 @@ public class CardDealer : MonoBehaviour
                     break;
             }
         }
+    }
+
+    IEnumerator LoadImageFromFirebase(GameObject card, string url)
+    {
+        UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+        {
+            Debug.Log(request.error);
+        }
+        else
+        {
+            card.GetComponent<SpriteRenderer>().sprite = ConvertToSprite(((DownloadHandlerTexture)request.downloadHandler).texture);
+        }
+    }
+
+    // https://gist.github.com/nnm-t/0b826365eb66e7c7b61a3f2ecb2765f5
+    // https://answers.unity.com/questions/650552/convert-a-texture2d-to-sprite.html
+    public Sprite ConvertToSprite(Texture2D texture)
+    {
+        Texture2D scaledTexture = ScaleTexture(texture, 140, 190);
+        return Sprite.Create(scaledTexture, new Rect(0, 0, 140, 190), new Vector2(0.5f, 0.5f));
+    }
+
+    // https://answers.unity.com/questions/1203440/resize-a-sprite-on-a-sprite-renderer.html
+    private Texture2D ScaleTexture(Texture2D source, int targetWidth, int targetHeight)
+    {
+        Texture2D result = new Texture2D(targetWidth, targetHeight, source.format, true);
+        Color[] rpixels = result.GetPixels(0);
+        float incX = (1.0f / (float)targetWidth);
+        float incY = (1.0f / (float)targetHeight);
+        for (int px = 0; px < rpixels.Length; px++)
+        {
+            rpixels[px] = source.GetPixelBilinear(incX * ((float)px % targetWidth), incY * ((float)Mathf.Floor(px / targetWidth)));
+        }
+        result.SetPixels(rpixels, 0);
+        result.Apply();
+        return result;
     }
 }
