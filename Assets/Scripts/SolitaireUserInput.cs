@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
 
 public class SolitaireUserInput : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class SolitaireUserInput : MonoBehaviour
     
     private Solitaire solitaire;
     private float timer;
+    int time;
+    public Text timeText;
+    public float totalTimer;
     private float doubleClickTime = 0.3f;
     private int clickCount = 0;
     public SolitaireUIButton solitaireUIButton;
@@ -34,7 +38,6 @@ public class SolitaireUserInput : MonoBehaviour
 
 
 
-
         solitaire = FindObjectOfType<Solitaire>();
         solitaireUIButton = FindObjectOfType<SolitaireUIButton>();
         slot1 = this.gameObject;
@@ -43,6 +46,10 @@ public class SolitaireUserInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        totalTimer += Time.deltaTime;
+        time = (int) totalTimer;
+        timeText.text = time.ToString();
+        Debug.Log(totalTimer);
         if (clickCount == 1) {
             timer += Time.deltaTime;
         }
