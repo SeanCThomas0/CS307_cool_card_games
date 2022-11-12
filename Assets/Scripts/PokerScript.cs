@@ -14,6 +14,10 @@ public class PokerScript : MonoBehaviour
     public GameObject QuitButton;
     public GameObject ExperiencedButton;
     public GameObject EasyButton;
+    public GameObject player1Text;
+    public GameObject player2Text;
+    public GameObject player3Text;
+    public GameObject player4Text;
     private CardDealer cardDealer;
     public bool game_won = false;
 
@@ -61,14 +65,14 @@ public class PokerScript : MonoBehaviour
     {
         private List<GameObject> hand;
         private string userID;
-        private int teamNumber;
+        private int chipAmount;
         private bool isHuman;
 
-        public CardPlayer(string userID, int teamNumber, bool isHuman)
+        public CardPlayer(string userID, int chipAmount, bool isHuman)
         {
             hand = new List<GameObject>();
             this.userID = userID;
-            this.teamNumber = teamNumber;
+            this.chipAmount = chipAmount;
             this.isHuman = isHuman;
         }
 
@@ -82,14 +86,19 @@ public class PokerScript : MonoBehaviour
             return userID;
         }
 
-        public int getTeamNumber()
-        {
-            return teamNumber;
-        }
-
         public bool getIsHuman()
         {
             return isHuman;
+        }
+
+        public int getChipAmount()
+        {
+            return chipAmount;
+        }
+
+        public void setChipAmount(int chipAmount)
+        {
+            this.chipAmount = chipAmount;
         }
 
         public void printHand()
@@ -204,7 +213,11 @@ public class PokerScript : MonoBehaviour
     public CardPlayer playerFour;
     public CardPlayer dealer = null;
     public CardPlayer currentPlayer = null;
+    public CardPlayer currentDealer = null;
+    public CardPlayer smallBlind = null;
+    public CardPlayer bigBlind = null;
     
+    public static int potValue = 0;
     public int currentState = 0;
     /*
         0=Initial,
@@ -282,6 +295,18 @@ public class PokerScript : MonoBehaviour
             }
         }
         
+        playerOne = new CardPlayer("" + 1, 200, true);
+        playerQueue.Enqueue(playerOne);
+        player1Text.GetComponent<TMPro.TextMeshProUGUI>().text = "Chips: " + playerOne.getChipAmount(); 
+        playerTwo = new CardPlayer("" + 2, 200, false);
+        playerQueue.Enqueue(playerTwo);
+        player2Text.GetComponent<TMPro.TextMeshProUGUI>().text = "Chips: " + playerTwo.getChipAmount(); 
+        playerThree = new CardPlayer("" + 3, 200, false);
+        playerQueue.Enqueue(playerThree);
+        player3Text.GetComponent<TMPro.TextMeshProUGUI>().text = "Chips: " + playerThree.getChipAmount(); 
+        playerFour = new CardPlayer("" + 4, 200, false);
+        playerQueue.Enqueue(playerFour);
+        player4Text.GetComponent<TMPro.TextMeshProUGUI>().text = "Chips: " + playerFour.getChipAmount(); 
 
         pool = cardDealer.ShuffleCards(pool);
 
@@ -309,7 +334,22 @@ public class PokerScript : MonoBehaviour
             } 
             else if (currentState == 0)
             {
+                potValue = 0;
                 //Select dealer and big/small blind
+                //small blind is 2 chips big blind is 4 chips
+                currentDealer = playerQueue.Dequeue();
+                playerQueue.Enqueue(currentDealer);
+
+                smallBlind = playerQueue.Dequeue();
+                playerQueue.Enqueue(currentDealer);
+                smallBlind.setChipAmount(smallBlind.getChipAmount() - 2);
+                potValue += 2;
+
+                bigBlind = playerQueue.Dequeue();
+                playerQueue.Enqueue(currentDealer);
+                bigBlind.setChipAmount(smallBlind.getChipAmount() - 4);
+                potValue += 4;
+
                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealer is: ";
                 currentState = 1;
             } 

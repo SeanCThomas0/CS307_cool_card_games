@@ -1464,6 +1464,10 @@ MonoBehaviour:
   QuitButton: {fileID: 1609112505}
   ExperiencedButton: {fileID: 516204486}
   EasyButton: {fileID: 854746970}
+  player1Text: {fileID: 195891110}
+  player2Text: {fileID: 494228706}
+  player3Text: {fileID: 1012292413}
+  player4Text: {fileID: 1887215926}
   game_won: 0
   userXPos: -7
   userYPos: -124
