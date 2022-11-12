@@ -30,7 +30,8 @@ public class UserPreferences : MonoBehaviour
     public GameObject cardSizeButtonText;
     public GameObject checkDefault;
     public GameObject checkUnlocked;
-    public GameObject checkUpload;
+    public GameObject checkUploadOne;
+    public GameObject checkUploadTwo;
 
     public GameObject errorText;
     private bool changeFailed;
@@ -537,185 +538,216 @@ public class UserPreferences : MonoBehaviour
                 checkDefault.transform.localPosition = new Vector3(-340, 175, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.BLUE_OUTLINE:
                 checkDefault.transform.localPosition = new Vector3(-235, 175, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.BLUE_OUTLINE_PATTERN:
                 checkDefault.transform.localPosition = new Vector3(-125, 175, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.BLUE_OUTLINE_SIMPLE:
                 checkDefault.transform.localPosition = new Vector3(-18, 175, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.BLUE_PATTERN:
                 checkDefault.transform.localPosition = new Vector3(90, 175, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.GREEN:
                 checkDefault.transform.localPosition = new Vector3(-340, 45, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.GREEN_OUTLINE:
                 checkDefault.transform.localPosition = new Vector3(-235, 45, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.GREEN_OUTLINE_PATTERN:
                 checkDefault.transform.localPosition = new Vector3(-125, 45, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.GREEN_OUTLINE_SIMPLE:
                 checkDefault.transform.localPosition = new Vector3(-18, 45, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.GREEN_PATTERN:
                 checkDefault.transform.localPosition = new Vector3(90, 45, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.RED:
                 checkDefault.transform.localPosition = new Vector3(-340, -85, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.RED_OUTLINE:
                 checkDefault.transform.localPosition = new Vector3(-235, -85, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.RED_OUTLINE_PATTERN:
                 checkDefault.transform.localPosition = new Vector3(-125, -85, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.RED_OUTLINE_SIMPLE:
                 checkDefault.transform.localPosition = new Vector3(-18, -85, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.RED_PATTERN:
                 checkDefault.transform.localPosition = new Vector3(90, -85, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.CHECKER_BLACK:
                 checkUnlocked.transform.localPosition = new Vector3(-340, 175, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.CHECKER_RED:
                 checkUnlocked.transform.localPosition = new Vector3(-235, 175, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.BOILERMAKER_SPECIAL:
                 checkUnlocked.transform.localPosition = new Vector3(-125, 175, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.CANDY_CANE:
                 checkUnlocked.transform.localPosition = new Vector3(-18, 175, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.DADDY_DANIELS:
                 checkUnlocked.transform.localPosition = new Vector3(90, 175, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.DOTS:
                 checkUnlocked.transform.localPosition = new Vector3(-340, 45, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.EMOJI:
                 checkUnlocked.transform.localPosition = new Vector3(-235, 45, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.FISH:
                 checkUnlocked.transform.localPosition = new Vector3(-125, 45, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.FOOD:
                 checkUnlocked.transform.localPosition = new Vector3(-18, 45, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.LOGO:
                 checkUnlocked.transform.localPosition = new Vector3(90, 45, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.PETS:
                 checkUnlocked.transform.localPosition = new Vector3(-340, -85, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.PURDUE_PETE:
                 checkUnlocked.transform.localPosition = new Vector3(-235, -85, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.PURDUE:
                 checkUnlocked.transform.localPosition = new Vector3(-125, -85, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.RICK_ROLL:
                 checkUnlocked.transform.localPosition = new Vector3(-18, -85, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.TURKSTRA:
                 checkUnlocked.transform.localPosition = new Vector3(90, -85, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
-                checkUpload.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.UPLOAD:
                 checkUnlocked.transform.localPosition = new Vector3(90, -85, -10);
-                checkUpload.SetActive(true);
+                checkUploadOne.SetActive(true);
+                checkUploadTwo.SetActive(true);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(false);
                 break;
