@@ -17,6 +17,14 @@ public class ImageUpdater : MonoBehaviour
 
     private FirebaseAuth auth;
 
+    public GameObject uploadOption;
+    private string uploadUrl;
+
+    void OnDisable()
+    {
+        PlayerPrefs.SetString("uploadUrl", uploadUrl);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,22 +42,25 @@ public class ImageUpdater : MonoBehaviour
         {
             if (!task.IsFaulted && !task.IsCanceled)
             {
-                StartCoroutine(LoadImage(Convert.ToString(task.Result)));
+                uploadUrl = task.Result.ToString();
+                StartCoroutine(LoadImage(task.Result.ToString()));
             }
             else
             {
                 Debug.Log(task.Exception);
+                uploadOption.SetActive(false);
             }
         });
     }
 
     IEnumerator LoadImage(string url)
     {
+        uploadOption.SetActive(true);
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
-        { //deprecated
+        {
             Debug.Log(request.error);
         }
         else

@@ -20,6 +20,8 @@ public class UploadImage : MonoBehaviour
     StorageReference storageReference;
     private FirebaseAuth auth;
 
+    public GameObject uploadOption;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -90,6 +92,7 @@ public class UploadImage : MonoBehaviour
 
     IEnumerator RefreshImage(string url)
     {
+        uploadOption.SetActive(true);
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
         yield return request.SendWebRequest();
 
