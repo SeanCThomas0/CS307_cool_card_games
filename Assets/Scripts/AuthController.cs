@@ -164,6 +164,11 @@ public class AuthController : MonoBehaviour
                 });
             }
 
+            string username = FirebaseAuth.DefaultInstance.CurrentUser.DisplayName;
+            string userId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+            string email = FirebaseAuth.DefaultInstance.CurrentUser.Email;
+            string photoURL = FirebaseAuth.DefaultInstance.CurrentUser.PhotoUrl.ToString();
+
             if (FirebaseAuth.DefaultInstance.CurrentUser.DisplayName.Equals(""))
             {
                 Firebase.Auth.UserProfile profile = new Firebase.Auth.UserProfile
