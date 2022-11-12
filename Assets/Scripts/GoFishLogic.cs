@@ -30,6 +30,8 @@ public class GoFishLogic : MonoBehaviour
     public GameObject exitButton;
     public GameObject botDiffButtonText;
 
+    private float timer;
+
     private enum gameStates
     {
         PICK_FROM_POOL,
@@ -289,7 +291,8 @@ public class GoFishLogic : MonoBehaviour
         switch (gameState)
         {
             case gameStates.PICK_PLAYER_TO_REQUEST:
-
+                timer += Time.deltaTime;
+                Debug.Log(timer);
                 if (gameAlert == gameAlerts.PICK_PLAYER)
                 {
                     guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Please select a player other than yourself.";
@@ -297,6 +300,11 @@ public class GoFishLogic : MonoBehaviour
                 else
                 {
                     guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Select a player to request a rank from.";
+                }
+                if (timer >= 10f) {
+                    timer = 0;
+                    PickFromPool(pool[UnityEngine.Random.Range(0, pool.Count)]);
+                    DetermineNextPlayer();
                 }
                 break;
             case gameStates.PICK_NUM_TO_REQEUST:
