@@ -18,6 +18,10 @@ public class PokerScript : MonoBehaviour
     public GameObject player2Text;
     public GameObject player3Text;
     public GameObject player4Text;
+    public GameObject player1Bet;
+    public GameObject player2Bet;
+    public GameObject player3Bet;
+    public GameObject player4Bet;
     private CardDealer cardDealer;
     public bool game_won = false;
 
@@ -66,14 +70,19 @@ public class PokerScript : MonoBehaviour
         private List<GameObject> hand;
         private string userID;
         private int chipAmount;
+        private int currentBet = 0;
         private bool isHuman;
+        public GameObject playerText;
+        public GameObject betText;
 
-        public CardPlayer(string userID, int chipAmount, bool isHuman)
+        public CardPlayer(string userID, int chipAmount, bool isHuman, GameObject playerText, GameObject betText)
         {
             hand = new List<GameObject>();
             this.userID = userID;
             this.chipAmount = chipAmount;
             this.isHuman = isHuman;
+            this.playerText = playerText;
+            this.betText = betText;
         }
 
         public List<GameObject> getHandList()
@@ -91,6 +100,15 @@ public class PokerScript : MonoBehaviour
             return isHuman;
         }
 
+        public int getCurrentBet() {
+            return currentBet;
+        }
+
+        public void setCurrentBet(int currentBet) {
+            this.currentBet = currentBet;
+            betText.GetComponent<TMPro.TextMeshProUGUI>().text = "Bet: " + currentBet; 
+        }
+
         public int getChipAmount()
         {
             return chipAmount;
@@ -99,6 +117,7 @@ public class PokerScript : MonoBehaviour
         public void setChipAmount(int chipAmount)
         {
             this.chipAmount = chipAmount;
+            playerText.GetComponent<TMPro.TextMeshProUGUI>().text = "Chips: " + chipAmount;
         }
 
         public void printHand()
@@ -138,6 +157,7 @@ public class PokerScript : MonoBehaviour
             return returnCard;
         }
     }
+
 
     //visually show cards 
     private void DisplayOneHand(CardPlayer currentPlayer)
@@ -207,6 +227,7 @@ public class PokerScript : MonoBehaviour
     public string currentInput = "empty";
    
     public Queue<CardPlayer> playerQueue = new Queue<CardPlayer>();
+    public Queue<CardPlayer> dealQueue = new Queue<CardPlayer>();
     public CardPlayer playerOne;
     public CardPlayer playerTwo;
     public CardPlayer playerThree;
@@ -219,6 +240,7 @@ public class PokerScript : MonoBehaviour
     
     public static int potValue = 0;
     public int currentState = 0;
+    public int matchBet = 0;
     /*
         0=Initial,
         1=pick up top card
@@ -295,18 +317,29 @@ public class PokerScript : MonoBehaviour
             }
         }
         
-        playerOne = new CardPlayer("" + 1, 200, true);
+        playerOne = new CardPlayer("" + 1, 200, true, player1Text, player1Bet);
         playerQueue.Enqueue(playerOne);
+        dealQueue.Enqueue(playerOne);
         player1Text.GetComponent<TMPro.TextMeshProUGUI>().text = "Chips: " + playerOne.getChipAmount(); 
-        playerTwo = new CardPlayer("" + 2, 200, false);
+        playerOne.setCurrentBet(0);
+        
+        playerTwo = new CardPlayer("" + 2, 200, false, player2Text, player2Bet);
         playerQueue.Enqueue(playerTwo);
+        dealQueue.Enqueue(playerTwo);
         player2Text.GetComponent<TMPro.TextMeshProUGUI>().text = "Chips: " + playerTwo.getChipAmount(); 
-        playerThree = new CardPlayer("" + 3, 200, false);
+        playerTwo.setCurrentBet(0);
+
+        playerThree = new CardPlayer("" + 3, 200, false, player3Text, player3Bet);
         playerQueue.Enqueue(playerThree);
+        dealQueue.Enqueue(playerThree);
         player3Text.GetComponent<TMPro.TextMeshProUGUI>().text = "Chips: " + playerThree.getChipAmount(); 
-        playerFour = new CardPlayer("" + 4, 200, false);
+        playerThree.setCurrentBet(0);
+
+        playerFour = new CardPlayer("" + 4, 200, false, player4Text, player4Bet);
         playerQueue.Enqueue(playerFour);
+        dealQueue.Enqueue(playerFour);
         player4Text.GetComponent<TMPro.TextMeshProUGUI>().text = "Chips: " + playerFour.getChipAmount(); 
+        playerFour.setCurrentBet(0);
 
         pool = cardDealer.ShuffleCards(pool);
 
@@ -331,43 +364,120 @@ public class PokerScript : MonoBehaviour
                     currentInput = "empty";
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Game Starting";
                 }
+
             } 
             else if (currentState == 0)
             {
                 potValue = 0;
                 //Select dealer and big/small blind
                 //small blind is 2 chips big blind is 4 chips
-                currentDealer = playerQueue.Dequeue();
-                playerQueue.Enqueue(currentDealer);
+                currentDealer = dealQueue.Dequeue();
+                dealQueue.Enqueue(currentDealer);
 
-                smallBlind = playerQueue.Dequeue();
-                playerQueue.Enqueue(currentDealer);
+                smallBlind = dealQueue.Dequeue();
+                dealQueue.Enqueue(currentDealer);
                 smallBlind.setChipAmount(smallBlind.getChipAmount() - 2);
+                smallBlind.setCurrentBet(smallBlind.getCurrentBet() + 2);
                 potValue += 2;
 
-                bigBlind = playerQueue.Dequeue();
-                playerQueue.Enqueue(currentDealer);
+                bigBlind = dealQueue.Dequeue();
+                dealQueue.Enqueue(currentDealer);
                 bigBlind.setChipAmount(smallBlind.getChipAmount() - 4);
+                bigBlind.setCurrentBet(bigBlind.getCurrentBet() + 4);
                 potValue += 4;
+                matchBet = 4;
 
-                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealer is: ";
+                for(int i = 0; i < 3; i++) {
+                    currentPlayer = playerQueue.Dequeue();
+                    playerQueue.Enqueue(currentPlayer);
+                }
+                currentPlayer = playerQueue.Dequeue();
+
+                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealer is: " + currentDealer.getUserID();
                 currentState = 1;
             } 
             else if (currentState == 1)
             {
-                //get 
+                if(currentPlayer.getIsHuman()) {
+                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = currentPlayer.getUserID() + " match the highest bet, raise, or fold";
+                    if(!currentInput.Equals("empty")) {
+                        if(currentInput.Equals("fold")) {
+                            currentPlayer = playerQueue.Dequeue();
+                        } else {
+                            bool validBet = false;
+                            int intInput = int.Parse(currentInput);
+                            if(intInput + currentPlayer.getCurrentBet() == matchBet) {
+                                potValue += matchBet - intInput;
+                                currentPlayer.setCurrentBet(matchBet);
+                                validBet = true;
+                            } else if(intInput + currentPlayer.getCurrentBet() > matchBet) {
+                                potValue += intInput - matchBet;
+                                currentPlayer.setCurrentBet(intInput); 
+                                validBet = true;
+                            } else {
+                                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: fold or match/raise the highest bet";
+                            }
+                            if(validBet == true) {
+                                currentPlayer = playerQueue.Dequeue();
+                                playerQueue.Enqueue(currentPlayer);
+                            }
+                            currentInput = "empty";
+                        }
+                    }
+                } else {
+                    string compAction = "";
+                    //only have coputer match bet for now
+                    potValue += matchBet - currentPlayer.getCurrentBet();
+                    currentPlayer.setChipAmount(currentPlayer.getChipAmount() - (matchBet - currentPlayer.getCurrentBet()));
+                    currentPlayer.setCurrentBet(matchBet); 
+                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opponent " + currentPlayer.getUserID() + " chose to "; //add in action
+
+                    //get next player and add player back if they didnt fold
+                    playerQueue.Enqueue(currentPlayer);
+                    currentPlayer = playerQueue.Dequeue();
+                }
                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
                 Debug.Log("Show hand");
             }
-            else if (currentState == 2)
+            else if (currentState == 2) //show first set of three cards
             {
                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
-                Debug.Log("Show hand");
+                Debug.Log("deal flop");
             }
-            else if (currentState == 3)
+            else if (currentState == 3) //let players bet again
             {
                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
-                Debug.Log("Show hand");
+                Debug.Log("bet after flop");
+            }
+            else if (currentState == 4) //show fourth card
+            {
+                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
+                Debug.Log("deal turn");
+            }
+            else if (currentState == 5) //let players bet again
+            {
+                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
+                Debug.Log("bet after turn");
+            }
+            else if (currentState == 4) //show fifth and final card
+            {
+                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
+                Debug.Log("deal river");
+            }
+            else if (currentState == 5) //let players bet again
+            {
+                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
+                Debug.Log("bet after river");
+            }
+            else if (currentState == 6) //show player cards and determine winner
+            {
+                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
+                Debug.Log("Show winner");
+            }
+            else if (currentState == 7) //reset pool and betting values and move to next dealer
+            {
+                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
+                Debug.Log("reset values");
             }
             
         }
