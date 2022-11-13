@@ -10,6 +10,7 @@ public class GoFishMultiplayer : MonoBehaviour
     {
         
     }
+    //scrapped the proggres, but im workin
 
     // Update is called once per frame
     void Update()
