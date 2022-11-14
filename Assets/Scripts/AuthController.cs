@@ -25,6 +25,10 @@ public class AuthController : MonoBehaviour
     private FirebaseAuth auth;
     private bool loggedIn = false;
 
+    public static string username;
+    public static string userId;
+    public static string userEmail;
+
     /*
      * Function : Start
      * 
@@ -163,6 +167,11 @@ public class AuthController : MonoBehaviour
                     Debug.Log("User profile picture updated successfully.");
                 });
             }
+
+            username = FirebaseAuth.DefaultInstance.CurrentUser.DisplayName;
+            userId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+            userEmail = FirebaseAuth.DefaultInstance.CurrentUser.Email;
+            string photoURL = FirebaseAuth.DefaultInstance.CurrentUser.PhotoUrl.ToString();
 
             if (FirebaseAuth.DefaultInstance.CurrentUser.DisplayName.Equals(""))
             {
