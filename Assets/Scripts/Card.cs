@@ -62,7 +62,8 @@ public class Card : MonoBehaviour
         PURDUE_PETE,
         PURDUE,
         RICK_ROLL,
-        TURKSTRA
+        TURKSTRA,
+        UPLOAD
     }
 
     public enum cardSize

@@ -23,6 +23,7 @@ public class AuthController : MonoBehaviour
 
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
+    private bool loggedIn = false;
 
     /*
      * Function : Start
@@ -31,8 +32,12 @@ public class AuthController : MonoBehaviour
      */
     private void Start()
     {
+        loggedIn = false;
+
         auth = FirebaseAuth.DefaultInstance;
         databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
+
+        loginMessageString = "";
         textMeshPro_LoginMessage = loginMessage.GetComponent<TextMeshProUGUI>();
         textMeshPro_ForgottenPasswordMessage = forgottenPasswordMessage.GetComponent<TextMeshProUGUI>();
         textMeshPro_password = passwordText.GetComponent<TextMeshProUGUI>();
@@ -58,7 +63,7 @@ public class AuthController : MonoBehaviour
             textMeshPro_ForgottenPasswordMessage.color = msgColor;
         }
 
-        if (FirebaseAuth.DefaultInstance.CurrentUser != null)
+        if (loggedIn == true)
         {
             Debug.Log(FirebaseAuth.DefaultInstance.CurrentUser);
 
@@ -93,18 +98,29 @@ public class AuthController : MonoBehaviour
     }
 
     /*
+     * Function : LoginButton
+     * 
+     * Description : This function attempts to is activated by the Login Button and calls the Login function
+     */
+    public void LoginButton()
+    {
+        Debug.Log("LoginButton");
+        StartCoroutine(Login());
+    }
+
+    /*
      * Function : Login
      * 
      * Description : This function attempts to log a user into their cool card games account. If their credentials
      *               are valid, it will log them in and direct them to the main menu. If invalid, it will give the
      *               appropriate error response
      */
-    public void Login()
+    public IEnumerator Login()
     {
-        FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
+        yield return FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
             if (task.IsCanceled)
             {
-                Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
+                Debug.Log("SignInWithEmailAndPasswordAsync was canceled.");
 
                 Firebase.FirebaseException e = task.Exception.Flatten().InnerException as Firebase.FirebaseException;
                 GetErrorMessage((AuthError)e.ErrorCode);
@@ -113,7 +129,7 @@ public class AuthController : MonoBehaviour
             }
             if (task.IsFaulted)
             {
-                Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error: " + task.Exception);
+                Debug.Log("SignInWithEmailAndPasswordAsync encountered an error: " + task.Exception);
 
                 Firebase.FirebaseException e = task.Exception.Flatten().InnerException as Firebase.FirebaseException;
                 GetErrorMessage((AuthError)e.ErrorCode);
@@ -124,6 +140,35 @@ public class AuthController : MonoBehaviour
             Firebase.Auth.FirebaseUser newUser = task.Result;
             Debug.LogFormat("User signed in successfully: {0} ({1})", newUser.DisplayName, newUser.UserId);
 
+            Debug.Log("Current PhotoUrl: " + FirebaseAuth.DefaultInstance.CurrentUser.PhotoUrl == null);
+
+            if (FirebaseAuth.DefaultInstance.CurrentUser.PhotoUrl == null)
+            {
+                Firebase.Auth.UserProfile profile = new Firebase.Auth.UserProfile
+                {
+                    PhotoUrl = new System.Uri("https://firebasestorage.googleapis.com/v0/b/cool-card-games.appspot.com/o/profile_icons%2FLogo.png?alt=media&token=f8c07c18-c585-471b-a8a4-030f7349dc23"),
+                };
+                newUser.UpdateUserProfileAsync(profile).ContinueWith(task => {
+                    if (task.IsCanceled)
+                    {
+                        Debug.Log("UpdateUserProfileAsync was canceled.");
+                        return;
+                    }
+                    if (task.IsFaulted)
+                    {
+                        Debug.Log("UpdateUserProfileAsync encountered an error: " + task.Exception);
+                        return;
+                    }
+
+                    Debug.Log("User profile picture updated successfully.");
+                });
+            }
+
+            string username = FirebaseAuth.DefaultInstance.CurrentUser.DisplayName;
+            string userId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+            string email = FirebaseAuth.DefaultInstance.CurrentUser.Email;
+            string photoURL = FirebaseAuth.DefaultInstance.CurrentUser.PhotoUrl.ToString();
+
             if (FirebaseAuth.DefaultInstance.CurrentUser.DisplayName.Equals(""))
             {
                 Firebase.Auth.UserProfile profile = new Firebase.Auth.UserProfile
@@ -133,21 +178,30 @@ public class AuthController : MonoBehaviour
                 newUser.UpdateUserProfileAsync(profile).ContinueWith(task => {
                     if (task.IsCanceled)
                     {
-                        Debug.LogError("UpdateUserProfileAsync was canceled.");
+                        Debug.Log("UpdateUserProfileAsync was canceled.");
                         return;
                     }
                     if (task.IsFaulted)
                     {
-                        Debug.LogError("UpdateUserProfileAsync encountered an error: " + task.Exception);
+                        Debug.Log("UpdateUserProfileAsync encountered an error: " + task.Exception);
                         return;
                     }
 
-                    Debug.Log("User profile updated successfully.");
+                    Debug.Log("User profile display name updated successfully.");
                 });
             }
-        });
 
-        print(FirebaseAuth.DefaultInstance.CurrentUser);
+            Debug.Log("user profile: " + newUser.DisplayName + " " + newUser.PhotoUrl);
+
+            Debug.Log(FirebaseAuth.DefaultInstance.CurrentUser);
+            loggedIn = true;
+        });
+    }
+
+    public void RegisterButton()
+    {
+        Debug.Log("RegisterButton");
+        StartCoroutine(CreateAccount());
     }
 
     /*
@@ -156,12 +210,12 @@ public class AuthController : MonoBehaviour
      * Description : This function creates an account and logs the user in given a valid email and password. If
      *               invalid, the function will give the appropriate error response.
      */
-    public void CreateAccount()
+    private IEnumerator CreateAccount()
     {
-        FirebaseAuth.DefaultInstance.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
+        yield return FirebaseAuth.DefaultInstance.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
             if (task.IsCanceled)
             {
-                Debug.LogError("CreateUserWithEmailAndPasswordAsync was canceled.");
+                Debug.Log("CreateUserWithEmailAndPasswordAsync was canceled.");
 
                 Firebase.FirebaseException e = task.Exception.Flatten().InnerException as Firebase.FirebaseException;
                 GetErrorMessage((AuthError)e.ErrorCode);
@@ -170,7 +224,7 @@ public class AuthController : MonoBehaviour
             }
             if (task.IsFaulted)
             {
-                Debug.LogError("CreateUserWithEmailAndPasswordAsync encountered an error: " + task.Exception);
+                Debug.Log("CreateUserWithEmailAndPasswordAsync encountered an error: " + task.Exception);
 
                 Firebase.FirebaseException e = task.Exception.Flatten().InnerException as Firebase.FirebaseException;
                 GetErrorMessage((AuthError)e.ErrorCode);
@@ -182,13 +236,15 @@ public class AuthController : MonoBehaviour
             Firebase.Auth.FirebaseUser newUser = task.Result;
 
             //Add account to database
-            CreateAccountData(newUser);
+            StartCoroutine(CreateAccountData(newUser));
 
             //FirebaseDatabase.DefaultInstance.RootReference.
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
 
         });
+
+        Debug.Log("Account Created");
 
         //Login the user after successful account creation
         FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
@@ -201,10 +257,12 @@ public class AuthController : MonoBehaviour
                 return;
             }
 
-            Firebase.Auth.FirebaseUser newUser = task.Result;
-        });
 
-        print(FirebaseAuth.DefaultInstance.CurrentUser);
+            Firebase.Auth.FirebaseUser newUser = task.Result;
+
+            Debug.Log("User Logged in: " + newUser.UserId + " " + newUser.DisplayName);
+            loggedIn = true;
+        });
     }
 
     /*
@@ -309,7 +367,7 @@ public class AuthController : MonoBehaviour
      * 
      * Description : This function preps the next panel so it is fresh
      */
-    public void CreateAccountData(Firebase.Auth.FirebaseUser user)
+    public IEnumerator CreateAccountData(Firebase.Auth.FirebaseUser user)
     {
         DatabaseReference userRef = databaseReference.Child("users").Child(user.UserId);
 
@@ -322,29 +380,23 @@ public class AuthController : MonoBehaviour
         Firebase.Auth.UserProfile profile = new Firebase.Auth.UserProfile
         {
             DisplayName = user.Email.Substring(0, user.Email.IndexOf("@")),
+            PhotoUrl = new System.Uri("https://firebasestorage.googleapis.com/v0/b/cool-card-games.appspot.com/o/profile_icons%2FLogo.png?alt=media&token=f8c07c18-c585-471b-a8a4-030f7349dc23"),
         };
-        user.UpdateUserProfileAsync(profile).ContinueWith(task => {
+        yield return user.UpdateUserProfileAsync(profile).ContinueWith(task => {
             if (task.IsCanceled)
             {
-                Debug.LogError("UpdateUserProfileAsync was canceled.");
+                Debug.Log("UpdateUserProfileAsync was canceled.");
                 return;
             }
             if (task.IsFaulted)
             {
-                Debug.LogError("UpdateUserProfileAsync encountered an error: " + task.Exception);
+                Debug.Log("UpdateUserProfileAsync encountered an error: " + task.Exception);
                 return;
             }
 
             Debug.Log("User profile updated successfully.");
         });
 
-        Debug.Log("logged event: " + user.UserId + " " + user.Email + " " + user.DisplayName);
-
-        /* Instead of initializing all of these values to zero at the start, we are just not going to initialize them and when we first need them, we will initialize them then
-        //game_statistics
-        
-        //solitaire
-        userRef.Child("game_statistics").Child("solitaire").Child("win_count").SetValueAsync(0);
-        */
+        Debug.Log("logged event: " + user.UserId + " " + user.Email + " " + user.DisplayName + " " + user.PhotoUrl);
     }
 }

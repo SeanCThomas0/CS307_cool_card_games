@@ -1,11 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+// using System.Collections;
+// using System.Collections.Generic;
 using Firebase.Auth;
 using Firebase.Database;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+// using UnityEngine.SceneManagement;
+// using UnityEngine.UI;
 
 public class UserPreferences : MonoBehaviour
 {
@@ -30,6 +30,8 @@ public class UserPreferences : MonoBehaviour
     public GameObject cardSizeButtonText;
     public GameObject checkDefault;
     public GameObject checkUnlocked;
+    public GameObject checkUploadOne;
+    public GameObject checkUploadTwo;
 
     public GameObject errorText;
     private bool changeFailed;
@@ -61,21 +63,21 @@ public class UserPreferences : MonoBehaviour
     private async void RetrieveVarsFromFirebase()
     {
         // GET SELECTED DESIGN
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/selected_design").GetValueAsync().ContinueWith(task =>
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/selected_design").GetValueAsync().ContinueWith(work =>
             {
-                if (task.IsCanceled)
+                if (work.IsCanceled)
                 {
                     Debug.Log("get selected design cancelled");
                 }
-                if (task.IsFaulted)
+                if (work.IsFaulted)
                 {
                     Debug.Log("get selected design faulted");
                 }
                 else
                 {
-                    if (task.Result.Value != null)
+                    if (work.Result.Value != null)
                     {
-                        SetCustomDesignVariable(task.Result.Value.ToString());
+                        SetCustomDesignVariable(work.Result.Value.ToString());
                         Debug.Log("from firebase (design) =" + customDesign);
                     }
                     else
@@ -87,21 +89,21 @@ public class UserPreferences : MonoBehaviour
             });
 
         // GET CARD SIZE
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/card_size").GetValueAsync().ContinueWith(task =>
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/card_size").GetValueAsync().ContinueWith(work =>
         {
-            if (task.IsCanceled)
+            if (work.IsCanceled)
             {
                 Debug.Log("get card size cancelled");
             }
-            if (task.IsFaulted)
+            if (work.IsFaulted)
             {
                 Debug.Log("get card size faulted");
             }
             else
             {
-                if (task.Result.Value != null)
+                if (work.Result.Value != null)
                 {
-                    cardSize = (Card.cardSize)Int32.Parse(task.Result.Value.ToString());
+                    cardSize = (Card.cardSize)Int32.Parse(work.Result.Value.ToString());
 
                     Debug.Log("from firebase (size) =" + cardSize);
                 }
@@ -128,21 +130,21 @@ public class UserPreferences : MonoBehaviour
         }
 
         // GET BACKGROUND COLOR
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/background_color").GetValueAsync().ContinueWith(task =>
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/background_color").GetValueAsync().ContinueWith(work =>
         {
-            if (task.IsCanceled)
+            if (work.IsCanceled)
             {
                 Debug.Log("get background color cancelled");
             }
-            if (task.IsFaulted)
+            if (work.IsFaulted)
             {
                 Debug.Log("get background color faulted");
             }
             else
             {
-                if (task.Result.Value != null)
+                if (work.Result.Value != null)
                 {
-                    backColor = (backgroundColor)Int32.Parse(task.Result.Value.ToString());
+                    backColor = (backgroundColor)Int32.Parse(work.Result.Value.ToString());
 
                     Debug.Log("from firebase (background) =" + backColor);
                 }
@@ -212,27 +214,27 @@ public class UserPreferences : MonoBehaviour
     private async void DetermineUnlock()
     {
         // UNLOCK EMOJI
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/solitaire/win_count").GetValueAsync().ContinueWith(task =>
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/solitaire/win_count").GetValueAsync().ContinueWith(work =>
         {
-            if (task.IsCanceled)
+            if (work.IsCanceled)
             {
                 Debug.Log("unlock emoji cancelled");
             }
-            if (task.IsFaulted)
+            if (work.IsFaulted)
             {
                 Debug.Log("unlock emoji faulted");
             }
             else
             {
-                if (task.Result.Value != null)
+                if (work.Result.Value != null)
                 {
-                    if (Int32.Parse(task.Result.Value.ToString()) >= 5)
+                    if (Int32.Parse(work.Result.Value.ToString()) >= 5)
                     {
                         databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/emoji").SetValueAsync(true);
                         numUnlocked++;
                     }
 
-                    if (Int32.Parse(task.Result.Value.ToString()) > 0)
+                    if (Int32.Parse(work.Result.Value.ToString()) > 0)
                     {
                         hasWon = true;
                     }
@@ -241,21 +243,21 @@ public class UserPreferences : MonoBehaviour
         });
 
         // UNLOCK FISH
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/set_count").GetValueAsync().ContinueWith(task =>
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/set_count").GetValueAsync().ContinueWith(work =>
         {
-            if (task.IsCanceled)
+            if (work.IsCanceled)
             {
                 Debug.Log("unlock fish cancelled");
             }
-            if (task.IsFaulted)
+            if (work.IsFaulted)
             {
                 Debug.Log("unlock fish faulted");
             }
             else
             {
-                if (task.Result.Value != null)
+                if (work.Result.Value != null)
                 {
-                    if (Int32.Parse(task.Result.Value.ToString()) >= 20)
+                    if (Int32.Parse(work.Result.Value.ToString()) >= 20)
                     {
                         databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/fish").SetValueAsync(true);
                         numUnlocked++;
@@ -265,27 +267,27 @@ public class UserPreferences : MonoBehaviour
         });
 
         // UNLOCK PETS
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/win_count").GetValueAsync().ContinueWith(task =>
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/win_count").GetValueAsync().ContinueWith(work =>
         {
-            if (task.IsCanceled)
+            if (work.IsCanceled)
             {
                 Debug.Log("unlock pets cancelled");
             }
-            if (task.IsFaulted)
+            if (work.IsFaulted)
             {
                 Debug.Log("unlock pets faulted");
             }
             else
             {
-                if (task.Result.Value != null)
+                if (work.Result.Value != null)
                 {
-                    if (Int32.Parse(task.Result.Value.ToString()) >= 5)
+                    if (Int32.Parse(work.Result.Value.ToString()) >= 5)
                     {
                         databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/pets").SetValueAsync(true);
                         numUnlocked++;
                     }
 
-                    if (Int32.Parse(task.Result.Value.ToString()) > 0)
+                    if (Int32.Parse(work.Result.Value.ToString()) > 0)
                     {
                         hasWon = true;
                     }
@@ -294,21 +296,21 @@ public class UserPreferences : MonoBehaviour
         });
 
         // UNLOCK PURDUE
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/trick_count").GetValueAsync().ContinueWith(task =>
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/trick_count").GetValueAsync().ContinueWith(work =>
         {
-            if (task.IsCanceled)
+            if (work.IsCanceled)
             {
                 Debug.Log("unlock purdue cancelled");
             }
-            if (task.IsFaulted)
+            if (work.IsFaulted)
             {
                 Debug.Log("unlock purdue faulted");
             }
             else
             {
-                if (task.Result.Value != null)
+                if (work.Result.Value != null)
                 {
-                    if (Int32.Parse(task.Result.Value.ToString()) >= 20)
+                    if (Int32.Parse(work.Result.Value.ToString()) >= 20)
                     {
                         databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/purdue").SetValueAsync(true);
                         numUnlocked++;
@@ -318,27 +320,27 @@ public class UserPreferences : MonoBehaviour
         });
 
         // UNLOCK CHECKERED BLACK
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/win_count").GetValueAsync().ContinueWith(task =>
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/win_count").GetValueAsync().ContinueWith(work =>
         {
-            if (task.IsCanceled)
+            if (work.IsCanceled)
             {
                 Debug.Log("unlock checkered black cancelled");
             }
-            if (task.IsFaulted)
+            if (work.IsFaulted)
             {
                 Debug.Log("unlock checkered black faulted");
             }
             else
             {
-                if (task.Result.Value != null)
+                if (work.Result.Value != null)
                 {
-                    if (Int32.Parse(task.Result.Value.ToString()) >= 5)
+                    if (Int32.Parse(work.Result.Value.ToString()) >= 5)
                     {
                         databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/checkered_black").SetValueAsync(true);
                         numUnlocked++;
                     }
 
-                    if (Int32.Parse(task.Result.Value.ToString()) > 0)
+                    if (Int32.Parse(work.Result.Value.ToString()) > 0)
                     {
                         hasWon = true;
                     }
@@ -390,19 +392,19 @@ public class UserPreferences : MonoBehaviour
         DetermineUnlock();
 
         // DETERMINE IF CLICKED DESIGN IS UNLOCKED
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/" + clickedName).GetValueAsync().ContinueWith(task =>
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/" + clickedName).GetValueAsync().ContinueWith(work =>
             {
-                if (task.IsCanceled)
+                if (work.IsCanceled)
                 {
                     Debug.Log("unlock check cancelled");
                 }
-                if (task.IsFaulted)
+                if (work.IsFaulted)
                 {
                     Debug.Log("unlock check faulted");
                 }
                 else
                 {
-                    if (task.Result.Value != null && (bool)task.Result.Value)
+                    if (work.Result.Value != null && (bool)work.Result.Value)
                     {
                         SetCustomDesignVariable(clickedName);
                     }
@@ -454,6 +456,9 @@ public class UserPreferences : MonoBehaviour
                                 break;
                             case "red_pattern":
                                 customDesign = Card.customDesign.RED_PATTERN;
+                                break;
+                            case "upload":
+                                customDesign = Card.customDesign.UPLOAD;
                                 break;
                             default:
                                 changeFailed = true;
@@ -533,151 +538,218 @@ public class UserPreferences : MonoBehaviour
                 checkDefault.transform.localPosition = new Vector3(-340, 175, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.BLUE_OUTLINE:
                 checkDefault.transform.localPosition = new Vector3(-235, 175, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.BLUE_OUTLINE_PATTERN:
                 checkDefault.transform.localPosition = new Vector3(-125, 175, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.BLUE_OUTLINE_SIMPLE:
                 checkDefault.transform.localPosition = new Vector3(-18, 175, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.BLUE_PATTERN:
                 checkDefault.transform.localPosition = new Vector3(90, 175, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.GREEN:
                 checkDefault.transform.localPosition = new Vector3(-340, 45, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.GREEN_OUTLINE:
                 checkDefault.transform.localPosition = new Vector3(-235, 45, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.GREEN_OUTLINE_PATTERN:
                 checkDefault.transform.localPosition = new Vector3(-125, 45, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.GREEN_OUTLINE_SIMPLE:
                 checkDefault.transform.localPosition = new Vector3(-18, 45, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.GREEN_PATTERN:
                 checkDefault.transform.localPosition = new Vector3(90, 45, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.RED:
                 checkDefault.transform.localPosition = new Vector3(-340, -85, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.RED_OUTLINE:
                 checkDefault.transform.localPosition = new Vector3(-235, -85, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.RED_OUTLINE_PATTERN:
                 checkDefault.transform.localPosition = new Vector3(-125, -85, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.RED_OUTLINE_SIMPLE:
                 checkDefault.transform.localPosition = new Vector3(-18, -85, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.RED_PATTERN:
                 checkDefault.transform.localPosition = new Vector3(90, -85, -10);
                 checkDefault.SetActive(true);
                 checkUnlocked.SetActive(false);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.CHECKER_BLACK:
                 checkUnlocked.transform.localPosition = new Vector3(-340, 175, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.CHECKER_RED:
                 checkUnlocked.transform.localPosition = new Vector3(-235, 175, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.BOILERMAKER_SPECIAL:
                 checkUnlocked.transform.localPosition = new Vector3(-125, 175, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.CANDY_CANE:
                 checkUnlocked.transform.localPosition = new Vector3(-18, 175, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.DADDY_DANIELS:
                 checkUnlocked.transform.localPosition = new Vector3(90, 175, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.DOTS:
                 checkUnlocked.transform.localPosition = new Vector3(-340, 45, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.EMOJI:
                 checkUnlocked.transform.localPosition = new Vector3(-235, 45, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.FISH:
                 checkUnlocked.transform.localPosition = new Vector3(-125, 45, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.FOOD:
                 checkUnlocked.transform.localPosition = new Vector3(-18, 45, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.LOGO:
                 checkUnlocked.transform.localPosition = new Vector3(90, 45, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.PETS:
                 checkUnlocked.transform.localPosition = new Vector3(-340, -85, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.PURDUE_PETE:
                 checkUnlocked.transform.localPosition = new Vector3(-235, -85, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.PURDUE:
                 checkUnlocked.transform.localPosition = new Vector3(-125, -85, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.RICK_ROLL:
                 checkUnlocked.transform.localPosition = new Vector3(-18, -85, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.TURKSTRA:
                 checkUnlocked.transform.localPosition = new Vector3(90, -85, -10);
                 checkDefault.SetActive(false);
                 checkUnlocked.SetActive(true);
+                checkUploadOne.SetActive(false);
+                checkUploadTwo.SetActive(false);
+                break;
+            case Card.customDesign.UPLOAD:
+                checkUnlocked.transform.localPosition = new Vector3(90, -85, -10);
+                checkUploadOne.SetActive(true);
+                checkUploadTwo.SetActive(true);
+                checkDefault.SetActive(false);
+                checkUnlocked.SetActive(false);
                 break;
         }
 
@@ -777,6 +849,9 @@ public class UserPreferences : MonoBehaviour
                 break;
             case "turkstra":
                 customDesign = Card.customDesign.TURKSTRA;
+                break;
+            case "upload":
+                customDesign = Card.customDesign.UPLOAD;
                 break;
         }
 
