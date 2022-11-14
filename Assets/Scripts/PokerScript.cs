@@ -26,8 +26,8 @@ public class PokerScript : MonoBehaviour
     public bool game_won = false;
 
     /*Temporary card class for testing to be replaced with CardDealer script*/
-    public float userXPos = -7;
-    public float userYPos = -124;
+    public float userXPos = 0f;
+    public float userYPos = 0f;
     public static bool experienced = false;
 
     private UserPreferences.backgroundColor backgroundColor;
@@ -136,6 +136,11 @@ public class PokerScript : MonoBehaviour
             hand.Add(cardToAdd);
         }
 
+        public void clearHand()
+        {
+            hand.Clear();
+        }
+
         public GameObject removeFromHand(int indexInHand)
         {
             GameObject returnCard = (GameObject)hand[indexInHand];
@@ -219,6 +224,18 @@ public class PokerScript : MonoBehaviour
         currentCard.SetActive(true);
     }
 
+    //display flop, turn, or river
+    private void displayDeckCard(GameObject currentCard) {
+        float x = -4 + (displayCount);
+        float z = 0;
+        displayCount += 2;
+
+        
+        currentCard.transform.position = new Vector3(x, 2, z);
+
+        currentCard.SetActive(true);
+    }
+
     private void flipCard(GameObject currentCard)
     {
         currentCard.SetActive(false);
@@ -241,6 +258,8 @@ public class PokerScript : MonoBehaviour
     public static int potValue = 0;
     public int currentState = 0;
     public int matchBet = 0;
+    public static int deckCount = 0;
+    public static int displayCount = 0;
     /*
         0=Initial,
         1=pick up top card
@@ -251,6 +270,7 @@ public class PokerScript : MonoBehaviour
     public bool sleeping = false;
     public bool sleepRunning = false;
     public List<GameObject> pool;
+    public List<GameObject> playedCards;
 
     public bool databaseUpdated; //Whether or not the database has been updated after the game ends
     //private DatabaseReference databaseReference;
@@ -394,6 +414,17 @@ public class PokerScript : MonoBehaviour
                 currentPlayer = playerQueue.Dequeue();
 
                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealer is: " + currentDealer.getUserID();
+                
+                pool = cardDealer.ShuffleCards(pool);
+
+                deckCount = 0;
+                for(int i = 0; i < 8; i++) {
+                    currentPlayer.addToHand(pool[deckCount]);
+                    deckCount++;
+                    playerQueue.Enqueue(currentPlayer);
+                    currentPlayer = playerQueue.Dequeue();
+                }
+                
                 currentState = 1;
             } 
             else if (currentState == 1)
@@ -425,6 +456,7 @@ public class PokerScript : MonoBehaviour
                         }
                     }
                 } else {
+                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Pre Flop betting";
                     string compAction = "";
                     //only have coputer match bet for now
                     potValue += matchBet - currentPlayer.getCurrentBet();
@@ -436,48 +468,84 @@ public class PokerScript : MonoBehaviour
                     playerQueue.Enqueue(currentPlayer);
                     currentPlayer = playerQueue.Dequeue();
                 }
-                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
-                Debug.Log("Show hand");
+                Debug.Log("Pre flop betting");
+                currentState = 2;
+                //have for loop that sees if all player bets are equal then move to next state
             }
             else if (currentState == 2) //show first set of three cards
             {
-                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
+                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Flop";
                 Debug.Log("deal flop");
+                deckCount++;
+                for(int i = 0; i < 3; i++) {
+                    playedCards.Add(pool[deckCount]);
+                    displayDeckCard(pool[deckCount]);
+                    deckCount++;
+                }
+                currentState = 3;
             }
             else if (currentState == 3) //let players bet again
             {
-                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
+                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "post flop betting";
                 Debug.Log("bet after flop");
+                currentState = 4;
             }
             else if (currentState == 4) //show fourth card
             {
-                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
+                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing turn card";
                 Debug.Log("deal turn");
+                deckCount++;
+                playedCards.Add(pool[deckCount]);
+                displayDeckCard(pool[deckCount]);
+                deckCount++;
+                currentState = 5;
             }
             else if (currentState == 5) //let players bet again
             {
                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
                 Debug.Log("bet after turn");
+                currentState = 6;
             }
-            else if (currentState == 4) //show fifth and final card
+            else if (currentState == 6) //show fifth and final card
             {
-                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
+                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing river card";
                 Debug.Log("deal river");
+                deckCount++;
+                playedCards.Add(pool[deckCount]);
+                displayDeckCard(pool[deckCount]);
+                deckCount++;
+                currentState = 7;
             }
-            else if (currentState == 5) //let players bet again
+            else if (currentState == 7) //let players bet again
             {
                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
                 Debug.Log("bet after river");
+                currentState = 8;
             }
-            else if (currentState == 6) //show player cards and determine winner
+            else if (currentState == 8) //show player cards and determine winner
             {
                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
                 Debug.Log("Show winner");
+                currentState = 9;
             }
-            else if (currentState == 7) //reset pool and betting values and move to next dealer
+            else if (currentState == 9) //reset pool and betting values and move to next dealer
             {
                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
                 Debug.Log("reset values");
+                displayCount = 0;
+                playedCards.Clear();
+                Debug.Log("cleared");
+                deckCount = 0;
+                for(int i = 0; i < dealQueue.Count; i++) {
+                    currentPlayer = dealQueue.Dequeue();
+                    Debug.Log(currentPlayer.getHandList().Count);
+                    currentPlayer.clearHand();
+                    currentPlayer.setCurrentBet(0);
+                    dealQueue.Enqueue(currentPlayer);
+                    Debug.Log("ran " + i);
+                }
+
+                currentState = 0;
             }
             
         }
