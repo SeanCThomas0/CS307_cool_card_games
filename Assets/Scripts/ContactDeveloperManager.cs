@@ -10,16 +10,43 @@ using UnityEngine.SceneManagement;
 
 public class ContactDeveloperManager : MonoBehaviour
 {
+    private UserPreferences.backgroundColor backgroundColor;
+    public GameObject mainCam;
+
+    void OnEnable()
+    {
+        backgroundColor = (UserPreferences.backgroundColor)PlayerPrefs.GetInt("backgroundColor");
+
+        switch (backgroundColor)
+        {
+            case UserPreferences.backgroundColor.GREEN:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(49, 121, 58, 255);
+                break;
+            case UserPreferences.backgroundColor.BLUE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(43, 100, 159, 255);
+                break;
+            case UserPreferences.backgroundColor.RED:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(222, 50, 73, 255);
+                break;
+            case UserPreferences.backgroundColor.ORANGE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(226, 119, 28, 255);
+                break;
+            case UserPreferences.backgroundColor.PURPLE:
+                mainCam.GetComponent<Camera>().backgroundColor = new Color32(120, 37, 217, 255);
+                break;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public TMP_InputField firstNameInput;
@@ -28,9 +55,10 @@ public class ContactDeveloperManager : MonoBehaviour
     public TMP_Dropdown subjectDropdown;
     public GameObject sentText;
 
-    
+
     //got help with the code found on https://www.mrventures.net/all-tutorials/sending-emails
-    public void sendEmail() {
+    public void sendEmail()
+    {
         //get login values from Firebase Auth
         //GameObject auth = GameObject.Find("AuthController");
         //AuthController authController = auth.GetComponent<AuthController>();
@@ -55,16 +83,19 @@ public class ContactDeveloperManager : MonoBehaviour
         SmtpClient smtpServer = new SmtpClient("smtp.office365.com");
         smtpServer.Port = 587;
         smtpServer.Credentials = new NetworkCredential("CoolCardGames11@outlook.com", "Unityisapain307");
-        smtpServer.EnableSsl = true;       
+        smtpServer.EnableSsl = true;
 
         //Send mail to server
-        try {
+        try
+        {
             smtpServer.Send(mail);
         }
-        catch (System.Exception e) {
+        catch (System.Exception e)
+        {
             Debug.Log("Email error: " + e.Message);
         }
-        finally {
+        finally
+        {
             Debug.Log("Email sent!");
         }
 
@@ -78,7 +109,8 @@ public class ContactDeveloperManager : MonoBehaviour
     }
 
     //reset all the fields to their default state
-    public void resetFields() {
+    public void resetFields()
+    {
         firstNameInput.text = "";
         lastNameInput.text = "";
         messageInput.text = "";
@@ -86,7 +118,8 @@ public class ContactDeveloperManager : MonoBehaviour
     }
 
     //load main menu scene
-    public void backButton() {
+    public void backButton()
+    {
         SceneManager.LoadScene("MainMenu");
     }
 }

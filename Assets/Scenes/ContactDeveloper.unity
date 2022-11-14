@@ -2962,6 +2962,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c6fe77ae68114ece9b4f54bf6196890, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCam: {fileID: 1872877424}
   firstNameInput: {fileID: 394402957}
   lastNameInput: {fileID: 1680500784}
   messageInput: {fileID: 475363426}
