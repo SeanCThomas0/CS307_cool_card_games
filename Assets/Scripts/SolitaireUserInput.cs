@@ -49,7 +49,6 @@ public class SolitaireUserInput : MonoBehaviour
         totalTimer += Time.deltaTime;
         time = (int) totalTimer;
         timeText.text = time.ToString();
-        Debug.Log(totalTimer);
         if (clickCount == 1) {
             timer += Time.deltaTime;
         }

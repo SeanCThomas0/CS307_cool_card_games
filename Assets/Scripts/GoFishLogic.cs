@@ -292,7 +292,6 @@ public class GoFishLogic : MonoBehaviour
         {
             case gameStates.PICK_PLAYER_TO_REQUEST:
                 timer += Time.deltaTime;
-                Debug.Log(timer);
                 if (gameAlert == gameAlerts.PICK_PLAYER)
                 {
                     guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Please select a player other than yourself.";
