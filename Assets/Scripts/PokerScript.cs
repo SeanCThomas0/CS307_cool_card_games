@@ -106,6 +106,7 @@ public class PokerScript : MonoBehaviour
 
         public void setCurrentBet(int currentBet) {
             this.currentBet = currentBet;
+            Debug.Log("bet is " + currentBet);
             betText.GetComponent<TMPro.TextMeshProUGUI>().text = "Bet: " + currentBet; 
         }
 
@@ -395,15 +396,15 @@ public class PokerScript : MonoBehaviour
                 dealQueue.Enqueue(currentDealer);
 
                 smallBlind = dealQueue.Dequeue();
-                dealQueue.Enqueue(currentDealer);
+                dealQueue.Enqueue(smallBlind);
                 smallBlind.setChipAmount(smallBlind.getChipAmount() - 2);
-                smallBlind.setCurrentBet(smallBlind.getCurrentBet() + 2);
+                smallBlind.setCurrentBet(2);
                 potValue += 2;
 
                 bigBlind = dealQueue.Dequeue();
-                dealQueue.Enqueue(currentDealer);
+                dealQueue.Enqueue(bigBlind);
                 bigBlind.setChipAmount(smallBlind.getChipAmount() - 4);
-                bigBlind.setCurrentBet(bigBlind.getCurrentBet() + 4);
+                bigBlind.setCurrentBet(4);
                 potValue += 4;
                 matchBet = 4;
 
@@ -530,9 +531,13 @@ public class PokerScript : MonoBehaviour
             }
             else if (currentState == 9) //reset pool and betting values and move to next dealer
             {
+                playerQueue.Enqueue(currentPlayer);
                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing Cards";
                 Debug.Log("reset values");
                 displayCount = 0;
+                for(int i = 0; i < playedCards.Count; i++) {
+                    flipCard(playedCards[i]);
+                }
                 playedCards.Clear();
                 Debug.Log("cleared");
                 deckCount = 0;
@@ -555,7 +560,7 @@ public class PokerScript : MonoBehaviour
     IEnumerator sleepFunction()
     {
         sleeping = true;
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
         sleeping = false;
         sleepRunning = false;
     }
