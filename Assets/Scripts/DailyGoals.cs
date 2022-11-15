@@ -69,8 +69,6 @@ public class DailyGoals : MonoBehaviour
         generateNewGoals = false;
 
         EvaluateDate();
-
-        GatherGoals();
     }
 
     // Update is called once per frame
@@ -112,6 +110,10 @@ public class DailyGoals : MonoBehaviour
             generateNewGoals = false;
             GenerateNewGoals();
         }
+        else
+        {
+            GatherGoals();
+        }
     }
 
     private async void GenerateNewGoals()
@@ -143,6 +145,8 @@ public class DailyGoals : MonoBehaviour
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/poker/type").SetValueAsync(UnityEngine.Random.Range(0, Enum.GetValues(typeof(pokerTypes)).Length));
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/poker/value").SetValueAsync(UnityEngine.Random.Range(1, 10));
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/poker/completed").SetValueAsync(false);
+
+        GatherGoals();
     }
 
     private async void GatherGoals()
