@@ -3,10 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Firebase.Auth;
+using Photon.Pun;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class MainMenu : MonoBehaviour
 {
+    /*
+     * Function Start
+     *called at very start
+     *
+     */
+     private void Start(){
+        if (!PhotonNetwork.IsConnected) {
+            PhotonNetwork.ConnectUsingSettings();
+            Debug.Log("Connected to photon : MainMenu.cs");
+        }
+     }
+
+
+
     /*
      * Function : Update
      * 
