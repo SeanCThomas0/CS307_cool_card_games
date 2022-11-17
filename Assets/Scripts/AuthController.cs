@@ -77,7 +77,10 @@ public class AuthController : MonoBehaviour
             if (!PhotonNetwork.IsConnected) {
                 PhotonNetwork.ConnectUsingSettings();
                 Debug.Log("Connected to photon : AuthController.cs");
+                PhotonNetwork.NickName = username;
             }
+        
+
 
 
         }

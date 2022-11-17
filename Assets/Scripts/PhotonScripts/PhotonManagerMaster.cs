@@ -28,6 +28,7 @@ namespace PhotonScripts
         public override void OnConnectedToMaster()
         {
             Debug.Log("Photon connected to Mater server");
+            
 
         }
 
