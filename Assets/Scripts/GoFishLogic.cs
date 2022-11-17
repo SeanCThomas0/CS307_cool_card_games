@@ -1040,12 +1040,20 @@ public class GoFishLogic : MonoBehaviour
                 object[] data = (object[]) photonEvent.CustomData;
                 string username = (string) data[0];
 
-                if (username.Equals(PhotonNetwork.NickName)) {
-
-                }
+                Debug.Log(username);
             }
         }
 
+    }
+
+    
+    public static void SendCardsToPlayer(string username){
+        object[] content = new object[]
+        {
+            username
+        };
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions {Receivers = ReceiverGroup.All};
+        PhotonNetwork.RaiseEvent((int) PhotonEventCodes.HostToClientData,content,raiseEventOptions, SendOptions.SendUnreliable);
     }
 
 
