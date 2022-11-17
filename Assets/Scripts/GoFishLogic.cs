@@ -654,7 +654,7 @@ public class GoFishLogic : MonoBehaviour
                         ClickSound.Play();
 
                         //TEST, MAKE SURE TO REMOVE
-                        //SendCardsToPlayer(PhotonNetwork.NickName);
+                        if(isMultiplayer) SendCardsToPlayer(PhotonNetwork.NickName);
                         //TEST, MAKE SURE TO REMOVE
                         break;
 
@@ -1045,6 +1045,7 @@ public class GoFishLogic : MonoBehaviour
                 string username = (string) data[0];
 
                 Debug.Log(username);
+                Debug.Log("Should have printed data ^");
             }
         }
 

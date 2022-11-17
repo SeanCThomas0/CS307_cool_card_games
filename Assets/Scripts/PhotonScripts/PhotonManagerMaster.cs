@@ -78,7 +78,7 @@ namespace PhotonScripts
             if (PhotonNetwork.IsConnectedAndReady)
             {
                 Debug.Log("make room pog!");
-                PhotonNetwork.CreateRoom("GoFish",options, null);
+                PhotonNetwork.JoinOrCreateRoom("GoFish",options, null);
                 SceneManager.LoadScene("GoFishMultiplayer");
             }
         }
