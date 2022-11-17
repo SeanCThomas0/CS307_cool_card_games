@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
+using UnityEngine.SceneManagement;
 
 
 
@@ -68,6 +69,18 @@ namespace PhotonScripts
             };
             RaiseEventOptions raiseEventOptions = new RaiseEventOptions {Receivers = ReceiverGroup.All};
             PhotonNetwork.RaiseEvent((int) PhotonEventCodes.HostToClientData,content,raiseEventOptions, SendOptions.SendUnreliable);
+            Debug.Log(username);
+        }
+
+        public static void CreateJoinRoom(){
+            RoomOptions options = new RoomOptions();
+            options.MaxPlayers = 4;
+            if (PhotonNetwork.IsConnectedAndReady)
+            {
+                Debug.Log("make room pog!");
+                PhotonNetwork.CreateRoom("GoFish",options, null);
+                SceneManager.LoadScene("GoFishMultiplayer");
+            }
         }
 
 

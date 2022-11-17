@@ -652,6 +652,10 @@ public class GoFishLogic : MonoBehaviour
                             gameAlert = gameAlerts.PICK_PLAYER;
                         }
                         ClickSound.Play();
+
+                        //TEST, MAKE SURE TO REMOVE
+                        SendCardsToPlayer(PhotonNetwork.NickName);
+                        //TEST, MAKE SURE TO REMOVE
                         break;
 
                     case gameStates.PICK_NUM_TO_REQEUST:
