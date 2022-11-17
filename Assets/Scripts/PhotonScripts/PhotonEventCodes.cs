@@ -12,4 +12,5 @@ public enum PhotonEventCodes
     ExitGame                =5,
     HostRemoveCardFromPlayer=6,
     SyncCardsAtStart        =7,
+    HostSendRoomInfo        =8
 }

@@ -60,6 +60,13 @@ namespace PhotonScripts
                 Debug.Log(test);
 
             }
+            else if (photonEvent.Code == (int)PhotonEventCodes.HostSendRoomInfo){
+                object[] data = (object[]) photonEvent.CustomData;
+                string roomName = (string) data[0];
+                int numPlayersInRoom = (int) data[1];
+                //Debug.Log(test);
+
+            }
 
         }
 
@@ -81,8 +88,13 @@ namespace PhotonScripts
             {
                 Debug.Log("make room pog!");
                 PhotonNetwork.JoinOrCreateRoom("GoFish",options, null);
-                SceneManager.LoadScene("GoFishMultiplayer");
+                //SceneManager.LoadScene("GoFishMultiplayer");
             }
+        }
+
+        public override void OnJoinedRoom(){
+            Debug.Log("joined room:" + PhotonNetwork.CurrentRoom.Name);
+            Debug.Log("Players in " +PhotonNetwork.CurrentRoom.Name +":" + PhotonNetwork.CurrentRoom.PlayerCount);
         }
 
 
@@ -90,7 +102,7 @@ namespace PhotonScripts
 
         private void OnDestroy()
         {
-            Debug.LogWarning("Network Controller was destoryed: CRITICAL PHOTON ERROR!");
+            Debug.LogWarning("Network Controller was destoryed: could be bad? ");
         }
 
 
