@@ -1059,6 +1059,7 @@ public class GoFishLogic : MonoBehaviour
         };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions {Receivers = ReceiverGroup.All};
         PhotonNetwork.RaiseEvent((int) PhotonEventCodes.HostToClientData,content,raiseEventOptions, SendOptions.SendUnreliable);
+        Debug.Log("Tried to use raise event - client");
     }
 
 

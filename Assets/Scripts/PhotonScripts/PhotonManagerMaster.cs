@@ -70,6 +70,7 @@ namespace PhotonScripts
             RaiseEventOptions raiseEventOptions = new RaiseEventOptions {Receivers = ReceiverGroup.All};
             PhotonNetwork.RaiseEvent((int) PhotonEventCodes.HostToClientData,content,raiseEventOptions, SendOptions.SendUnreliable);
             Debug.Log(username);
+            Debug.Log("Tried to use raise event - Master");
         }
 
         public static void CreateJoinRoom(){
