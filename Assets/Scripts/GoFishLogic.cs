@@ -7,6 +7,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
+
 public class GoFishLogic : MonoBehaviour
 {
     public GameObject cardDealerController; // to get CardDealer
@@ -79,12 +83,18 @@ public class GoFishLogic : MonoBehaviour
     [SerializeField] public AudioSource Music;
 
 
+    [SerializeField] public bool isMultiplayer;
+
+
     private UserPreferences.backgroundColor backgroundColor;
     public GameObject mainCam;
 
     void OnEnable()
     {
         backgroundColor = (UserPreferences.backgroundColor)PlayerPrefs.GetInt("backgroundColor");
+
+        if (isMultiplayer) PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
+
 
         switch (backgroundColor)
         {
@@ -1012,4 +1022,39 @@ public class GoFishLogic : MonoBehaviour
             botDiffButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Bot Mode: Easy";
         }
     }
+
+    /*  PHOTON MULTIPLAYER STUFF!  */
+
+
+    private void OnDisable()
+    {
+
+        if (isMultiplayer) PhotonNetwork.NetworkingClient.EventReceived -= OnEvent;
+    }
+
+    private void OnEvent(EventData photonEvent)
+    {
+        if (isMultiplayer) {
+            if(photonEvent.Code == (int)PhotonEventCodes.HostToClientData) {
+                Debug.Log("Trying to get data");
+                object[] data = (object[]) photonEvent.CustomData;
+                string username = (string) data[0];
+
+                if (username.Equals(PhotonNetwork.NickName)) {
+
+                }
+            }
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
 }

@@ -50,6 +50,24 @@ namespace PhotonScripts
         {
             
             //Debug.Log("THIS SHOULD NOT PRINT , MESSAGE SEAN IF IT DOES");
+            if (photonEvent.Code == (int)PhotonEventCodes.HostToClientData){
+                object[] data = (object[]) photonEvent.CustomData;
+                string test = (string) data[0];
+                //bool test = (bool) data[1];
+                //int players =(int) data[2];
+                Debug.Log(test);
+
+            }
+
+        }
+
+        public static void SendCardsToPlayer(string username){
+            object[] content = new object[]
+            {
+                username
+            };
+            RaiseEventOptions raiseEventOptions = new RaiseEventOptions {Receivers = ReceiverGroup.All};
+            PhotonNetwork.RaiseEvent((int) PhotonEventCodes.HostToClientData,content,raiseEventOptions, SendOptions.SendUnreliable);
         }
 
 

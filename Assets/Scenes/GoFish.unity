@@ -930,6 +930,7 @@ MonoBehaviour:
   WinSound: {fileID: 9123316615734622581}
   CardSound: {fileID: 361958316}
   Music: {fileID: 693534098}
+  isMultiplayer: 1
   mainCam: {fileID: 1958733817}
 --- !u!4 &780356557
 Transform:

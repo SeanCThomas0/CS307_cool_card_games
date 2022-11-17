@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum EventCodes
+public enum PhotonEventCodes
 {
     HostToClientData        =0,
     StartGame               =1,
@@ -11,5 +11,5 @@ public enum EventCodes
     WinGame                 =4,
     ExitGame                =5,
     HostRemoveCardFromPlayer=6,
-    SyncCardsAtStart        =7
+    SyncCardsAtStart        =7,
 }
