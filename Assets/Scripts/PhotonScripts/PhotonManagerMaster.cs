@@ -126,8 +126,9 @@ namespace PhotonScripts
             Debug.Log("joined room:" + PhotonNetwork.CurrentRoom.Name);
             Debug.Log("Players in " +PhotonNetwork.CurrentRoom.Name +":" + PhotonNetwork.CurrentRoom.PlayerCount);
             if (PhotonNetwork.CurrentRoom.PlayerCount == 2) {
-                StartGame("guh");
-                Debug.Log("WEADAS");
+                //StartGame("GoFishMultiplayer");
+                SceneManager.LoadScene("GoFishMultiplayer");
+                Debug.Log("JOINED ROOM SEE IF FULL, IF IT IS LOAD SCENE");
             }
         }
 
