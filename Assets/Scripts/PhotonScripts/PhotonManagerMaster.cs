@@ -72,7 +72,7 @@ namespace PhotonScripts
                 string SceneName = (string) data[0];
                 if (PhotonNetwork.CurrentRoom.PlayerCount == 2) {
                     SceneManager.LoadScene("GoFishMultiplayer");
-                    
+                    Debug.Log("pls start go fish");
                 }
             }
 
@@ -108,6 +108,10 @@ namespace PhotonScripts
             PhotonNetwork.RaiseEvent((int) PhotonEventCodes.StartGame,content,raiseEventOptions, SendOptions.SendUnreliable);
             Debug.Log(gamename);
             Debug.Log("Tried to use raise event - Master: StartGame");
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 2) {
+                SceneManager.LoadScene("GoFishMultiplayer");
+                Debug.Log("pls start go fish");
+            }
         }
 
         public static void CreateJoinRoom(){
@@ -118,6 +122,7 @@ namespace PhotonScripts
                 Debug.Log("make room pog!");
                 PhotonNetwork.JoinOrCreateRoom("GoFish",options, null);
                 //SceneManager.LoadScene("GoFishMultiplayer");
+                StartGame("GoFishMultiplayer");
             }
         }
 
