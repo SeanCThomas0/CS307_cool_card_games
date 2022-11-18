@@ -344,7 +344,8 @@ public class GoFishLogic : MonoBehaviour
                 {
                     guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Select a player to request a rank from.";
                 }
-                if (timer >= 10f) {
+                if (timer >= 10f && !isMultiplayer) {
+                    //REMOVE THIS MUTLIPLAYER CHECK WHEN MULTIPLAY IS FINISHED
                     timer = 0;
                     PickFromPool(pool[UnityEngine.Random.Range(0, pool.Count)]);
                     DetermineNextPlayer();
