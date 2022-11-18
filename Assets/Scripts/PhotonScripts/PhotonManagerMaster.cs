@@ -71,7 +71,7 @@ namespace PhotonScripts
                 object[] data = (object[]) photonEvent.CustomData;
                 string SceneName = (string) data[0];
                 SceneManager.LoadScene("GoFishMultiplayer");
-                Debug.Log("pls start go fish");
+                Debug.Log("pls start go fishWWWWWWWWWWWWWWWWWWWW");
             }
 
         }
@@ -127,7 +127,7 @@ namespace PhotonScripts
             Debug.Log("Players in " +PhotonNetwork.CurrentRoom.Name +":" + PhotonNetwork.CurrentRoom.PlayerCount);
             if (PhotonNetwork.CurrentRoom.PlayerCount == 2) {
                 StartGame("guh");
-                Debug.Log("pls start go fish");
+                Debug.Log("WEADAS");
             }
         }
 
