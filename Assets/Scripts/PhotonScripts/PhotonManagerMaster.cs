@@ -70,10 +70,8 @@ namespace PhotonScripts
             else if (photonEvent.Code == (int)PhotonEventCodes.StartGame) {
                 object[] data = (object[]) photonEvent.CustomData;
                 string SceneName = (string) data[0];
-                if (PhotonNetwork.CurrentRoom.PlayerCount == 2) {
-                    SceneManager.LoadScene("GoFishMultiplayer");
-                    Debug.Log("pls start go fish");
-                }
+                SceneManager.LoadScene("GoFishMultiplayer");
+                Debug.Log("pls start go fish");
             }
 
         }
@@ -108,10 +106,7 @@ namespace PhotonScripts
             PhotonNetwork.RaiseEvent((int) PhotonEventCodes.StartGame,content,raiseEventOptions, SendOptions.SendUnreliable);
             Debug.Log(gamename);
             Debug.Log("Tried to use raise event - Master: StartGame");
-            if (PhotonNetwork.CurrentRoom.PlayerCount == 2) {
-                SceneManager.LoadScene("GoFishMultiplayer");
-                Debug.Log("pls start go fish");
-            }
+
         }
 
         public static void CreateJoinRoom(){
@@ -129,6 +124,10 @@ namespace PhotonScripts
         public override void OnJoinedRoom(){
             Debug.Log("joined room:" + PhotonNetwork.CurrentRoom.Name);
             Debug.Log("Players in " +PhotonNetwork.CurrentRoom.Name +":" + PhotonNetwork.CurrentRoom.PlayerCount);
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 2) {
+                StartGame("guh");
+                Debug.Log("pls start go fish");
+            }
         }
 
 
