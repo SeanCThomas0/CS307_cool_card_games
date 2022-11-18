@@ -117,7 +117,8 @@ namespace PhotonScripts
                 Debug.Log("make room pog!");
                 PhotonNetwork.JoinOrCreateRoom("GoFish",options, null);
                 //SceneManager.LoadScene("GoFishMultiplayer");
-                StartGame("GoFishMultiplayer");
+                
+                //StartGame("GoFishMultiplayer");
             }
         }
 
