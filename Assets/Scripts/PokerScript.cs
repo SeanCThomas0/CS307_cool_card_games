@@ -113,6 +113,19 @@ public class PokerScript : MonoBehaviour
             betText.GetComponent<TMPro.TextMeshProUGUI>().text = "Bet: " + currentBet; 
         }
 
+        public bool addToBetAmount(int currentBet)
+        {
+            if(chipAmount - currentBet < 0) {
+                return false;
+            } else {
+                this.currentBet += currentBet;
+                this.chipAmount -= currentBet;
+                betText.GetComponent<TMPro.TextMeshProUGUI>().text = "Bet: " + this.currentBet; 
+                playerText.GetComponent<TMPro.TextMeshProUGUI>().text = "Chips: " + chipAmount;
+            }
+            return true;
+        }
+
         public int getChipAmount()
         {
             return chipAmount;
@@ -121,6 +134,12 @@ public class PokerScript : MonoBehaviour
         public void setChipAmount(int chipAmount)
         {
             this.chipAmount = chipAmount;
+            playerText.GetComponent<TMPro.TextMeshProUGUI>().text = "Chips: " + chipAmount;
+        }
+
+        public void addToChipAmount(int chipAmount)
+        {
+            this.chipAmount += chipAmount;
             playerText.GetComponent<TMPro.TextMeshProUGUI>().text = "Chips: " + chipAmount;
         }
 
@@ -298,6 +317,7 @@ public class PokerScript : MonoBehaviour
     public static int potValue = 0;
     public int currentState = 0;
     public int matchBet = 0;
+    public int numbMovesMade = 0;
     public static int deckCount = 0;
     public static int displayCount = 0;
     /*
@@ -442,7 +462,7 @@ public class PokerScript : MonoBehaviour
 
                 bigBlind = dealQueue.Dequeue();
                 dealQueue.Enqueue(bigBlind);
-                bigBlind.setChipAmount(smallBlind.getChipAmount() - 4);
+                bigBlind.setChipAmount(bigBlind.getChipAmount() - 4);
                 bigBlind.setCurrentBet(4);
                 potValue += 4;
                 matchBet = 4;
@@ -474,71 +494,98 @@ public class PokerScript : MonoBehaviour
             } 
             else if (currentState == 1)
             {
+                bool validMove = false;
                 if(currentPlayer.getIsHuman()) {
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = currentPlayer.getUserID() + " match the highest bet, raise, or fold";
                     if(!currentInput.Equals("empty")) {
                         if(currentInput.Equals("fold")) {
                             currentPlayer.clearHand();
-                            currentPlayer = playerQueue.Dequeue();
+                            validMove = true;
+                            numbMovesMade++;
                         } else {
                             bool validBet = false;
                             int intInput = int.Parse(currentInput);
                             if(intInput + currentPlayer.getCurrentBet() == matchBet) {
-                                potValue += matchBet - intInput;
-                                currentPlayer.setCurrentBet(matchBet);
-                                validBet = true;
+                                bool checkInput = currentPlayer.addToBetAmount(intInput);
+                                if(checkInput == true) {
+                                    potValue += intInput;
+                                    validBet = true;
+                                } else {
+                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                }
                             } else if(intInput + currentPlayer.getCurrentBet() > matchBet) {
-                                potValue += intInput - matchBet;
-                                currentPlayer.setCurrentBet(intInput); 
-                                validBet = true;
+                                bool checkInput = currentPlayer.addToBetAmount(intInput); 
+                                if(checkInput == true) {
+                                    potValue += intInput;
+                                    matchBet = currentPlayer.getCurrentBet();
+                                    validBet = true;
+                                } else {
+                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                }
+                                
                             } else {
                                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: fold or match/raise the highest bet";
                             }
                             if(validBet == true) {
-                                currentPlayer = playerQueue.Dequeue();
                                 playerQueue.Enqueue(currentPlayer);
+                                numbMovesMade++;
                             }
                             currentInput = "empty";
+                            validMove = validBet;
                         }
                     }
+                    
                 } else {
+                    validMove = true;
+                    Debug.Log(currentPlayer.getUserID() + " choosing");
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Pre Flop betting";
                     string compAction = "";
 
-                    if(currentInput.Equals("fold")) {
+                    if(compAction.Equals("fold")) {
                         currentPlayer.clearHand();
                         currentPlayer = playerQueue.Dequeue();
                     }
                     //only have coputer match bet for now
-                    potValue += matchBet - currentPlayer.getCurrentBet();
-                    currentPlayer.setChipAmount(currentPlayer.getChipAmount() - (matchBet - currentPlayer.getCurrentBet()));
-                    currentPlayer.setCurrentBet(matchBet); 
+                    if(currentPlayer.getCurrentBet() < matchBet) {
+                        currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
+                        potValue += matchBet - currentPlayer.getCurrentBet();
+                    }
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opponent " + currentPlayer.getUserID() + " chose to match bet"; //add in action
 
                     //get next player and add player back if they didnt fold
                     playerQueue.Enqueue(currentPlayer);
-                    currentPlayer = playerQueue.Dequeue();
+                    numbMovesMade++;
                 }
                 Debug.Log("Pre flop betting");
                 bool equalBets = true;
                 int firstBet = 0;
+
+                Debug.Log("Player count: " + playerQueue.Count);
+                Debug.Log(validMove);
                 //if playerqueue count is 1 then make that user the winner
-                for(int i = 0; i < playerQueue.Count + 1; i++) {
-                    if(i == 0) {
-                        firstBet = currentPlayer.getCurrentBet(); 
-                    } else {
-                        if(firstBet != currentPlayer.getCurrentBet()) {
-                            equalBets = false;
+                if(validMove == true) {
+                    for(int i = 0; i < playerQueue.Count; i++) {
+                        if(i == 0) {
+                            firstBet = currentPlayer.getCurrentBet(); 
+                        } else {
+                            if(firstBet != currentPlayer.getCurrentBet()) {
+                                equalBets = false;
+                            }
                         }
+                        Debug.Log("check player id: " + currentPlayer.getUserID() + " has bet " + currentPlayer.getCurrentBet());
+                        currentPlayer = playerQueue.Dequeue();
+                        playerQueue.Enqueue(currentPlayer);
                     }
-                    Debug.Log("check player id: " + currentPlayer.getUserID());
-                    playerQueue.Enqueue(currentPlayer);
                     currentPlayer = playerQueue.Dequeue();
+                } else {
+                    equalBets = false;
                 }
-                if(equalBets == true) {
+                
+                if(equalBets == true && numbMovesMade >= 4) {
                     currentState = 2;
+                    numbMovesMade = 0;
                 }
-                //have for loop that sees if all player bets are equal then move to next state
+                
             }
             else if (currentState == 2) //show first set of three cards
             {
@@ -554,69 +601,98 @@ public class PokerScript : MonoBehaviour
             }
             else if (currentState == 3) //let players bet again
             {
-                 if(currentPlayer.getIsHuman()) {
+                bool validMove = false;
+                if(currentPlayer.getIsHuman()) {
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = currentPlayer.getUserID() + " match the highest bet, raise, or fold";
                     if(!currentInput.Equals("empty")) {
                         if(currentInput.Equals("fold")) {
                             currentPlayer.clearHand();
-                            currentPlayer = playerQueue.Dequeue();
+                            validMove = true;
+                            numbMovesMade++;
                         } else {
                             bool validBet = false;
                             int intInput = int.Parse(currentInput);
                             if(intInput + currentPlayer.getCurrentBet() == matchBet) {
-                                potValue += matchBet - intInput;
-                                currentPlayer.setCurrentBet(matchBet);
-                                validBet = true;
+                                bool checkInput = currentPlayer.addToBetAmount(intInput);
+                                if(checkInput == true) {
+                                    potValue += intInput;
+                                    validBet = true;
+                                } else {
+                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                }
                             } else if(intInput + currentPlayer.getCurrentBet() > matchBet) {
-                                potValue += intInput - matchBet;
-                                currentPlayer.setCurrentBet(intInput); 
-                                validBet = true;
+                                bool checkInput = currentPlayer.addToBetAmount(intInput); 
+                                if(checkInput == true) {
+                                    potValue += intInput;
+                                    matchBet = currentPlayer.getCurrentBet();
+                                    validBet = true;
+                                } else {
+                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                }
+                                
                             } else {
                                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: fold or match/raise the highest bet";
                             }
                             if(validBet == true) {
-                                currentPlayer = playerQueue.Dequeue();
                                 playerQueue.Enqueue(currentPlayer);
+                                numbMovesMade++;
                             }
                             currentInput = "empty";
+                            validMove = validBet;
                         }
                     }
+                    
                 } else {
+                    validMove = true;
+                    Debug.Log(currentPlayer.getUserID() + " choosing");
+                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Pre Flop betting";
                     string compAction = "";
 
-                    if(currentInput.Equals("fold")) {
+                    if(compAction.Equals("fold")) {
                         currentPlayer.clearHand();
                         currentPlayer = playerQueue.Dequeue();
                     }
                     //only have coputer match bet for now
-                    potValue += matchBet - currentPlayer.getCurrentBet();
-                    currentPlayer.setChipAmount(currentPlayer.getChipAmount() - (matchBet - currentPlayer.getCurrentBet()));
-                    currentPlayer.setCurrentBet(matchBet); 
+                    if(currentPlayer.getCurrentBet() < matchBet) {
+                        currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
+                        potValue += matchBet - currentPlayer.getCurrentBet();
+                    }
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opponent " + currentPlayer.getUserID() + " chose to match bet"; //add in action
 
                     //get next player and add player back if they didnt fold
                     playerQueue.Enqueue(currentPlayer);
-                    currentPlayer = playerQueue.Dequeue();
+                    numbMovesMade++;
                 }
-                Debug.Log("post flop betting");
+                Debug.Log("Pre flop betting");
                 bool equalBets = true;
                 int firstBet = 0;
+
+                Debug.Log("Player count: " + playerQueue.Count);
+                Debug.Log(validMove);
                 //if playerqueue count is 1 then make that user the winner
-                for(int i = 0; i < playerQueue.Count + 1; i++) {
-                    if(i == 0) {
-                        firstBet = currentPlayer.getCurrentBet(); 
-                    } else {
-                        if(firstBet != currentPlayer.getCurrentBet()) {
-                            equalBets = false;
+                if(validMove == true) {
+                    for(int i = 0; i < playerQueue.Count; i++) {
+                        if(i == 0) {
+                            firstBet = currentPlayer.getCurrentBet(); 
+                        } else {
+                            if(firstBet != currentPlayer.getCurrentBet()) {
+                                equalBets = false;
+                            }
                         }
+                        Debug.Log("check player id: " + currentPlayer.getUserID() + " has bet " + currentPlayer.getCurrentBet());
+                        currentPlayer = playerQueue.Dequeue();
+                        playerQueue.Enqueue(currentPlayer);
                     }
-                    Debug.Log("check player id: " + currentPlayer.getUserID());
-                    playerQueue.Enqueue(currentPlayer);
                     currentPlayer = playerQueue.Dequeue();
+                } else {
+                    equalBets = false;
                 }
-                if(equalBets == true) {
+                
+                if(equalBets == true && numbMovesMade >= 4) {
                     currentState = 4;
+                    numbMovesMade = 0;
                 }
+                
             }
             else if (currentState == 4) //show fourth card
             {
@@ -630,68 +706,96 @@ public class PokerScript : MonoBehaviour
             }
             else if (currentState == 5) //let players bet again
             {
+                bool validMove = false;
                 if(currentPlayer.getIsHuman()) {
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = currentPlayer.getUserID() + " match the highest bet, raise, or fold";
                     if(!currentInput.Equals("empty")) {
                         if(currentInput.Equals("fold")) {
                             currentPlayer.clearHand();
-                            currentPlayer = playerQueue.Dequeue();
+                            validMove = true;
+                            numbMovesMade++;
                         } else {
                             bool validBet = false;
                             int intInput = int.Parse(currentInput);
                             if(intInput + currentPlayer.getCurrentBet() == matchBet) {
-                                potValue += matchBet - intInput;
-                                currentPlayer.setCurrentBet(matchBet);
-                                validBet = true;
+                                bool checkInput = currentPlayer.addToBetAmount(intInput);
+                                if(checkInput == true) {
+                                    potValue += intInput;
+                                    validBet = true;
+                                } else {
+                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                }
                             } else if(intInput + currentPlayer.getCurrentBet() > matchBet) {
-                                potValue += intInput - matchBet;
-                                currentPlayer.setCurrentBet(intInput); 
-                                validBet = true;
+                                bool checkInput = currentPlayer.addToBetAmount(intInput); 
+                                if(checkInput == true) {
+                                    potValue += intInput;
+                                    matchBet = currentPlayer.getCurrentBet();
+                                    validBet = true;
+                                } else {
+                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                }
+                                
                             } else {
                                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: fold or match/raise the highest bet";
                             }
                             if(validBet == true) {
-                                currentPlayer = playerQueue.Dequeue();
                                 playerQueue.Enqueue(currentPlayer);
+                                numbMovesMade++;
                             }
                             currentInput = "empty";
+                            validMove = validBet;
                         }
                     }
+                    
                 } else {
+                    validMove = true;
+                    Debug.Log(currentPlayer.getUserID() + " choosing");
+                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Pre Flop betting";
                     string compAction = "";
 
-                    if(currentInput.Equals("fold")) {
+                    if(compAction.Equals("fold")) {
                         currentPlayer.clearHand();
                         currentPlayer = playerQueue.Dequeue();
                     }
                     //only have coputer match bet for now
-                    potValue += matchBet - currentPlayer.getCurrentBet();
-                    currentPlayer.setChipAmount(currentPlayer.getChipAmount() - (matchBet - currentPlayer.getCurrentBet()));
-                    currentPlayer.setCurrentBet(matchBet); 
+                    if(currentPlayer.getCurrentBet() < matchBet) {
+                        currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
+                        potValue += matchBet - currentPlayer.getCurrentBet();
+                    }
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opponent " + currentPlayer.getUserID() + " chose to match bet"; //add in action
 
                     //get next player and add player back if they didnt fold
                     playerQueue.Enqueue(currentPlayer);
-                    currentPlayer = playerQueue.Dequeue();
+                    numbMovesMade++;
                 }
-                Debug.Log("post flop betting");
+                Debug.Log("Pre flop betting");
                 bool equalBets = true;
                 int firstBet = 0;
+
+                Debug.Log("Player count: " + playerQueue.Count);
+                Debug.Log(validMove);
                 //if playerqueue count is 1 then make that user the winner
-                for(int i = 0; i < playerQueue.Count + 1; i++) {
-                    if(i == 0) {
-                        firstBet = currentPlayer.getCurrentBet(); 
-                    } else {
-                        if(firstBet != currentPlayer.getCurrentBet()) {
-                            equalBets = false;
+                if(validMove == true) {
+                    for(int i = 0; i < playerQueue.Count; i++) {
+                        if(i == 0) {
+                            firstBet = currentPlayer.getCurrentBet(); 
+                        } else {
+                            if(firstBet != currentPlayer.getCurrentBet()) {
+                                equalBets = false;
+                            }
                         }
+                        Debug.Log("check player id: " + currentPlayer.getUserID() + " has bet " + currentPlayer.getCurrentBet());
+                        currentPlayer = playerQueue.Dequeue();
+                        playerQueue.Enqueue(currentPlayer);
                     }
-                    Debug.Log("check player id: " + currentPlayer.getUserID());
-                    playerQueue.Enqueue(currentPlayer);
                     currentPlayer = playerQueue.Dequeue();
+                } else {
+                    equalBets = false;
                 }
-                if(equalBets == true) {
+                
+                if(equalBets == true && numbMovesMade >= 4) {
                     currentState = 6;
+                    numbMovesMade = 0;
                 }
             }
             else if (currentState == 6) //show fifth and final card
@@ -706,68 +810,96 @@ public class PokerScript : MonoBehaviour
             }
             else if (currentState == 7) //let players bet again
             {
+                bool validMove = false;
                 if(currentPlayer.getIsHuman()) {
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = currentPlayer.getUserID() + " match the highest bet, raise, or fold";
                     if(!currentInput.Equals("empty")) {
                         if(currentInput.Equals("fold")) {
                             currentPlayer.clearHand();
-                            currentPlayer = playerQueue.Dequeue();
+                            validMove = true;
+                            numbMovesMade++;
                         } else {
                             bool validBet = false;
                             int intInput = int.Parse(currentInput);
                             if(intInput + currentPlayer.getCurrentBet() == matchBet) {
-                                potValue += matchBet - intInput;
-                                currentPlayer.setCurrentBet(matchBet);
-                                validBet = true;
+                                bool checkInput = currentPlayer.addToBetAmount(intInput);
+                                if(checkInput == true) {
+                                    potValue += intInput;
+                                    validBet = true;
+                                } else {
+                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                }
                             } else if(intInput + currentPlayer.getCurrentBet() > matchBet) {
-                                potValue += intInput - matchBet;
-                                currentPlayer.setCurrentBet(intInput); 
-                                validBet = true;
+                                bool checkInput = currentPlayer.addToBetAmount(intInput); 
+                                if(checkInput == true) {
+                                    potValue += intInput;
+                                    matchBet = currentPlayer.getCurrentBet();
+                                    validBet = true;
+                                } else {
+                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                }
+                                
                             } else {
                                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: fold or match/raise the highest bet";
                             }
                             if(validBet == true) {
-                                currentPlayer = playerQueue.Dequeue();
                                 playerQueue.Enqueue(currentPlayer);
+                                numbMovesMade++;
                             }
                             currentInput = "empty";
+                            validMove = validBet;
                         }
                     }
+                    
                 } else {
+                    validMove = true;
+                    Debug.Log(currentPlayer.getUserID() + " choosing");
+                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Pre Flop betting";
                     string compAction = "";
 
-                    if(currentInput.Equals("fold")) {
+                    if(compAction.Equals("fold")) {
                         currentPlayer.clearHand();
                         currentPlayer = playerQueue.Dequeue();
                     }
                     //only have coputer match bet for now
-                    potValue += matchBet - currentPlayer.getCurrentBet();
-                    currentPlayer.setChipAmount(currentPlayer.getChipAmount() - (matchBet - currentPlayer.getCurrentBet()));
-                    currentPlayer.setCurrentBet(matchBet); 
+                    if(currentPlayer.getCurrentBet() < matchBet) {
+                        currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
+                        potValue += matchBet - currentPlayer.getCurrentBet();
+                    }
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opponent " + currentPlayer.getUserID() + " chose to match bet"; //add in action
 
                     //get next player and add player back if they didnt fold
                     playerQueue.Enqueue(currentPlayer);
-                    currentPlayer = playerQueue.Dequeue();
+                    numbMovesMade++;
                 }
-                Debug.Log("post flop betting");
+                Debug.Log("Pre flop betting");
                 bool equalBets = true;
                 int firstBet = 0;
+
+                Debug.Log("Player count: " + playerQueue.Count);
+                Debug.Log(validMove);
                 //if playerqueue count is 1 then make that user the winner
-                for(int i = 0; i < playerQueue.Count + 1; i++) {
-                    if(i == 0) {
-                        firstBet = currentPlayer.getCurrentBet(); 
-                    } else {
-                        if(firstBet != currentPlayer.getCurrentBet()) {
-                            equalBets = false;
+                if(validMove == true) {
+                    for(int i = 0; i < playerQueue.Count; i++) {
+                        if(i == 0) {
+                            firstBet = currentPlayer.getCurrentBet(); 
+                        } else {
+                            if(firstBet != currentPlayer.getCurrentBet()) {
+                                equalBets = false;
+                            }
                         }
+                        Debug.Log("check player id: " + currentPlayer.getUserID() + " has bet " + currentPlayer.getCurrentBet());
+                        currentPlayer = playerQueue.Dequeue();
+                        playerQueue.Enqueue(currentPlayer);
                     }
-                    Debug.Log("check player id: " + currentPlayer.getUserID());
-                    playerQueue.Enqueue(currentPlayer);
                     currentPlayer = playerQueue.Dequeue();
+                } else {
+                    equalBets = false;
                 }
-                if(equalBets == true) {
+                
+                if(equalBets == true && numbMovesMade >= 4) {
                     currentState = 8;
+                    numbMovesMade = 0;
                 }
             }
             else if (currentState == 8) //show player cards and determine winner
