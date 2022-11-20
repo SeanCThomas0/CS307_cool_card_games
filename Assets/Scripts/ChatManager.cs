@@ -311,6 +311,13 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     private Transform contentContainer;
     bool removeFriendbool = false;
 
+    [SerializeField]
+    private TMP_Text lastOnlineInfoText;
+    [SerializeField]
+    private TMP_Text currentGameText;
+    [SerializeField]
+    private GameObject friendInformation;
+
     public void addPreviousFriends(string[] friends)
     {
 
@@ -368,6 +375,26 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public void changeToMainMenuScene()
     {
         SceneManager.LoadScene("MainMenu");
+    }
+
+    //display information like last online and what game a friend
+    //is playing when clicking on a friend object
+    public void displayFriendInformation() {
+        if(removeFriendbool) {
+            return;
+        }
+        friendInformation.SetActive(true);
+        DateTime utc = System.DateTime.UtcNow;
+        utc = utc.AddHours(-5);
+        string lastOnline = utc.ToString("HH:mm dd MMMM, yyyy");
+       
+        lastOnlineInfoText.text = lastOnline;
+        
+    }
+
+    //close the friend information page
+    public void closeButton() {
+        friendInformation.SetActive(false);
     }
 
 
