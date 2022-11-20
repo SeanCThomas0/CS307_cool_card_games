@@ -76,6 +76,7 @@ public class DailyGoals : MonoBehaviour
         today = DateTime.Today;
         generateNewGoals = false;
 
+        Debug.Log("hi");
         EvaluateDate();
     }
 
@@ -132,26 +133,32 @@ public class DailyGoals : MonoBehaviour
         // RANDOM GO FISH
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/type").SetValueAsync(UnityEngine.Random.Range(0, Enum.GetValues(typeof(goFishTypes)).Length));
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/value").SetValueAsync(UnityEngine.Random.Range(1, 10));
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/set_count").SetValueAsync(0);
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/win_count").SetValueAsync(0);
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/completed").SetValueAsync(false);
 
         // RANDOM SOLITAIRE
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/solitaire/type").SetValueAsync(UnityEngine.Random.Range(0, Enum.GetValues(typeof(solitaireTypes)).Length));
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/solitaire/value").SetValueAsync(UnityEngine.Random.Range(1, 10));
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/solitaire/win_count").SetValueAsync(0);
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/solitaire/completed").SetValueAsync(false);
 
         // RANDOM EUCHRE
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/euchre/type").SetValueAsync(UnityEngine.Random.Range(0, Enum.GetValues(typeof(euchreTypes)).Length));
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/euchre/value").SetValueAsync(UnityEngine.Random.Range(1, 10));
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/euchre/win_count").SetValueAsync(0);
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/euchre/completed").SetValueAsync(false);
 
         // RANDOM BRUH
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/bruh/type").SetValueAsync(UnityEngine.Random.Range(0, Enum.GetValues(typeof(bruhTypes)).Length));
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/bruh/value").SetValueAsync(UnityEngine.Random.Range(1, 10));
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/bruh/win_count").SetValueAsync(0);
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/bruh/completed").SetValueAsync(false);
 
         // RANDOM POKER
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/poker/type").SetValueAsync(UnityEngine.Random.Range(0, Enum.GetValues(typeof(pokerTypes)).Length));
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/poker/value").SetValueAsync(UnityEngine.Random.Range(1, 10));
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/poker/win_count").SetValueAsync(0);
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/poker/completed").SetValueAsync(false);
 
         GatherGoals();
@@ -159,8 +166,6 @@ public class DailyGoals : MonoBehaviour
 
     private async void GatherGoals()
     {
-        DetermineComplete();
-
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/type").GetValueAsync().ContinueWith(work =>
         {
             if (work.IsCanceled)
@@ -706,6 +711,11 @@ public class DailyGoals : MonoBehaviour
                                             databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/completed").SetValueAsync(true);
                                             SetText(goFishText, games.GO_FISH, (int)goFishTypes.WINS, tempValue, "True");
                                         }
+                                        else
+                                        {
+                                            databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/completed").SetValueAsync(false);
+                                            SetText(goFishText, games.GO_FISH, (int)goFishTypes.WINS, tempValue, "False");
+                                        }
                                     }
                                 }
                             });
@@ -725,10 +735,17 @@ public class DailyGoals : MonoBehaviour
                                 {
                                     if (work.Result.Value != null)
                                     {
+                                        Debug.Log("set_count: " + work.Result.Value);
+
                                         if (Int32.Parse(work.Result.Value.ToString()) >= tempValue)
                                         {
                                             databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/completed").SetValueAsync(true);
                                             SetText(goFishText, games.GO_FISH, (int)goFishTypes.SETS, tempValue, "True");
+                                        }
+                                        else
+                                        {
+                                            databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/completed").SetValueAsync(false);
+                                            SetText(goFishText, games.GO_FISH, (int)goFishTypes.SETS, tempValue, "False");
                                         }
                                     }
                                 }
@@ -793,7 +810,12 @@ public class DailyGoals : MonoBehaviour
                                         if (Int32.Parse(work.Result.Value.ToString()) >= tempValue)
                                         {
                                             databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/solitaire/completed").SetValueAsync(true);
-                                            SetText(goFishText, games.SOLITAIRE, (int)solitaireTypes.WINS, tempValue, "True");
+                                            SetText(solitaireText, games.SOLITAIRE, (int)solitaireTypes.WINS, tempValue, "True");
+                                        }
+                                        else
+                                        {
+                                            databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/solitaire/completed").SetValueAsync(false);
+                                            SetText(solitaireText, games.SOLITAIRE, (int)solitaireTypes.WINS, tempValue, "False");
                                         }
                                     }
                                 }
@@ -858,7 +880,12 @@ public class DailyGoals : MonoBehaviour
                                         if (Int32.Parse(work.Result.Value.ToString()) >= tempValue)
                                         {
                                             databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/solitaire/completed").SetValueAsync(true);
-                                            SetText(goFishText, games.EUCHRE, (int)euchreTypes.WINS, tempValue, "True");
+                                            SetText(euchreText, games.EUCHRE, (int)euchreTypes.WINS, tempValue, "True");
+                                        }
+                                        else
+                                        {
+                                            databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/solitaire/completed").SetValueAsync(false);
+                                            SetText(solitaireText, games.EUCHRE, (int)euchreTypes.WINS, tempValue, "False");
                                         }
                                     }
                                 }
@@ -883,7 +910,12 @@ public class DailyGoals : MonoBehaviour
                                         if (Int32.Parse(work.Result.Value.ToString()) >= tempValue)
                                         {
                                             databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/solitaire/completed").SetValueAsync(true);
-                                            SetText(goFishText, games.EUCHRE, (int)euchreTypes.TRICKS, tempValue, "True");
+                                            SetText(euchreText, games.EUCHRE, (int)euchreTypes.TRICKS, tempValue, "True");
+                                        }
+                                        else
+                                        {
+                                            databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/solitaire/completed").SetValueAsync(false);
+                                            SetText(euchreText, games.EUCHRE, (int)euchreTypes.WINS, tempValue, "False");
                                         }
                                     }
                                 }
@@ -948,7 +980,12 @@ public class DailyGoals : MonoBehaviour
                                         if (Int32.Parse(work.Result.Value.ToString()) >= tempValue)
                                         {
                                             databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/bruh/completed").SetValueAsync(true);
-                                            SetText(goFishText, games.BRUH, (int)bruhTypes.WINS, tempValue, "True");
+                                            SetText(bruhText, games.BRUH, (int)bruhTypes.WINS, tempValue, "True");
+                                        }
+                                        else
+                                        {
+                                            databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/bruh/completed").SetValueAsync(false);
+                                            SetText(bruhText, games.BRUH, (int)bruhTypes.WINS, tempValue, "False");
                                         }
                                     }
                                 }
@@ -1013,7 +1050,12 @@ public class DailyGoals : MonoBehaviour
                                         if (Int32.Parse(work.Result.Value.ToString()) >= tempValue)
                                         {
                                             databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/poker/completed").SetValueAsync(true);
-                                            SetText(goFishText, games.POKER, (int)pokerTypes.WINS, tempValue, "True");
+                                            SetText(pokerText, games.POKER, (int)pokerTypes.WINS, tempValue, "True");
+                                        }
+                                        else
+                                        {
+                                            databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/poker/completed").SetValueAsync(false);
+                                            SetText(pokerText, games.POKER, (int)pokerTypes.WINS, tempValue, "False");
                                         }
                                     }
                                 }
