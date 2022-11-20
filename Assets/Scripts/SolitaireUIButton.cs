@@ -27,12 +27,12 @@ public class SolitaireUIButton : MonoBehaviour
 
     }
 
-    void Pause() {
+    public void Pause() {
         Time.timeScale = 0f;
         isPaused = true;
     }
 
-    void Resume() {
+    public void Resume() {
         Time.timeScale = 1f;
         isPaused = false;
     }
