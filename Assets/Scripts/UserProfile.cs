@@ -21,6 +21,7 @@ public class UserProfile : MonoBehaviour
 
     string errorPicUrl = "https://firebasestorage.googleapis.com/v0/b/cool-card-games.appspot.com/o/profile_icons%2FNuvola_apps_error.svg.png?alt=media&token=1a6dcef1-3e45-4290-b0d5-7059f3b1a9aa";
     FirebaseUser user;
+    string loadedProfilePicUrl = "";
 
 
     // Start is called before the first frame update
@@ -55,14 +56,20 @@ public class UserProfile : MonoBehaviour
         else
         {
             profilePic.texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
+            loadedProfilePicUrl = user.PhotoUrl.ToString();
         }
     }
-
-
 
     // Update is called once per frame
     void Update()
     {
-        
+        textMeshPro_usernameText.text = user.DisplayName;
+        textMeshPro_emailText.text = user.Email;
+        textMeshPro_userIDText.text = user.UserId;
+
+        if (user.PhotoUrl.ToString().Equals(loadedProfilePicUrl))
+        {
+            StartCoroutine(LoadImage(user.PhotoUrl.ToString()));
+        }
     }
 }
