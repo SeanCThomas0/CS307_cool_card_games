@@ -39,6 +39,9 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     [SerializeField]
     private GameObject friendSceneButton;
 
+    [SerializeField]
+    private GameObject inviteInformation;
+
     public static string username;
     //public static Action<PhotonStatus> OnStatusUpdated = delegate { };
 
@@ -212,6 +215,13 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public void OnPrivateMessage(string sender, object message, string channelName)
     {
         Debug.Log("Received Private");
+
+        //invite message is received
+        if (message.ToString().Contains("has invited you to join ") && !message.ToString().Contains(username)) {
+            inviteInformation.SetActive(true);
+            return;
+        }
+
         if (string.IsNullOrEmpty(msgArea.text))
         {
             msgArea.text += "<color=black>(Private) " + message;
@@ -317,6 +327,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     private TMP_Text currentGameText;
     [SerializeField]
     private GameObject friendInformation;
+    
 
     public void addPreviousFriends(string[] friends)
     {
@@ -395,6 +406,21 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     //close the friend information page
     public void closeButton() {
         friendInformation.SetActive(false);
+    }
+
+    //invite friend to join game lobby
+    public void inviteFriend(GameObject friend) {
+        chatClient.SendPrivateMessage(friend.GetComponentInChildren<TMP_Text>().text, username + " has invited you to join (game)</color>");
+    }
+
+    //accept invite
+    public void acceptButton() {
+        inviteInformation.SetActive(false);
+    }
+
+    //decline invite
+    public void declineButton() {
+        inviteInformation.SetActive(false);
     }
 
 
