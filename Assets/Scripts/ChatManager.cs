@@ -39,6 +39,9 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     [SerializeField]
     private GameObject friendSceneButton;
 
+    [SerializeField]
+    private GameObject inviteInformation;
+
     public static string username;
     //public static Action<PhotonStatus> OnStatusUpdated = delegate { };
 
@@ -212,6 +215,13 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public void OnPrivateMessage(string sender, object message, string channelName)
     {
         Debug.Log("Received Private");
+
+        //invite message is received
+        if (message.ToString().Contains("has invited you to join ") && !message.ToString().Contains(username)) {
+            inviteInformation.SetActive(true);
+            return;
+        }
+
         if (string.IsNullOrEmpty(msgArea.text))
         {
             msgArea.text += "<color=black>(Private) " + message;
@@ -311,6 +321,14 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     private Transform contentContainer;
     bool removeFriendbool = false;
 
+    [SerializeField]
+    private TMP_Text lastOnlineInfoText;
+    [SerializeField]
+    private TMP_Text currentGameText;
+    [SerializeField]
+    private GameObject friendInformation;
+    
+
     public void addPreviousFriends(string[] friends)
     {
 
@@ -368,6 +386,41 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public void changeToMainMenuScene()
     {
         SceneManager.LoadScene("MainMenu");
+    }
+
+    //display information like last online and what game a friend
+    //is playing when clicking on a friend object
+    public void displayFriendInformation() {
+        if(removeFriendbool) {
+            return;
+        }
+        friendInformation.SetActive(true);
+        DateTime utc = System.DateTime.UtcNow;
+        utc = utc.AddHours(-5);
+        string lastOnline = utc.ToString("HH:mm dd MMMM, yyyy");
+       
+        lastOnlineInfoText.text = lastOnline;
+        
+    }
+
+    //close the friend information page
+    public void closeButton() {
+        friendInformation.SetActive(false);
+    }
+
+    //invite friend to join game lobby
+    public void inviteFriend(GameObject friend) {
+        chatClient.SendPrivateMessage(friend.GetComponentInChildren<TMP_Text>().text, username + " has invited you to join (game)</color>");
+    }
+
+    //accept invite
+    public void acceptButton() {
+        inviteInformation.SetActive(false);
+    }
+
+    //decline invite
+    public void declineButton() {
+        inviteInformation.SetActive(false);
     }
 
 
