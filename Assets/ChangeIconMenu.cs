@@ -31,6 +31,7 @@ public class ChangeIconMenu : MonoBehaviour
     private string uploadUrl;
     string curUserPhotoUrl;
     string curUserIcon = "";
+    bool changeSuccess = false;
 
 
 
@@ -56,6 +57,7 @@ public class ChangeIconMenu : MonoBehaviour
 
 
 
+        /*
         userDR.Child("customization/selected_icon").GetValueAsync().ContinueWith(task =>
         {
             if (!task.IsFaulted && !task.IsCanceled)
@@ -79,7 +81,7 @@ public class ChangeIconMenu : MonoBehaviour
             {
                 Debug.Log(task.Exception);
             }
-        });
+        });*/
 
 
         StorageReference image = storageReference.Child("users/").Child(auth.CurrentUser.UserId).Child("custom_icon.png");
@@ -99,9 +101,11 @@ public class ChangeIconMenu : MonoBehaviour
     }
 
 
+
     public void ChangeDesignCustomButton()
     {
         StartCoroutine(ChangeDesignCustom());
+        PositionCheck(50, 50, 0);
     }
 
     private IEnumerator ChangeDesignCustom()
@@ -126,9 +130,9 @@ public class ChangeIconMenu : MonoBehaviour
                 };
 
                 //Position check
-                checkDefault.SetActive(true);
-                Vector3 curPos = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.transform.localPosition;
-                checkDefault.transform.localPosition = curPos + new Vector3(50, 50, 0);
+                //checkDefault.SetActive(true);
+                //Vector3 curPos = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.transform.localPosition;
+                //checkDefault.transform.localPosition = curPos + new Vector3(50, 50, 0);
 
                 user.UpdateUserProfileAsync(profile).ContinueWith(task =>
                 {
@@ -160,8 +164,6 @@ public class ChangeIconMenu : MonoBehaviour
                             return;
                         }
                         Debug.Log("Database Icon Update Successful");
-
-
                     });
                 });
             }
@@ -175,6 +177,7 @@ public class ChangeIconMenu : MonoBehaviour
     public void ChangeDesignButton()
     {
         StartCoroutine(ChangeDesign());
+        PositionCheck(35, 35, 0);
     }
 
 
@@ -196,7 +199,7 @@ public class ChangeIconMenu : MonoBehaviour
                 uploadUrl = task.Result.ToString();
 
                 //Position check
-                PositionCheck();
+
                 Debug.Log("Check Moved");
 
                 Firebase.Auth.UserProfile profile = new Firebase.Auth.UserProfile
@@ -244,11 +247,11 @@ public class ChangeIconMenu : MonoBehaviour
         });
     }
 
-    private void PositionCheck()
+    private void PositionCheck(float x, float y, float z)
     {
         checkDefault.SetActive(true);
         Vector3 curPos = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.transform.localPosition;
-        checkDefault.transform.localPosition = curPos + new Vector3(35, 35, 0);
+        checkDefault.transform.localPosition = curPos + new Vector3(x, y, z);
         checkDefault.SetActive(true);
     }
 
