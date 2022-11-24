@@ -33,7 +33,20 @@ public class ChangeIconMenu : MonoBehaviour
     string curUserIcon = "";
     bool changeSuccess = false;
 
-
+    //Icon Game Objects
+    public GameObject custom_icon;
+    public GameObject Default;
+    public GameObject Amogus;
+    public GameObject Blue;
+    public GameObject Bot_Emoji;
+    public GameObject Disguise_Emoji;
+    public GameObject Doge;
+    public GameObject Manatee;
+    public GameObject Meme_Baby;
+    public GameObject Pennywise;
+    public GameObject Purdue_Pete;
+    public GameObject Qualifi;
+    public GameObject curIconGameObject;
 
 
     // Start is called before the first frame update
@@ -55,34 +68,8 @@ public class ChangeIconMenu : MonoBehaviour
 
         curUserPhotoUrl = user.PhotoUrl.ToString();
 
-
-
-        /*
-        userDR.Child("customization/selected_icon").GetValueAsync().ContinueWith(task =>
-        {
-            if (!task.IsFaulted && !task.IsCanceled)
-            {
-                curUserIcon = task.Result.ToString();
-                Vector3 curPos = GameObject.Find(curUserIcon).transform.position;
-                checkDefault.SetActive(true);
-                if (curUserIcon.Equals("custom_icon"))
-                {
-                    checkDefault.transform.localPosition = curPos + new Vector3(50, 50, 0);
-                    checkDefault.SetActive(true);
-                }
-                else
-                {
-                    checkDefault.transform.localPosition = curPos + new Vector3(35, 35, 0);
-                    checkDefault.SetActive(true);
-                }
-                Debug.Log("Initial selected icon success");
-            }
-            else
-            {
-                Debug.Log(task.Exception);
-            }
-        });*/
-
+        Debug.Log("customization/selected_icon");
+        StartCoroutine(CheckStart());
 
         StorageReference image = storageReference.Child("users/").Child(auth.CurrentUser.UserId).Child("custom_icon.png");
         image.GetDownloadUrlAsync().ContinueWithOnMainThread(task =>
@@ -98,6 +85,50 @@ public class ChangeIconMenu : MonoBehaviour
             }
         });
 
+
+        StartCoroutine(Wait(1.0f));
+
+
+
+    }
+
+    private IEnumerator Wait(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        curIconGameObject = GameObject.Find(curUserIcon);
+        Debug.Log("CurUserIcon : " + curIconGameObject);
+        if (curIconGameObject != null)
+        {
+            Vector3 curPos = curIconGameObject.transform.localPosition;
+            checkDefault.SetActive(true);
+            Debug.Log(curUserIcon + " " + curPos);
+            if (curUserIcon.Equals("custom_icon"))
+            {
+                checkDefault.transform.localPosition = curPos + new Vector3(50, 50, 0);
+                checkDefault.SetActive(true);
+            }
+            else
+            {
+                checkDefault.transform.localPosition = curPos + new Vector3(35, 35, 0);
+                checkDefault.SetActive(true);
+            }
+        }
+    }
+
+    private IEnumerator CheckStart()
+    {
+        yield return userDR.Child("customization/selected_icon").GetValueAsync().ContinueWith(task =>
+        {
+            if (!task.IsFaulted && !task.IsCanceled)
+            {
+                curUserIcon = task.Result.Value.ToString();
+                Debug.Log("customization/selected_icon found : " + curUserIcon);
+            }
+            else
+            {
+                Debug.Log(task.Exception);
+            }
+        });
     }
 
 
