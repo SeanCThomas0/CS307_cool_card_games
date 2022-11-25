@@ -8,6 +8,8 @@ using Photon.Pun;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Firebase.Auth;
+using Firebase.Database;
 
 
 /*
@@ -47,6 +49,9 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     private UserPreferences.backgroundColor backgroundColor;
     public GameObject mainCam;
+
+    private DatabaseReference databaseReference;
+    private FirebaseAuth auth;
 
     void OnEnable()
     {
@@ -92,6 +97,8 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             //OnSubscribed(new string[] {"Chatroom"}, new bool[] {true});
         }
 
+        auth = FirebaseAuth.DefaultInstance;
+        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
 
 
     }
@@ -259,6 +266,11 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         if (status == 0)
         {
             friendUpdate.GetComponent<Image>().color = Color.red;
+            //put last online info in database
+            DateTime utc = System.DateTime.UtcNow;
+            utc = utc.AddHours(-5);
+            string lastOnline = utc.ToString("HH:mm dd MMMM, yyyy");
+            databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("friend_info/" + user + "_last_online").SetValueAsync(lastOnline);
         }
         else
         {
@@ -390,17 +402,53 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     //display information like last online and what game a friend
     //is playing when clicking on a friend object
-    public void displayFriendInformation() {
+    public void displayFriendInformation(GameObject friend) {
         if(removeFriendbool) {
             return;
         }
         friendInformation.SetActive(true);
-        DateTime utc = System.DateTime.UtcNow;
-        utc = utc.AddHours(-5);
-        string lastOnline = utc.ToString("HH:mm dd MMMM, yyyy");
+        string username = friend.GetComponentInChildren<TMP_Text>().text;
+        getFriendInfo(username);
+
        
-        lastOnlineInfoText.text = lastOnline;
+        //lastOnlineInfoText.text = lastOnline;
         
+    }
+
+    public async void getFriendInfo(string username) {
+        
+        string lastOnline  = "";
+
+        //get last online value from database
+        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("friend_info/" + username + "_last_online").GetValueAsync().ContinueWith(work =>
+        {
+            if (work.IsCanceled)
+            {
+                Debug.Log("get last online cancelled");
+            }
+            if (work.IsFaulted)
+            {
+                Debug.Log("get last online faulted");
+            }
+            else
+            {
+                if (work.Result.Value != null)
+                {
+                    lastOnline = work.Result.Value.ToString();
+                    Debug.Log("from firebase (design) =" + lastOnline);
+                }
+                else
+                {
+                    lastOnline = "N/A";
+                    Debug.Log("nothing in firebase (online), set to = N/A");
+                }
+            }
+        });
+
+        lastOnlineInfoText.text = lastOnline;
+
+        Debug.Log("Last Online: " + lastOnline);
+
     }
 
     //close the friend information page
