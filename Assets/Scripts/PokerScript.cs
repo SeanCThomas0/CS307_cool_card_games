@@ -398,25 +398,21 @@ public class PokerScript : MonoBehaviour
         }
         
         playerOne = new CardPlayer("" + 1, 200, true, player1Text, player1Bet);
-        playerQueue.Enqueue(playerOne);
         dealQueue.Enqueue(playerOne);
         player1Text.GetComponent<TMPro.TextMeshProUGUI>().text = "Chips: " + playerOne.getChipAmount(); 
         playerOne.setCurrentBet(0);
         
         playerTwo = new CardPlayer("" + 2, 200, false, player2Text, player2Bet);
-        playerQueue.Enqueue(playerTwo);
         dealQueue.Enqueue(playerTwo);
         player2Text.GetComponent<TMPro.TextMeshProUGUI>().text = "Chips: " + playerTwo.getChipAmount(); 
         playerTwo.setCurrentBet(0);
 
         playerThree = new CardPlayer("" + 3, 200, false, player3Text, player3Bet);
-        playerQueue.Enqueue(playerThree);
         dealQueue.Enqueue(playerThree);
         player3Text.GetComponent<TMPro.TextMeshProUGUI>().text = "Chips: " + playerThree.getChipAmount(); 
         playerThree.setCurrentBet(0);
 
         playerFour = new CardPlayer("" + 4, 200, false, player4Text, player4Bet);
-        playerQueue.Enqueue(playerFour);
         dealQueue.Enqueue(playerFour);
         player4Text.GetComponent<TMPro.TextMeshProUGUI>().text = "Chips: " + playerFour.getChipAmount(); 
         playerFour.setCurrentBet(0);
@@ -453,19 +449,25 @@ public class PokerScript : MonoBehaviour
                 //small blind is 2 chips big blind is 4 chips
                 currentDealer = dealQueue.Dequeue();
                 dealQueue.Enqueue(currentDealer);
+                playerQueue.Enqueue(currentDealer);
 
                 smallBlind = dealQueue.Dequeue();
                 dealQueue.Enqueue(smallBlind);
+                playerQueue.Enqueue(smallBlind);
                 smallBlind.setChipAmount(smallBlind.getChipAmount() - 2);
                 smallBlind.setCurrentBet(2);
                 potValue += 2;
 
                 bigBlind = dealQueue.Dequeue();
                 dealQueue.Enqueue(bigBlind);
+                playerQueue.Enqueue(bigBlind);
                 bigBlind.setChipAmount(bigBlind.getChipAmount() - 4);
                 bigBlind.setCurrentBet(4);
                 potValue += 4;
                 matchBet = 4;
+
+                currentPlayer = dealQueue.Peek();
+                playerQueue.Enqueue(currentPlayer);
 
                 for(int i = 0; i < 3; i++) {
                     currentPlayer = playerQueue.Dequeue();
@@ -502,6 +504,7 @@ public class PokerScript : MonoBehaviour
                             currentPlayer.clearHand();
                             validMove = true;
                             numbMovesMade++;
+                            currentInput = "empty";
                         } else {
                             bool validBet = false;
                             int intInput = int.Parse(currentInput);
@@ -609,6 +612,7 @@ public class PokerScript : MonoBehaviour
                             currentPlayer.clearHand();
                             validMove = true;
                             numbMovesMade++;
+                            currentInput = "empty";
                         } else {
                             bool validBet = false;
                             int intInput = int.Parse(currentInput);
@@ -714,6 +718,7 @@ public class PokerScript : MonoBehaviour
                             currentPlayer.clearHand();
                             validMove = true;
                             numbMovesMade++;
+                            currentInput = "empty";
                         } else {
                             bool validBet = false;
                             int intInput = int.Parse(currentInput);
@@ -818,6 +823,7 @@ public class PokerScript : MonoBehaviour
                             currentPlayer.clearHand();
                             validMove = true;
                             numbMovesMade++;
+                            currentInput = "empty";
                         } else {
                             bool validBet = false;
                             int intInput = int.Parse(currentInput);
@@ -928,6 +934,7 @@ public class PokerScript : MonoBehaviour
                     dealQueue.Enqueue(currentPlayer);
                     Debug.Log("ran " + i);
                 }
+                playerQueue.Clear();
 
                 currentState = 0;
             }
