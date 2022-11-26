@@ -101,6 +101,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
 
 
+
     }
 
     // Update is called once per frame
@@ -124,6 +125,10 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             username = usernameInputField.text;
         }
         chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new Photon.Chat.AuthenticationValues(username));
+
+        //call infinite loop to update last online value for current user
+        StartCoroutine(updateLastOnline());
+
 
     }
 
@@ -163,6 +168,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         chatClient.Unsubscribe(new string[] { PhotonNetwork.CurrentRoom.Name });
         chatClient.SetOnlineStatus(ChatUserStatus.Offline);
+        
         Debug.Log("Leave");
     }
 
@@ -253,6 +259,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public void OnStatusUpdate(string user, int status, bool gotMessage, object message)
     {
         Debug.Log("OnStatusUpdate: " + user + "changed to " + status);
+
         GameObject[] friends = GameObject.FindGameObjectsWithTag("Friend");
         GameObject friendUpdate = friends[0];
         foreach (GameObject friend in friends)
@@ -266,11 +273,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         if (status == 0)
         {
             friendUpdate.GetComponent<Image>().color = Color.red;
-            //put last online info in database
-            DateTime utc = System.DateTime.UtcNow;
-            utc = utc.AddHours(-5);
-            string lastOnline = utc.ToString("HH:mm dd MMMM, yyyy");
-            databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("friend_info/" + user + "_last_online").SetValueAsync(lastOnline);
         }
         else
         {
@@ -420,7 +422,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         string lastOnline  = "";
 
         //get last online value from database
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("friend_info/" + username + "_last_online").GetValueAsync().ContinueWith(work =>
+        await databaseReference.Child("friend_info").Child(username).Child("last_online").GetValueAsync().ContinueWith(work =>
         {
             if (work.IsCanceled)
             {
@@ -469,6 +471,22 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     //decline invite
     public void declineButton() {
         inviteInformation.SetActive(false);
+    }
+
+    IEnumerator updateLastOnline() {
+
+        Debug.Log("update");
+
+        //put last online info in database
+        DateTime utc = System.DateTime.UtcNow;
+        utc = utc.AddHours(-5);
+        string lastOnline = utc.ToString("HH:mm dd MMMM, yyyy");
+        databaseReference.Child("friend_info").Child(username).Child("last_online").SetValueAsync(lastOnline);
+
+        yield return new WaitForSeconds(60);
+
+        StartCoroutine(updateLastOnline());
+        
     }
 
 
