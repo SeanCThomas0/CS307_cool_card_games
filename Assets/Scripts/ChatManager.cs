@@ -408,18 +408,22 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         if(removeFriendbool) {
             return;
         }
-        friendInformation.SetActive(true);
         string username = friend.GetComponentInChildren<TMP_Text>().text;
+        //if friend is offline change current game to N/A
+        if (friend.GetComponentInChildren<Image>().color == Color.red) {
+            databaseReference.Child("friend_info").Child(username).Child("current_game").SetValueAsync("N/A");
+        }
+
         getFriendInfo(username);
 
-       
-        //lastOnlineInfoText.text = lastOnline;
-        
+        friendInformation.SetActive(true);
+    
     }
 
     public async void getFriendInfo(string username) {
         
         string lastOnline  = "";
+        string currentGame = "";
 
         //get last online value from database
         await databaseReference.Child("friend_info").Child(username).Child("last_online").GetValueAsync().ContinueWith(work =>
@@ -437,19 +441,47 @@ public class ChatManager : MonoBehaviour, IChatClientListener
                 if (work.Result.Value != null)
                 {
                     lastOnline = work.Result.Value.ToString();
-                    Debug.Log("from firebase (design) =" + lastOnline);
+                    Debug.Log("from firebase (last_online) =" + lastOnline);
                 }
                 else
                 {
                     lastOnline = "N/A";
-                    Debug.Log("nothing in firebase (online), set to = N/A");
+                    Debug.Log("nothing in firebase (last_online), set to = N/A");
+                }
+            }
+        });
+
+        //get current game value from database
+        await databaseReference.Child("friend_info").Child(username).Child("current_game").GetValueAsync().ContinueWith(work =>
+        {
+            if (work.IsCanceled)
+            {
+                Debug.Log("get current game cancelled");
+            }
+            if (work.IsFaulted)
+            {
+                Debug.Log("get current game faulted");
+            }
+            else
+            {
+                if (work.Result.Value != null)
+                {
+                    currentGame = work.Result.Value.ToString();
+                    Debug.Log("from firebase (current_game) =" + currentGame);
+                }
+                else
+                {
+                    currentGame = "N/A";
+                    Debug.Log("nothing in firebase (current_game), set to = N/A");
                 }
             }
         });
 
         lastOnlineInfoText.text = lastOnline;
+        currentGameText.text = currentGame;
 
         Debug.Log("Last Online: " + lastOnline);
+        Debug.Log("Current Game: " + currentGame);
 
     }
 
@@ -487,6 +519,21 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
         StartCoroutine(updateLastOnline());
         
+    }
+
+    //put current game playing in database
+    public void updateCurrentGame(GameObject gameButton) {
+        Debug.Log("update current Game");
+
+        //put name of game scene into database
+        string gameName = gameButton.GetComponentInChildren<TMP_Text>().text;
+        
+        if (gameName.Equals("Exit")) {
+            gameName = "N/A";
+        }
+
+        databaseReference.Child("friend_info").Child(username).Child("current_game").SetValueAsync(gameName);
+
     }
 
 
