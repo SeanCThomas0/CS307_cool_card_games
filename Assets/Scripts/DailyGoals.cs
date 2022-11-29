@@ -67,6 +67,8 @@ public class DailyGoals : MonoBehaviour
     public GameObject bruhCheck;
     public GameObject pokerCheck;
 
+    private bool updating = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -83,7 +85,6 @@ public class DailyGoals : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
     }
 
     private async void EvaluateDate()
@@ -121,7 +122,7 @@ public class DailyGoals : MonoBehaviour
         }
         else
         {
-            GatherGoals();
+            DetermineComplete();
         }
     }
 
@@ -161,370 +162,374 @@ public class DailyGoals : MonoBehaviour
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/poker/win_count").SetValueAsync(0);
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/poker/completed").SetValueAsync(false);
 
-        GatherGoals();
+        DetermineComplete();
     }
 
-    private async void GatherGoals()
-    {
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/type").GetValueAsync().ContinueWith(work =>
-        {
-            if (work.IsCanceled)
-            {
-                Debug.Log("cancelled");
-            }
-            if (work.IsFaulted)
-            {
-                Debug.Log("faulted");
-            }
-            else
-            {
-                if (work.Result.Value != null)
-                {
+    // private async void GatherGoals()
+    // {
+    //     updating = true;
 
-                    type = Int32.Parse(work.Result.Value.ToString());
-                }
-                else
-                {
-                    type = -1;
-                }
-            }
-        });
+    //     await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/type").GetValueAsync().ContinueWith(work =>
+    //     {
+    //         if (work.IsCanceled)
+    //         {
+    //             Debug.Log("cancelled");
+    //         }
+    //         if (work.IsFaulted)
+    //         {
+    //             Debug.Log("faulted");
+    //         }
+    //         else
+    //         {
+    //             if (work.Result.Value != null)
+    //             {
 
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/value").GetValueAsync().ContinueWith(work =>
-        {
-            if (work.IsCanceled)
-            {
-                Debug.Log("cancelled");
-            }
-            if (work.IsFaulted)
-            {
-                Debug.Log("faulted");
-            }
-            else
-            {
-                if (work.Result.Value != null)
-                {
-                    value = Int32.Parse(work.Result.Value.ToString());
-                }
-                else
-                {
-                    value = -1;
-                }
-            }
-        });
+    //                 type = Int32.Parse(work.Result.Value.ToString());
+    //             }
+    //             else
+    //             {
+    //                 type = -1;
+    //             }
+    //         }
+    //     });
 
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/completed").GetValueAsync().ContinueWith(work =>
-        {
-            if (work.IsCanceled)
-            {
-                Debug.Log("cancelled");
-            }
-            if (work.IsFaulted)
-            {
-                Debug.Log("faulted");
-            }
-            else
-            {
-                if (work.Result.Value != null)
-                {
-                    completed = work.Result.Value.ToString();
-                }
-                else
-                {
-                    value = -1;
-                }
-            }
-        });
+    //     await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/value").GetValueAsync().ContinueWith(work =>
+    //     {
+    //         if (work.IsCanceled)
+    //         {
+    //             Debug.Log("cancelled");
+    //         }
+    //         if (work.IsFaulted)
+    //         {
+    //             Debug.Log("faulted");
+    //         }
+    //         else
+    //         {
+    //             if (work.Result.Value != null)
+    //             {
+    //                 value = Int32.Parse(work.Result.Value.ToString());
+    //             }
+    //             else
+    //             {
+    //                 value = -1;
+    //             }
+    //         }
+    //     });
 
-        SetText(goFishText, games.GO_FISH, type, value, completed);
+    //     await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/completed").GetValueAsync().ContinueWith(work =>
+    //     {
+    //         if (work.IsCanceled)
+    //         {
+    //             Debug.Log("cancelled");
+    //         }
+    //         if (work.IsFaulted)
+    //         {
+    //             Debug.Log("faulted");
+    //         }
+    //         else
+    //         {
+    //             if (work.Result.Value != null)
+    //             {
+    //                 completed = work.Result.Value.ToString();
+    //             }
+    //             else
+    //             {
+    //                 value = -1;
+    //             }
+    //         }
+    //     });
 
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/solitaire/type").GetValueAsync().ContinueWith(work =>
-        {
-            if (work.IsCanceled)
-            {
-                Debug.Log("cancelled");
-            }
-            if (work.IsFaulted)
-            {
-                Debug.Log("faulted");
-            }
-            else
-            {
-                if (work.Result.Value != null)
-                {
-                    type = Int32.Parse(work.Result.Value.ToString());
-                }
-                else
-                {
-                    type = -1;
-                }
-            }
-        });
+    //     // SetText(goFishText, games.GO_FISH, type, value, completed);
 
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/solitaire/value").GetValueAsync().ContinueWith(work =>
-        {
-            if (work.IsCanceled)
-            {
-                Debug.Log("cancelled");
-            }
-            if (work.IsFaulted)
-            {
-                Debug.Log("faulted");
-            }
-            else
-            {
-                if (work.Result.Value != null)
-                {
-                    value = Int32.Parse(work.Result.Value.ToString());
-                }
-                else
-                {
-                    value = -1;
-                }
-            }
-        });
+    //     await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/solitaire/type").GetValueAsync().ContinueWith(work =>
+    //     {
+    //         if (work.IsCanceled)
+    //         {
+    //             Debug.Log("cancelled");
+    //         }
+    //         if (work.IsFaulted)
+    //         {
+    //             Debug.Log("faulted");
+    //         }
+    //         else
+    //         {
+    //             if (work.Result.Value != null)
+    //             {
+    //                 type = Int32.Parse(work.Result.Value.ToString());
+    //             }
+    //             else
+    //             {
+    //                 type = -1;
+    //             }
+    //         }
+    //     });
 
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/solitaire/completed").GetValueAsync().ContinueWith(work =>
-        {
-            if (work.IsCanceled)
-            {
-                Debug.Log("cancelled");
-            }
-            if (work.IsFaulted)
-            {
-                Debug.Log("faulted");
-            }
-            else
-            {
-                if (work.Result.Value != null)
-                {
-                    completed = work.Result.Value.ToString();
-                }
-                else
-                {
-                    value = -1;
-                }
-            }
-        });
+    //     await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/solitaire/value").GetValueAsync().ContinueWith(work =>
+    //     {
+    //         if (work.IsCanceled)
+    //         {
+    //             Debug.Log("cancelled");
+    //         }
+    //         if (work.IsFaulted)
+    //         {
+    //             Debug.Log("faulted");
+    //         }
+    //         else
+    //         {
+    //             if (work.Result.Value != null)
+    //             {
+    //                 value = Int32.Parse(work.Result.Value.ToString());
+    //             }
+    //             else
+    //             {
+    //                 value = -1;
+    //             }
+    //         }
+    //     });
 
-        SetText(solitaireText, games.SOLITAIRE, type, value, completed);
+    //     await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/solitaire/completed").GetValueAsync().ContinueWith(work =>
+    //     {
+    //         if (work.IsCanceled)
+    //         {
+    //             Debug.Log("cancelled");
+    //         }
+    //         if (work.IsFaulted)
+    //         {
+    //             Debug.Log("faulted");
+    //         }
+    //         else
+    //         {
+    //             if (work.Result.Value != null)
+    //             {
+    //                 completed = work.Result.Value.ToString();
+    //             }
+    //             else
+    //             {
+    //                 value = -1;
+    //             }
+    //         }
+    //     });
 
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/euchre/type").GetValueAsync().ContinueWith(work =>
-        {
-            if (work.IsCanceled)
-            {
-                Debug.Log("cancelled");
-            }
-            if (work.IsFaulted)
-            {
-                Debug.Log("faulted");
-            }
-            else
-            {
-                if (work.Result.Value != null)
-                {
+    //     // SetText(solitaireText, games.SOLITAIRE, type, value, completed);
 
-                    type = Int32.Parse(work.Result.Value.ToString());
-                }
-                else
-                {
-                    type = -1;
-                }
-            }
-        });
+    //     await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/euchre/type").GetValueAsync().ContinueWith(work =>
+    //     {
+    //         if (work.IsCanceled)
+    //         {
+    //             Debug.Log("cancelled");
+    //         }
+    //         if (work.IsFaulted)
+    //         {
+    //             Debug.Log("faulted");
+    //         }
+    //         else
+    //         {
+    //             if (work.Result.Value != null)
+    //             {
 
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/euchre/value").GetValueAsync().ContinueWith(work =>
-        {
-            if (work.IsCanceled)
-            {
-                Debug.Log("cancelled");
-            }
-            if (work.IsFaulted)
-            {
-                Debug.Log("faulted");
-            }
-            else
-            {
-                if (work.Result.Value != null)
-                {
-                    value = Int32.Parse(work.Result.Value.ToString());
-                }
-                else
-                {
-                    value = -1;
-                }
-            }
-        });
+    //                 type = Int32.Parse(work.Result.Value.ToString());
+    //             }
+    //             else
+    //             {
+    //                 type = -1;
+    //             }
+    //         }
+    //     });
 
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/euchre/completed").GetValueAsync().ContinueWith(work =>
-        {
-            if (work.IsCanceled)
-            {
-                Debug.Log("cancelled");
-            }
-            if (work.IsFaulted)
-            {
-                Debug.Log("faulted");
-            }
-            else
-            {
-                if (work.Result.Value != null)
-                {
-                    completed = work.Result.Value.ToString();
-                }
-                else
-                {
-                    value = -1;
-                }
-            }
-        });
+    //     await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/euchre/value").GetValueAsync().ContinueWith(work =>
+    //     {
+    //         if (work.IsCanceled)
+    //         {
+    //             Debug.Log("cancelled");
+    //         }
+    //         if (work.IsFaulted)
+    //         {
+    //             Debug.Log("faulted");
+    //         }
+    //         else
+    //         {
+    //             if (work.Result.Value != null)
+    //             {
+    //                 value = Int32.Parse(work.Result.Value.ToString());
+    //             }
+    //             else
+    //             {
+    //                 value = -1;
+    //             }
+    //         }
+    //     });
 
-        SetText(euchreText, games.EUCHRE, type, value, completed);
+    //     await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/euchre/completed").GetValueAsync().ContinueWith(work =>
+    //     {
+    //         if (work.IsCanceled)
+    //         {
+    //             Debug.Log("cancelled");
+    //         }
+    //         if (work.IsFaulted)
+    //         {
+    //             Debug.Log("faulted");
+    //         }
+    //         else
+    //         {
+    //             if (work.Result.Value != null)
+    //             {
+    //                 completed = work.Result.Value.ToString();
+    //             }
+    //             else
+    //             {
+    //                 value = -1;
+    //             }
+    //         }
+    //     });
 
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/bruh/type").GetValueAsync().ContinueWith(work =>
-        {
-            if (work.IsCanceled)
-            {
-                Debug.Log("cancelled");
-            }
-            if (work.IsFaulted)
-            {
-                Debug.Log("faulted");
-            }
-            else
-            {
-                if (work.Result.Value != null)
-                {
+    //     // SetText(euchreText, games.EUCHRE, type, value, completed);
 
-                    type = Int32.Parse(work.Result.Value.ToString());
-                }
-                else
-                {
-                    type = -1;
-                }
-            }
-        });
+    //     await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/bruh/type").GetValueAsync().ContinueWith(work =>
+    //     {
+    //         if (work.IsCanceled)
+    //         {
+    //             Debug.Log("cancelled");
+    //         }
+    //         if (work.IsFaulted)
+    //         {
+    //             Debug.Log("faulted");
+    //         }
+    //         else
+    //         {
+    //             if (work.Result.Value != null)
+    //             {
 
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/bruh/value").GetValueAsync().ContinueWith(work =>
-        {
-            if (work.IsCanceled)
-            {
-                Debug.Log("cancelled");
-            }
-            if (work.IsFaulted)
-            {
-                Debug.Log("faulted");
-            }
-            else
-            {
-                if (work.Result.Value != null)
-                {
-                    value = Int32.Parse(work.Result.Value.ToString());
-                }
-                else
-                {
-                    value = -1;
-                }
-            }
-        });
+    //                 type = Int32.Parse(work.Result.Value.ToString());
+    //             }
+    //             else
+    //             {
+    //                 type = -1;
+    //             }
+    //         }
+    //     });
 
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/bruh/completed").GetValueAsync().ContinueWith(work =>
-        {
-            if (work.IsCanceled)
-            {
-                Debug.Log("cancelled");
-            }
-            if (work.IsFaulted)
-            {
-                Debug.Log("faulted");
-            }
-            else
-            {
-                if (work.Result.Value != null)
-                {
-                    completed = work.Result.Value.ToString();
-                }
-                else
-                {
-                    value = -1;
-                }
-            }
-        });
+    //     await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/bruh/value").GetValueAsync().ContinueWith(work =>
+    //     {
+    //         if (work.IsCanceled)
+    //         {
+    //             Debug.Log("cancelled");
+    //         }
+    //         if (work.IsFaulted)
+    //         {
+    //             Debug.Log("faulted");
+    //         }
+    //         else
+    //         {
+    //             if (work.Result.Value != null)
+    //             {
+    //                 value = Int32.Parse(work.Result.Value.ToString());
+    //             }
+    //             else
+    //             {
+    //                 value = -1;
+    //             }
+    //         }
+    //     });
 
-        SetText(bruhText, games.BRUH, type, value, completed);
+    //     await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/bruh/completed").GetValueAsync().ContinueWith(work =>
+    //     {
+    //         if (work.IsCanceled)
+    //         {
+    //             Debug.Log("cancelled");
+    //         }
+    //         if (work.IsFaulted)
+    //         {
+    //             Debug.Log("faulted");
+    //         }
+    //         else
+    //         {
+    //             if (work.Result.Value != null)
+    //             {
+    //                 completed = work.Result.Value.ToString();
+    //             }
+    //             else
+    //             {
+    //                 value = -1;
+    //             }
+    //         }
+    //     });
 
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/poker/type").GetValueAsync().ContinueWith(work =>
-        {
-            if (work.IsCanceled)
-            {
-                Debug.Log("cancelled");
-            }
-            if (work.IsFaulted)
-            {
-                Debug.Log("faulted");
-            }
-            else
-            {
-                if (work.Result.Value != null)
-                {
+    //     // SetText(bruhText, games.BRUH, type, value, completed);
 
-                    type = Int32.Parse(work.Result.Value.ToString());
-                }
-                else
-                {
-                    type = -1;
-                }
-            }
-        });
+    //     await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/poker/type").GetValueAsync().ContinueWith(work =>
+    //     {
+    //         if (work.IsCanceled)
+    //         {
+    //             Debug.Log("cancelled");
+    //         }
+    //         if (work.IsFaulted)
+    //         {
+    //             Debug.Log("faulted");
+    //         }
+    //         else
+    //         {
+    //             if (work.Result.Value != null)
+    //             {
 
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/poker/value").GetValueAsync().ContinueWith(work =>
-        {
-            if (work.IsCanceled)
-            {
-                Debug.Log("cancelled");
-            }
-            if (work.IsFaulted)
-            {
-                Debug.Log("faulted");
-            }
-            else
-            {
-                if (work.Result.Value != null)
-                {
-                    value = Int32.Parse(work.Result.Value.ToString());
-                }
-                else
-                {
-                    value = -1;
-                }
-            }
-        });
+    //                 type = Int32.Parse(work.Result.Value.ToString());
+    //             }
+    //             else
+    //             {
+    //                 type = -1;
+    //             }
+    //         }
+    //     });
 
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/poker/completed").GetValueAsync().ContinueWith(work =>
-        {
-            if (work.IsCanceled)
-            {
-                Debug.Log("cancelled");
-            }
-            if (work.IsFaulted)
-            {
-                Debug.Log("faulted");
-            }
-            else
-            {
-                if (work.Result.Value != null)
-                {
-                    completed = work.Result.Value.ToString();
-                }
-                else
-                {
-                    value = -1;
-                }
-            }
-        });
+    //     await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/poker/value").GetValueAsync().ContinueWith(work =>
+    //     {
+    //         if (work.IsCanceled)
+    //         {
+    //             Debug.Log("cancelled");
+    //         }
+    //         if (work.IsFaulted)
+    //         {
+    //             Debug.Log("faulted");
+    //         }
+    //         else
+    //         {
+    //             if (work.Result.Value != null)
+    //             {
+    //                 value = Int32.Parse(work.Result.Value.ToString());
+    //             }
+    //             else
+    //             {
+    //                 value = -1;
+    //             }
+    //         }
+    //     });
 
-        SetText(pokerText, games.POKER, type, value, completed);
-    }
+    //     await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/poker/completed").GetValueAsync().ContinueWith(work =>
+    //     {
+    //         if (work.IsCanceled)
+    //         {
+    //             Debug.Log("cancelled");
+    //         }
+    //         if (work.IsFaulted)
+    //         {
+    //             Debug.Log("faulted");
+    //         }
+    //         else
+    //         {
+    //             if (work.Result.Value != null)
+    //             {
+    //                 completed = work.Result.Value.ToString();
+    //             }
+    //             else
+    //             {
+    //                 value = -1;
+    //             }
+    //         }
+    //     });
+
+    //     // SetText(pokerText, games.POKER, type, value, completed);
+
+    //     DetermineComplete();
+    // }
 
     private void SetText(GameObject gameObject, games game, int type, int value, string completed)
     {
@@ -537,6 +542,7 @@ public class DailyGoals : MonoBehaviour
         switch (game)
         {
             case games.GO_FISH:
+            Debug.Log("state: " + completed);
                 switch ((goFishTypes)type)
                 {
                     case goFishTypes.WINS:
@@ -547,19 +553,21 @@ public class DailyGoals : MonoBehaviour
                         }
                         else
                         {
-                            solitaireCheck.SetActive(false);
+                            goFishCheck.SetActive(false);
                             gameObject.GetComponent<TMPro.TextMeshProUGUI>().text = "Incomplete. Win " + value + " games!";
                         }
                         break;
                     case goFishTypes.SETS:
                         if (completed.Equals("True"))
                         {
+                            Debug.Log("hmm");
                             goFishCheck.SetActive(true);
                             gameObject.GetComponent<TMPro.TextMeshProUGUI>().text = "COMPLETED! Achieve a set count of " + value + "!";
                         }
                         else
                         {
-                            solitaireCheck.SetActive(false);
+                            Debug.Log("hola");
+                            goFishCheck.SetActive(false);
                             gameObject.GetComponent<TMPro.TextMeshProUGUI>().text = "Incomplete. Achieve a set count of " + value + "!";
                         }
                         break;
@@ -595,7 +603,7 @@ public class DailyGoals : MonoBehaviour
                         }
                         else
                         {
-                            solitaireCheck.SetActive(false);
+                            euchreCheck.SetActive(false);
                             gameObject.GetComponent<TMPro.TextMeshProUGUI>().text = "Incomplete. Win " + value + " games!";
                         }
                         break;
@@ -607,7 +615,7 @@ public class DailyGoals : MonoBehaviour
                         }
                         else
                         {
-                            solitaireCheck.SetActive(false);
+                            euchreCheck.SetActive(false);
                             gameObject.GetComponent<TMPro.TextMeshProUGUI>().text = "Incomplete. Achieve a trick count of " + value + "!";
                         }
                         break;
@@ -625,7 +633,7 @@ public class DailyGoals : MonoBehaviour
                         }
                         else
                         {
-                            solitaireCheck.SetActive(false);
+                            bruhCheck.SetActive(false);
                             gameObject.GetComponent<TMPro.TextMeshProUGUI>().text = "Incomplete. Win " + value + " games!";
                         }
                         break;
@@ -643,7 +651,7 @@ public class DailyGoals : MonoBehaviour
                         }
                         else
                         {
-                            solitaireCheck.SetActive(false);
+                            pokerCheck.SetActive(false);
                             gameObject.GetComponent<TMPro.TextMeshProUGUI>().text = "Incomplete. Win " + value + " games!";
                         }
                         break;
@@ -654,6 +662,8 @@ public class DailyGoals : MonoBehaviour
 
     private async void DetermineComplete()
     {
+        updating = true;
+
         // GO FISH
         await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/value").GetValueAsync().ContinueWith(work =>
         {
@@ -736,14 +746,17 @@ public class DailyGoals : MonoBehaviour
                                     if (work.Result.Value != null)
                                     {
                                         Debug.Log("set_count: " + work.Result.Value);
+                                        Debug.Log("tempValue: " + tempValue);                           
 
                                         if (Int32.Parse(work.Result.Value.ToString()) >= tempValue)
                                         {
+                                            Debug.Log("here hi");
                                             databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/completed").SetValueAsync(true);
                                             SetText(goFishText, games.GO_FISH, (int)goFishTypes.SETS, tempValue, "True");
                                         }
                                         else
                                         {
+                                            Debug.Log("actually here");
                                             databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/completed").SetValueAsync(false);
                                             SetText(goFishText, games.GO_FISH, (int)goFishTypes.SETS, tempValue, "False");
                                         }
@@ -885,7 +898,7 @@ public class DailyGoals : MonoBehaviour
                                         else
                                         {
                                             databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/solitaire/completed").SetValueAsync(false);
-                                            SetText(solitaireText, games.EUCHRE, (int)euchreTypes.WINS, tempValue, "False");
+                                            SetText(euchreText, games.EUCHRE, (int)euchreTypes.WINS, tempValue, "False");
                                         }
                                     }
                                 }
@@ -1065,5 +1078,13 @@ public class DailyGoals : MonoBehaviour
                 }
             }
         });
+
+        updating = false;
+    }
+
+    public void Refresh() {
+        if (!updating) {
+            DetermineComplete();
+        }
     }
 }
