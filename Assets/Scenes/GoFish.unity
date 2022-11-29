@@ -760,7 +760,7 @@ MonoBehaviour:
   chatRoomImage: {fileID: 0}
   friendSceneButton: {fileID: 0}
   inviteInformation: {fileID: 0}
-  mainCam: {fileID: 0}
+  mainCam: {fileID: 1958733817}
   addFriendInput: {fileID: 0}
   addFriendButton: {fileID: 0}
   friendObjectButton: {fileID: 0}
