@@ -271,13 +271,27 @@ public class PokerScript : MonoBehaviour
         }
 
         public string moveDecision() {
+            System.Random rand = new System.Random();
+            int randIndex = rand.Next(0, 100);
+            Debug.Log("random index: " + randIndex);
             if(experienced) {
-
+                if (randIndex < 5) {
+                    return "fold";
+                } else if(randIndex > 65) {
+                    return "raise";
+                } else {
+                    return "match";
+                }
             } else {
-
+                if (randIndex < 10) {
+                    return "fold";
+                } else if(randIndex > 85) {
+                    return "raise";
+                } else {
+                    return "match";
+                }
             }
 
-            //if everything else fails match the bet
             return "match";
         }
     }
@@ -525,31 +539,42 @@ public class PokerScript : MonoBehaviour
                             folded = true;
                             currentInput = "empty";
                         } else {
+                            //start of check if number
+                            int checkNumber;
+                            bool isNumb = int.TryParse(currentInput, out checkNumber);
+                            //end of check number    
+
                             bool validBet = false;
-                            int intInput = int.Parse(currentInput);
-                            if(intInput + currentPlayer.getCurrentBet() == matchBet) {
-                                bool checkInput = currentPlayer.addToBetAmount(intInput);
-                                if(checkInput == true) {
-                                    potValue += intInput;
-                                    PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
-                                    validBet = true;
+
+                            if(isNumb == true) {
+                                int intInput = int.Parse(currentInput);
+                                if(intInput + currentPlayer.getCurrentBet() == matchBet) {
+                                    bool checkInput = currentPlayer.addToBetAmount(intInput);
+                                    if(checkInput == true) {
+                                        potValue += intInput;
+                                        PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                                        validBet = true;
+                                    } else {
+                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    }
+                                } else if(intInput + currentPlayer.getCurrentBet() > matchBet) {
+                                    bool checkInput = currentPlayer.addToBetAmount(intInput); 
+                                    if(checkInput == true) {
+                                        potValue += intInput;
+                                        PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                                        matchBet = currentPlayer.getCurrentBet();
+                                        validBet = true;
+                                    } else {
+                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    }
+                                    
                                 } else {
-                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: if you are entering a bet it must be within your chip amount";
                                 }
-                            } else if(intInput + currentPlayer.getCurrentBet() > matchBet) {
-                                bool checkInput = currentPlayer.addToBetAmount(intInput); 
-                                if(checkInput == true) {
-                                    potValue += intInput;
-                                    PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
-                                    matchBet = currentPlayer.getCurrentBet();
-                                    validBet = true;
-                                } else {
-                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
-                                }
-                                
                             } else {
-                                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: fold or match/raise the highest bet";
+                                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: fold or match/raise the highest bet by entering number";
                             }
+
                             if(validBet == true) {
                                 playerQueue.Enqueue(currentPlayer);
                                 numbMovesMade++;
@@ -583,6 +608,9 @@ public class PokerScript : MonoBehaviour
                             Debug.Log(potValue);
                             PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
                         }
+                        System.Random rand = new System.Random();
+                        int randIndex = rand.Next(0, currentPlayer.getChipAmount());
+                        currentPlayer.addToBetAmount(randIndex);
                     }
 
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opponent " + currentPlayer.getUserID() + " chose to " + compAction;
@@ -669,31 +697,42 @@ public class PokerScript : MonoBehaviour
                             folded = true;
                             currentInput = "empty";
                         } else {
+                            //start of check if number
+                            int checkNumber;
+                            bool isNumb = int.TryParse(currentInput, out checkNumber);
+                            //end of check number    
+
                             bool validBet = false;
-                            int intInput = int.Parse(currentInput);
-                            if(intInput + currentPlayer.getCurrentBet() == matchBet) {
-                                bool checkInput = currentPlayer.addToBetAmount(intInput);
-                                if(checkInput == true) {
-                                    potValue += intInput;
-                                    PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
-                                    validBet = true;
+
+                            if(isNumb == true) {
+                                int intInput = int.Parse(currentInput);
+                                if(intInput + currentPlayer.getCurrentBet() == matchBet) {
+                                    bool checkInput = currentPlayer.addToBetAmount(intInput);
+                                    if(checkInput == true) {
+                                        potValue += intInput;
+                                        PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                                        validBet = true;
+                                    } else {
+                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    }
+                                } else if(intInput + currentPlayer.getCurrentBet() > matchBet) {
+                                    bool checkInput = currentPlayer.addToBetAmount(intInput); 
+                                    if(checkInput == true) {
+                                        potValue += intInput;
+                                        PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                                        matchBet = currentPlayer.getCurrentBet();
+                                        validBet = true;
+                                    } else {
+                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    }
+                                    
                                 } else {
-                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: if you are entering a bet it must be within your chip amount";
                                 }
-                            } else if(intInput + currentPlayer.getCurrentBet() > matchBet) {
-                                bool checkInput = currentPlayer.addToBetAmount(intInput); 
-                                if(checkInput == true) {
-                                    potValue += intInput;
-                                    PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
-                                    matchBet = currentPlayer.getCurrentBet();
-                                    validBet = true;
-                                } else {
-                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
-                                }
-                                
                             } else {
-                                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: fold or match/raise the highest bet";
+                                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: fold or match/raise the highest bet by entering number";
                             }
+
                             if(validBet == true) {
                                 playerQueue.Enqueue(currentPlayer);
                                 numbMovesMade++;
@@ -727,6 +766,9 @@ public class PokerScript : MonoBehaviour
                             Debug.Log(potValue);
                             PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
                         }
+                        System.Random rand = new System.Random();
+                        int randIndex = rand.Next(0, currentPlayer.getChipAmount());
+                        currentPlayer.addToBetAmount(randIndex);
                     }
 
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opponent " + currentPlayer.getUserID() + " chose to " + compAction;
@@ -811,31 +853,42 @@ public class PokerScript : MonoBehaviour
                             folded = true;
                             currentInput = "empty";
                         } else {
+                            //start of check if number
+                            int checkNumber;
+                            bool isNumb = int.TryParse(currentInput, out checkNumber);
+                            //end of check number    
+
                             bool validBet = false;
-                            int intInput = int.Parse(currentInput);
-                            if(intInput + currentPlayer.getCurrentBet() == matchBet) {
-                                bool checkInput = currentPlayer.addToBetAmount(intInput);
-                                if(checkInput == true) {
-                                    potValue += intInput;
-                                    PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
-                                    validBet = true;
+
+                            if(isNumb == true) {
+                                int intInput = int.Parse(currentInput);
+                                if(intInput + currentPlayer.getCurrentBet() == matchBet) {
+                                    bool checkInput = currentPlayer.addToBetAmount(intInput);
+                                    if(checkInput == true) {
+                                        potValue += intInput;
+                                        PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                                        validBet = true;
+                                    } else {
+                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    }
+                                } else if(intInput + currentPlayer.getCurrentBet() > matchBet) {
+                                    bool checkInput = currentPlayer.addToBetAmount(intInput); 
+                                    if(checkInput == true) {
+                                        potValue += intInput;
+                                        PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                                        matchBet = currentPlayer.getCurrentBet();
+                                        validBet = true;
+                                    } else {
+                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    }
+                                    
                                 } else {
-                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: if you are entering a bet it must be within your chip amount";
                                 }
-                            } else if(intInput + currentPlayer.getCurrentBet() > matchBet) {
-                                bool checkInput = currentPlayer.addToBetAmount(intInput); 
-                                if(checkInput == true) {
-                                    potValue += intInput;
-                                    PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
-                                    matchBet = currentPlayer.getCurrentBet();
-                                    validBet = true;
-                                } else {
-                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
-                                }
-                                
                             } else {
-                                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: fold or match/raise the highest bet";
+                                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: fold or match/raise the highest bet by entering number";
                             }
+
                             if(validBet == true) {
                                 playerQueue.Enqueue(currentPlayer);
                                 numbMovesMade++;
@@ -869,6 +922,9 @@ public class PokerScript : MonoBehaviour
                             Debug.Log(potValue);
                             PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
                         }
+                        System.Random rand = new System.Random();
+                        int randIndex = rand.Next(0, currentPlayer.getChipAmount());
+                        currentPlayer.addToBetAmount(randIndex);
                     }
 
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opponent " + currentPlayer.getUserID() + " chose to " + compAction;
@@ -952,31 +1008,42 @@ public class PokerScript : MonoBehaviour
                             folded = true;
                             currentInput = "empty";
                         } else {
+                            //start of check if number
+                            int checkNumber;
+                            bool isNumb = int.TryParse(currentInput, out checkNumber);
+                            //end of check number    
+
                             bool validBet = false;
-                            int intInput = int.Parse(currentInput);
-                            if(intInput + currentPlayer.getCurrentBet() == matchBet) {
-                                bool checkInput = currentPlayer.addToBetAmount(intInput);
-                                if(checkInput == true) {
-                                    potValue += intInput;
-                                    PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
-                                    validBet = true;
+
+                            if(isNumb == true) {
+                                int intInput = int.Parse(currentInput);
+                                if(intInput + currentPlayer.getCurrentBet() == matchBet) {
+                                    bool checkInput = currentPlayer.addToBetAmount(intInput);
+                                    if(checkInput == true) {
+                                        potValue += intInput;
+                                        PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                                        validBet = true;
+                                    } else {
+                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    }
+                                } else if(intInput + currentPlayer.getCurrentBet() > matchBet) {
+                                    bool checkInput = currentPlayer.addToBetAmount(intInput); 
+                                    if(checkInput == true) {
+                                        potValue += intInput;
+                                        PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                                        matchBet = currentPlayer.getCurrentBet();
+                                        validBet = true;
+                                    } else {
+                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    }
+                                    
                                 } else {
-                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: if you are entering a bet it must be within your chip amount";
                                 }
-                            } else if(intInput + currentPlayer.getCurrentBet() > matchBet) {
-                                bool checkInput = currentPlayer.addToBetAmount(intInput); 
-                                if(checkInput == true) {
-                                    potValue += intInput;
-                                    PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
-                                    matchBet = currentPlayer.getCurrentBet();
-                                    validBet = true;
-                                } else {
-                                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
-                                }
-                                
                             } else {
-                                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: fold or match/raise the highest bet";
+                                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: fold or match/raise the highest bet by entering number";
                             }
+
                             if(validBet == true) {
                                 playerQueue.Enqueue(currentPlayer);
                                 numbMovesMade++;
@@ -1010,6 +1077,9 @@ public class PokerScript : MonoBehaviour
                             Debug.Log(potValue);
                             PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
                         }
+                        System.Random rand = new System.Random();
+                        int randIndex = rand.Next(0, currentPlayer.getChipAmount());
+                        currentPlayer.addToBetAmount(randIndex);
                     }
 
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opponent " + currentPlayer.getUserID() + " chose to " + compAction;
