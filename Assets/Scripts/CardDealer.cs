@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Firebase.Auth;
 using Firebase.Database;
+using Firebase.Storage;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -10,9 +11,11 @@ using UnityEngine.UI;
 
 public class CardDealer : MonoBehaviour
 {
-    private DatabaseReference databaseReference;
-    private FirebaseAuth auth;
-
+    // private DatabaseReference databaseReference;
+    // private FirebaseAuth auth;
+    FirebaseStorage storage;
+    StorageReference storageReference;
+    
     public GameObject card;
     public Sprite[] clubs;
     public Sprite[] hearts;
@@ -30,11 +33,18 @@ public class CardDealer : MonoBehaviour
     public Card.customDesign customDesign;
     public string uploadUrl;
 
+    private Sprite uploadSprite;
+
     void OnEnable()
     {
         cardSize = (Card.cardSize)PlayerPrefs.GetInt("cardSize");
         customDesign = (Card.customDesign)PlayerPrefs.GetInt("customDesign");
         uploadUrl = PlayerPrefs.GetString("uploadUrl");
+    }
+
+    void Start() {
+        storage = FirebaseStorage.DefaultInstance;
+        storageReference = storage.GetReferenceFromUrl("gs://cool-card-games.appspot.com/");
     }
 
     /*
@@ -789,16 +799,26 @@ public class CardDealer : MonoBehaviour
 
     IEnumerator LoadImageFromFirebase(GameObject card, string url)
     {
-        UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
-        yield return request.SendWebRequest();
+        Debug.Log("one");
+        if (uploadSprite != null) {
+            Debug.Log("three");
+            card.GetComponent<SpriteRenderer>().sprite = uploadSprite;
+        } else {
+            Debug.Log("two.one");
+            Debug.Log("url: " + url);
+            UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
+            yield return request.SendWebRequest();
+            Debug.Log("two.three");
 
-        if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
-        {
-            Debug.Log(request.error);
-        }
-        else
-        {
-            card.GetComponent<SpriteRenderer>().sprite = ConvertToSprite(((DownloadHandlerTexture)request.downloadHandler).texture);
+            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+                Debug.Log("two.two");
+                uploadSprite = ConvertToSprite(((DownloadHandlerTexture)request.downloadHandler).texture);
+            }
         }
     }
 

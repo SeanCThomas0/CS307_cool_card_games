@@ -7,6 +7,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
+
 public class GoFishLogic : MonoBehaviour
 {
     public GameObject cardDealerController; // to get CardDealer
@@ -29,6 +33,8 @@ public class GoFishLogic : MonoBehaviour
     public GameObject quitButton;
     public GameObject exitButton;
     public GameObject botDiffButtonText;
+
+    private float timer;
 
     private enum gameStates
     {
@@ -66,7 +72,9 @@ public class GoFishLogic : MonoBehaviour
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
     private int curUserWinCount = 0;
+    private int todayWinCount = 0;
     private int curUserSetCount = 0;
+    private int todaySetCount = 0;
     private bool updatedDatabase;
 
     [SerializeField] public AudioSource ClickSound;
@@ -75,12 +83,18 @@ public class GoFishLogic : MonoBehaviour
     [SerializeField] public AudioSource Music;
 
 
+    [SerializeField] public bool isMultiplayer;
+
+
     private UserPreferences.backgroundColor backgroundColor;
     public GameObject mainCam;
 
     void OnEnable()
     {
         backgroundColor = (UserPreferences.backgroundColor)PlayerPrefs.GetInt("backgroundColor");
+
+        if (isMultiplayer) PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
+
 
         switch (backgroundColor)
         {
@@ -230,6 +244,22 @@ public class GoFishLogic : MonoBehaviour
             }
         });
 
+        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/win_count").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("win_count = 0");
+            }
+            if (task.IsFaulted)
+            {
+                Debug.Log("win_count = 0");
+            }
+            else
+            {
+                todayWinCount = Int32.Parse(task.Result.Value.ToString());
+            }
+        });
+
         databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/set_count").GetValueAsync().ContinueWith(task =>
         {
             if (task.IsCanceled)
@@ -244,6 +274,22 @@ public class GoFishLogic : MonoBehaviour
             {
                 curUserSetCount = Int32.Parse(task.Result.Value.ToString());
                 Debug.Log("set_count = " + curUserSetCount);
+            }
+        });
+
+        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/set_count").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("win_count = 0");
+            }
+            if (task.IsFaulted)
+            {
+                Debug.Log("win_count = 0");
+            }
+            else
+            {
+                todaySetCount = Int32.Parse(task.Result.Value.ToString());
             }
         });
 
@@ -289,7 +335,7 @@ public class GoFishLogic : MonoBehaviour
         switch (gameState)
         {
             case gameStates.PICK_PLAYER_TO_REQUEST:
-
+                timer += Time.deltaTime;
                 if (gameAlert == gameAlerts.PICK_PLAYER)
                 {
                     guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Please select a player other than yourself.";
@@ -297,6 +343,12 @@ public class GoFishLogic : MonoBehaviour
                 else
                 {
                     guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Select a player to request a rank from.";
+                }
+                if (timer >= 10f && !isMultiplayer) {
+                    //REMOVE THIS MUTLIPLAYER CHECK WHEN MULTIPLAY IS FINISHED
+                    timer = 0;
+                    PickFromPool(pool[UnityEngine.Random.Range(0, pool.Count)]);
+                    DetermineNextPlayer();
                 }
                 break;
             case gameStates.PICK_NUM_TO_REQEUST:
@@ -414,7 +466,9 @@ public class GoFishLogic : MonoBehaviour
                     if (players[i].GetComponent<Player>().userID.Equals("1") && !updatedDatabase)
                     {
                         curUserSetCount += players[i].GetComponent<Player>().numOfSetsOfFour;
+                        todaySetCount += players[i].GetComponent<Player>().numOfSetsOfFour;
                         databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/set_count").SetValueAsync(curUserSetCount);
+                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/set_count").SetValueAsync(todaySetCount);
                     }
 
                     if (players[i].GetComponent<Player>().numOfSetsOfFour > maxPlayer.GetComponent<Player>().numOfSetsOfFour)
@@ -435,6 +489,7 @@ public class GoFishLogic : MonoBehaviour
                         {
                             WinSound.Play();
                             databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/win_count").SetValueAsync(++curUserWinCount);
+                            databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/win_count").SetValueAsync(++todayWinCount);
                         }
                         winningPlayers.Add(players[i]);
                     }
@@ -598,6 +653,10 @@ public class GoFishLogic : MonoBehaviour
                             gameAlert = gameAlerts.PICK_PLAYER;
                         }
                         ClickSound.Play();
+
+                        //TEST, MAKE SURE TO REMOVE
+                        if(isMultiplayer) SendCardsToPlayer(PhotonNetwork.NickName);
+                        //TEST, MAKE SURE TO REMOVE
                         break;
 
                     case gameStates.PICK_NUM_TO_REQEUST:
@@ -968,4 +1027,49 @@ public class GoFishLogic : MonoBehaviour
             botDiffButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Bot Mode: Easy";
         }
     }
+
+    /*  PHOTON MULTIPLAYER STUFF!  */
+
+
+    private void OnDisable()
+    {
+
+        if (isMultiplayer) PhotonNetwork.NetworkingClient.EventReceived -= OnEvent;
+    }
+
+    private void OnEvent(EventData photonEvent)
+    {
+        if (isMultiplayer) {
+            if(photonEvent.Code == (int)PhotonEventCodes.HostToClientData) {
+                Debug.Log("Trying to get data");
+                object[] data = (object[]) photonEvent.CustomData;
+                string username = (string) data[0];
+
+                Debug.Log(username);
+                Debug.Log("Should have printed data ^");
+            }
+        }
+
+    }
+
+    
+    public static void SendCardsToPlayer(string username){
+        object[] content = new object[]
+        {
+            username
+        };
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions {Receivers = ReceiverGroup.All};
+        PhotonNetwork.RaiseEvent((int) PhotonEventCodes.HostToClientData,content,raiseEventOptions, SendOptions.SendUnreliable);
+        Debug.Log("Tried to use raise event - client");
+    }
+
+
+
+
+
+
+
+
+
+
 }

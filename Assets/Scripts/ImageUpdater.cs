@@ -31,7 +31,6 @@ public class ImageUpdater : MonoBehaviour
         auth = FirebaseAuth.DefaultInstance;
 
         rawImage = gameObject.GetComponent<RawImage>();
-        // StartCoroutine(LoadImage("https://firebasestorage.googleapis.com/v0/b/cool-card-games.appspot.com/o/profile_icons%2FAmogus.png?alt=media&token=129832ef-d72a-4a5f-8d2b-c6ba13571d02"));
 
         storage = FirebaseStorage.DefaultInstance;
         storageReference = storage.GetReferenceFromUrl("gs://cool-card-games.appspot.com/");
