@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using Firebase.Auth;
 using TMPro;
 using Firebase.Database;
+using Photon.Pun;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class AuthController : MonoBehaviour
@@ -24,6 +25,10 @@ public class AuthController : MonoBehaviour
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
     private bool loggedIn = false;
+
+    public static string username;
+    public static string userId;
+    public static string userEmail;
 
     /*
      * Function : Start
@@ -68,6 +73,16 @@ public class AuthController : MonoBehaviour
             Debug.Log(FirebaseAuth.DefaultInstance.CurrentUser);
 
             SceneManager.LoadScene("Scenes/MainMenu");
+            
+            if (!PhotonNetwork.IsConnected) {
+                PhotonNetwork.ConnectUsingSettings();
+                Debug.Log("Connected to photon : AuthController.cs");
+                PhotonNetwork.NickName = username;
+            }
+        
+
+
+
         }
     }
 
@@ -164,9 +179,9 @@ public class AuthController : MonoBehaviour
                 });
             }
 
-            string username = FirebaseAuth.DefaultInstance.CurrentUser.DisplayName;
-            string userId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
-            string email = FirebaseAuth.DefaultInstance.CurrentUser.Email;
+            username = FirebaseAuth.DefaultInstance.CurrentUser.DisplayName;
+            userId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+            userEmail = FirebaseAuth.DefaultInstance.CurrentUser.Email;
             string photoURL = FirebaseAuth.DefaultInstance.CurrentUser.PhotoUrl.ToString();
 
             if (FirebaseAuth.DefaultInstance.CurrentUser.DisplayName.Equals(""))

@@ -33,6 +33,7 @@ public class SolitaireUIButton : MonoBehaviour
 
     public void ResetScene() {
         clicked = false;
+        solitaireUserInput.totalTimer = 0;
         UpdateSprite[] cards = FindObjectsOfType<UpdateSprite>();
         foreach (UpdateSprite card in cards) {
             if (card.gameObject.name != "Card") {
