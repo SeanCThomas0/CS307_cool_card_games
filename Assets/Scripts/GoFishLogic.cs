@@ -69,12 +69,14 @@ public class GoFishLogic : MonoBehaviour
 
     private int indexInHand;
 
-    private DatabaseReference databaseReference;
+    private DatabaseReference userRef;
     private FirebaseAuth auth;
     private int curUserWinCount = 0;
     private int todayWinCount = 0;
     private int curUserSetCount = 0;
     private int todaySetCount = 0;
+    private int curUserTournamentSetCount = 0;
+    DateTime curTime;
     private bool updatedDatabase;
 
     [SerializeField] public AudioSource ClickSound;
@@ -224,10 +226,11 @@ public class GoFishLogic : MonoBehaviour
 
         // Set Firebase authenticator and database reference
         auth = FirebaseAuth.DefaultInstance;
-        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
+        userRef = FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(auth.CurrentUser.UserId);
+        curTime = System.DateTime.Now;
 
         // Retrieve current user game statistics
-        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/win_count").GetValueAsync().ContinueWith(task =>
+        userRef.Child("game_statistics/go_fish/win_count").GetValueAsync().ContinueWith(task =>
         {
             if (task.IsCanceled)
             {
@@ -244,7 +247,7 @@ public class GoFishLogic : MonoBehaviour
             }
         });
 
-        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/win_count").GetValueAsync().ContinueWith(task =>
+        userRef.Child("daily_goals/go_fish/win_count").GetValueAsync().ContinueWith(task =>
         {
             if (task.IsCanceled)
             {
@@ -260,7 +263,7 @@ public class GoFishLogic : MonoBehaviour
             }
         });
 
-        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/set_count").GetValueAsync().ContinueWith(task =>
+        userRef.Child("game_statistics/go_fish/set_count").GetValueAsync().ContinueWith(task =>
         {
             if (task.IsCanceled)
             {
@@ -277,7 +280,7 @@ public class GoFishLogic : MonoBehaviour
             }
         });
 
-        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/set_count").GetValueAsync().ContinueWith(task =>
+        userRef.Child("daily_goals/go_fish/set_count").GetValueAsync().ContinueWith(task =>
         {
             if (task.IsCanceled)
             {
@@ -292,6 +295,25 @@ public class GoFishLogic : MonoBehaviour
                 todaySetCount = Int32.Parse(task.Result.Value.ToString());
             }
         });
+
+        userRef.Child("game_statistics/go_fish/tournament/set_count/" + curTime.Year + "/" + curTime.Month).GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("tournament/set_count = 0");
+            }
+            if (task.IsFaulted)
+            {
+                Debug.Log("tournament/set_count = 0");
+            }
+            else
+            {
+                curUserTournamentSetCount = Int32.Parse(task.Result.Value.ToString());
+                Debug.Log("tournament/set_count = " + curUserTournamentSetCount);
+            }
+        });
+
+
 
         updatedDatabase = false;
     }
@@ -467,8 +489,10 @@ public class GoFishLogic : MonoBehaviour
                     {
                         curUserSetCount += players[i].GetComponent<Player>().numOfSetsOfFour;
                         todaySetCount += players[i].GetComponent<Player>().numOfSetsOfFour;
-                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/set_count").SetValueAsync(curUserSetCount);
-                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/set_count").SetValueAsync(todaySetCount);
+                        curUserTournamentSetCount += players[i].GetComponent<Player>().numOfSetsOfFour;
+                        userRef.Child("game_statistics/go_fish/set_count").SetValueAsync(curUserSetCount);
+                        userRef.Child("daily_goals/go_fish/set_count").SetValueAsync(todaySetCount);
+                        userRef.Child("game_statistics/go_fish/tournament/set_count/" + curTime.Year + "/" + curTime.Month).SetValueAsync(curUserTournamentSetCount);
                     }
 
                     if (players[i].GetComponent<Player>().numOfSetsOfFour > maxPlayer.GetComponent<Player>().numOfSetsOfFour)
@@ -488,8 +512,11 @@ public class GoFishLogic : MonoBehaviour
                         if (players[i].GetComponent<Player>().userID.Equals("1") && !updatedDatabase)
                         {
                             WinSound.Play();
-                            databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/win_count").SetValueAsync(++curUserWinCount);
-                            databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/win_count").SetValueAsync(++todayWinCount);
+                            userRef.Child("game_statistics/go_fish/win_count").SetValueAsync(++curUserWinCount);
+                            userRef.Child("daily_goals/go_fish/win_count").SetValueAsync(++todayWinCount);
+                            Debug.Log("game_statistics/go_fish/win_count : " + curUserWinCount);
+                            Debug.Log("daily_goals/go_fish/win_count : " + todayWinCount);
+
                         }
                         winningPlayers.Add(players[i]);
                     }

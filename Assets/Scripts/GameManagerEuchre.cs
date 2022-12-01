@@ -814,10 +814,12 @@ public class GameManagerEuchre : MonoBehaviour
     public List<GameObject> pool2;
 
     public bool databaseUpdated; //Whether or not the database has been updated after the game ends
-    private DatabaseReference databaseReference;
+    private DatabaseReference userRef;
     private FirebaseAuth auth;
     private int curUserWinCount = 0;
     private int curUserTrickCount = 0;
+    private int curUserTournamentTrickCount = 0;
+    private DateTime curTime;
 
     // Start is called before the first frame update
     void Start()
@@ -965,14 +967,15 @@ public class GameManagerEuchre : MonoBehaviour
         currentState = -1;
 
         auth = FirebaseAuth.DefaultInstance;
-        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
+        userRef = FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre");
         databaseUpdated = false;
+        curTime = System.DateTime.Now;
 
         if (auth.CurrentUser == null) {
             Debug.Log("Current user = null");
         }
         
-        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/win_count").GetValueAsync().ContinueWith(task =>
+        userRef.Child("win_count").GetValueAsync().ContinueWith(task =>
         {
             if (task.IsCanceled)
             {
@@ -989,7 +992,7 @@ public class GameManagerEuchre : MonoBehaviour
             }
         });
 
-        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/trick_count").GetValueAsync().ContinueWith(task =>
+        userRef.Child("trick_count").GetValueAsync().ContinueWith(task =>
         {
             if (task.IsCanceled)
             {
@@ -1003,6 +1006,23 @@ public class GameManagerEuchre : MonoBehaviour
             {
                 curUserTrickCount = Int32.Parse(task.Result.Value.ToString());
                 Debug.Log("trick_count = " + curUserTrickCount);
+            }
+        });
+
+        userRef.Child("tournament/trick_count" + curTime.Year + "/" + curTime.Month).GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("tournament/trick_count = 0");
+            }
+            if (task.IsFaulted)
+            {
+                Debug.Log("tournament/trick_count = 0");
+            }
+            else
+            {
+                curUserTournamentTrickCount = Int32.Parse(task.Result.Value.ToString());
+                Debug.Log("tournament/trick_count = " + curUserTournamentTrickCount);
             }
         });
         
@@ -1488,7 +1508,8 @@ public class GameManagerEuchre : MonoBehaviour
                             currentPlayer = playerQueue.Dequeue();
                         }
                         //update database with trick count
-                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/trick_count").SetValueAsync(++curUserTrickCount);
+                        userRef.Child("trick_count").SetValueAsync(++curUserTrickCount);
+                        userRef.Child("tournament/trick_count/" + curTime.Year + "/" + curTime.Month).SetValueAsync(++curUserTournamentTrickCount);
                     }
                     else
                     {
@@ -1585,7 +1606,7 @@ public class GameManagerEuchre : MonoBehaviour
             //Update win_count in database
             if (!databaseUpdated)
             {
-                databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre/win_count").SetValueAsync(++curUserWinCount);
+                userRef.Child("win_count").SetValueAsync(++curUserWinCount);
                 databaseUpdated = true;
             }
 
