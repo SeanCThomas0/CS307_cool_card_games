@@ -190,10 +190,6 @@ public class PokerScript : MonoBehaviour
             return returnCard;
         }
 
-        public void foldHand() {
-            
-        }
-
         /*gets card value and removes it from the User's hand*/
         public GameObject playCard(int indexInHand)
         {
@@ -313,8 +309,105 @@ public class PokerScript : MonoBehaviour
         currentCard.SetActive(false);
     }
 
-    public static CardPlayer determineWinner(Queue<CardPlayer> tempplayerQueue, List<GameObject> tempplayedCards) {
-        return tempplayerQueue.Dequeue();
+
+
+    public CardPlayer determineWinner(Queue<CardPlayer> tempplayerQueue, List<GameObject> tempplayedCards) {
+        CardPlayer currentPlayerCheck = null;
+        CardPlayer currentTopPlayer = null;
+        List<GameObject> combindedCards = new List<GameObject>();
+        List<GameObject> topFiveCards = new List<GameObject>();
+        int highestScore = 0;
+        int currentScore = 0;
+        
+        int hasPair(List<GameObject> tempCombindedCards) {
+            return -1;
+        } 
+        int hasTwoPair(List<GameObject> tempCombindedCards) {
+            return -1;
+        } 
+        int hasThree(List<GameObject> tempCombindedCards) {
+            return -1;
+        } 
+        int hasStraight(List<GameObject> tempCombindedCards) {
+            return -1; 
+        } 
+        int hasFlush(List<GameObject> tempCombindedCards) {
+            return -1;  
+        } 
+        int hasFullHouse(List<GameObject> tempCombindedCards) {
+            return -1;  
+        } 
+        int hasFour(List<GameObject> tempCombindedCards) {
+            return -1;
+        } 
+        int hasStraightFlush(List<GameObject> tempCombindedCards) {
+            return -1;
+        } 
+        int hasRoyalFlush(List<GameObject> tempCombindedCards) {
+            return -1;
+        } 
+
+        for(int i = 0; i < tempplayerQueue.Count; i++) {
+            currentPlayerCheck = tempplayerQueue.Dequeue();
+
+            for(int j = 0; j < tempplayedCards.Count; j++) {
+                combindedCards.Add(tempplayedCards[j]);
+            }
+            for(int j = 0; j < 2; j++) {
+                combindedCards.Add(currentPlayerCheck.peekAtCard(j));
+            }
+
+            int check = hasPair(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            check = hasTwoPair(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            check = hasThree(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            check = hasStraight(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            check = hasFlush(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            check = hasFullHouse(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            check = hasFour(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            check = hasStraightFlush(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            check = hasRoyalFlush(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            
+            //check to see if user score is > or equal to top score 
+            if(i == 0) {
+                currentTopPlayer = currentPlayerCheck;
+                highestScore = currentScore;
+            } else {
+                if(currentScore > highestScore) {
+                    highestScore = currentScore;
+                    currentTopPlayer = currentPlayerCheck;
+                }
+            }
+            tempplayerQueue.Enqueue(currentPlayerCheck);
+        }
+        
+        return currentTopPlayer;
     }
 
     public string currentInput = "empty";
