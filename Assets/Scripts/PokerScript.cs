@@ -296,19 +296,6 @@ public class PokerScript : MonoBehaviour
         }
     }
 
-
-    private void DisplayOnePlay(GameObject currentCard)
-    {
-        float x = userXPos;
-        float z = 0;
-
-
-        currentCard.transform.position = new Vector3(x + 1, -0.5f, z);
-
-        currentCard.SetActive(true);
-    }
-
-
     //display flop, turn, or river
     private void displayDeckCard(GameObject currentCard) {
         float x = -4 + (displayCount);
@@ -324,6 +311,10 @@ public class PokerScript : MonoBehaviour
     private static void flipCard(GameObject currentCard)
     {
         currentCard.SetActive(false);
+    }
+
+    public static CardPlayer determineWinner(Queue<CardPlayer> tempplayerQueue, List<GameObject> tempplayedCards) {
+        return tempplayerQueue.Dequeue();
     }
 
     public string currentInput = "empty";
@@ -356,6 +347,7 @@ public class PokerScript : MonoBehaviour
 
     public bool sleeping = false;
     public bool sleepRunning = false;
+    public static bool gameOver = false;
     public List<GameObject> pool;
     public List<GameObject> playedCards;
 
@@ -611,6 +603,8 @@ public class PokerScript : MonoBehaviour
                         System.Random rand = new System.Random();
                         int randIndex = rand.Next(0, currentPlayer.getChipAmount());
                         currentPlayer.addToBetAmount(randIndex);
+                        potValue += randIndex;
+                        matchBet = currentPlayer.getCurrentBet();
                     }
 
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opponent " + currentPlayer.getUserID() + " chose to " + compAction;
@@ -769,6 +763,8 @@ public class PokerScript : MonoBehaviour
                         System.Random rand = new System.Random();
                         int randIndex = rand.Next(0, currentPlayer.getChipAmount());
                         currentPlayer.addToBetAmount(randIndex);
+                        potValue += randIndex;
+                        matchBet = currentPlayer.getCurrentBet();
                     }
 
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opponent " + currentPlayer.getUserID() + " chose to " + compAction;
@@ -925,6 +921,8 @@ public class PokerScript : MonoBehaviour
                         System.Random rand = new System.Random();
                         int randIndex = rand.Next(0, currentPlayer.getChipAmount());
                         currentPlayer.addToBetAmount(randIndex);
+                        potValue += randIndex;
+                        matchBet = currentPlayer.getCurrentBet();
                     }
 
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opponent " + currentPlayer.getUserID() + " chose to " + compAction;
@@ -1080,6 +1078,8 @@ public class PokerScript : MonoBehaviour
                         System.Random rand = new System.Random();
                         int randIndex = rand.Next(0, currentPlayer.getChipAmount());
                         currentPlayer.addToBetAmount(randIndex);
+                        potValue += randIndex;
+                        matchBet = currentPlayer.getCurrentBet();
                     }
 
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Computer opponent " + currentPlayer.getUserID() + " chose to " + compAction;
@@ -1141,12 +1141,18 @@ public class PokerScript : MonoBehaviour
             }
             else if (currentState == 8) //show player cards and determine winner
             {
+                playerQueue.Enqueue(currentPlayer);
                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Checking winner";
                 //if there is only one player remaining
+                CardPlayer roundWinner; 
                 Debug.Log(playerQueue.Count);
-                if(playerQueue.Count == 0) {
+                if(playerQueue.Count == 1) {
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Player " + currentPlayer.getUserID() + " wins the hand and a pot of " + potValue;
                     currentPlayer.addToChipAmount(potValue);
+                } else {
+                    roundWinner = determineWinner(playerQueue, playedCards);
+                    GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Player " + roundWinner.getUserID() + " wins the hand and a pot of " + potValue;
+                    roundWinner.addToChipAmount(potValue);
                 }
 
                 Debug.Log("Show winner");
@@ -1154,7 +1160,6 @@ public class PokerScript : MonoBehaviour
             }
             else if (currentState == 9) //reset pool and betting values and move to next dealer
             {
-                playerQueue.Enqueue(currentPlayer);
                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Preparing for next hand";
                 Debug.Log("reset values");
                 displayCount = 0;
@@ -1164,13 +1169,16 @@ public class PokerScript : MonoBehaviour
                 playedCards.Clear();
                 Debug.Log("cleared");
                 deckCount = 0;
-                for(int i = 0; i < dealQueue.Count; i++) {
+                
+                int queueLength = dealQueue.Count;
+                for(int i = 0; i < queueLength; i++) {
                     currentPlayer = dealQueue.Dequeue();
                     Debug.Log(currentPlayer.getHandList().Count);
                     currentPlayer.clearHand();
                     currentPlayer.setCurrentBet(0);
-                    dealQueue.Enqueue(currentPlayer);
-                    Debug.Log("ran " + i);
+                    if(currentPlayer.getChipAmount() > 0) {
+                        dealQueue.Enqueue(currentPlayer);
+                    }
                 }
                 playerQueue.Clear();
 
@@ -1191,8 +1199,12 @@ public class PokerScript : MonoBehaviour
 
     public bool checkForWinner()
     {
-        
-        return false;
+        if(dealQueue.Count == 1) {
+            currentPlayer = dealQueue.Dequeue();
+            GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Poker game winner is player " + currentPlayer.getUserID();
+            gameOver = true;
+        } 
+        return gameOver;
     }
 
     // Update is called once per frame
