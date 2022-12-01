@@ -373,12 +373,72 @@ public class PokerScript : MonoBehaviour
             return -1;
         } 
         int hasStraight(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[13];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                numOccurances[card.GetComponent<Card>().numValue - 2]++;
+            }
+            
+            int consec = 0;
+            for(int j = 12; j >= 0; j--) {
+                if(numOccurances[j] == 0) {
+                    consec = 0;
+                } else {
+                    consec++;
+                }
+                if(consec == 5) {
+                    return j+2+200;
+                }
+            }
             return -1; 
         } 
         int hasFlush(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[4];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                if(card.GetComponent<Card>().suitValueString.Equals("Clubs")) {
+                    numOccurances[0]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Hearts")) {
+                    numOccurances[1]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Diamonds")) {
+                    numOccurances[2]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Spades")) {
+                    numOccurances[3]++;
+                }
+            }
+            
+            for(int j = 4; j >= 0; j--) {
+                if(numOccurances[j] >= 5) {
+                    return 300;
+                } 
+            }
             return -1;  
         } 
         int hasFullHouse(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[13];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                numOccurances[card.GetComponent<Card>().numValue - 2]++;
+            }
+
+            int doubleCount = 0;
+            int tripleCount = 0; 
+            int tempScore = 0;
+            for(int j = 12; j >= 0; j--) {
+                if(numOccurances[j] >= 2) {
+                    tempWinningCard = j + 2;
+                    tempScore += j + 2;
+                    doubleCount++;
+                }
+                if(numOccurances[j] >= 3) {
+                    tempWinningCard = j + 2;
+                    tempScore += j + 2;
+                    tripleCount++;
+                }
+                if(doubleCount >= 2 && tripleCount >= 1) {
+                    return tempScore + 400;
+                }
+            }
             return -1;  
         } 
         int hasFour(List<GameObject> tempCombindedCards) {
@@ -391,15 +451,113 @@ public class PokerScript : MonoBehaviour
             for(int j = 12; j >= 0; j--) {
                 if(numOccurances[j] >= 3) {
                     tempWinningCard = j + 2;
-                    return j + 2 + 300;
+                    return j + 2 + 500;
                 }
             }
             return -1;
         } 
         int hasStraightFlush(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[13];
+            int[] numSuitOccurances = new int[4];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                if(card.GetComponent<Card>().suitValueString.Equals("Clubs")) {
+                    numSuitOccurances[0]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Hearts")) {
+                    numSuitOccurances[1]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Diamonds")) {
+                    numSuitOccurances[2]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Spades")) {
+                    numSuitOccurances[3]++;
+                }
+            }
+
+            string flushsuit = "";
+            for(int j = 4; j >= 0; j--) {
+                if(numSuitOccurances[j] >= 5) {
+                    if(j == 0) {
+                        flushsuit = "Clubs";
+                    } else if(j == 1) {
+                        flushsuit = "Hearts";
+                    } else if(j == 2) {
+                        flushsuit = "Diamonds";
+                    } else if(j == 3) {
+                        flushsuit = "Spades";
+                    }
+                } 
+            }
+            
+            foreach (GameObject card in tempCombindedCards)
+            {
+                if(card.GetComponent<Card>().numValue.suitValueString.Equals(flushsuit)) {
+                    numOccurances[card.GetComponent<Card>().numValue - 2]++;
+                }
+            }
+            
+            int consec = 0;
+            for(int j = 12; j >= 0; j--) {
+                if(numOccurances[j] == 0) {
+                    consec = 0;
+                } else {
+                    consec++;
+                }
+                if(consec == 5) {
+                    return j+2+600;
+                }
+            }
+
             return -1;
         } 
         int hasRoyalFlush(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[13];
+            int[] numSuitOccurances = new int[4];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                if(card.GetComponent<Card>().suitValueString.Equals("Clubs")) {
+                    numSuitOccurances[0]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Hearts")) {
+                    numSuitOccurances[1]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Diamonds")) {
+                    numSuitOccurances[2]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Spades")) {
+                    numSuitOccurances[3]++;
+                }
+            }
+
+            string flushsuit = "";
+            for(int j = 4; j >= 0; j--) {
+                if(numSuitOccurances[j] >= 5) {
+                    if(j == 0) {
+                        flushsuit = "Clubs";
+                    } else if(j == 1) {
+                        flushsuit = "Hearts";
+                    } else if(j == 2) {
+                        flushsuit = "Diamonds";
+                    } else if(j == 3) {
+                        flushsuit = "Spades";
+                    }
+                } 
+            }
+            
+            foreach (GameObject card in tempCombindedCards)
+            {
+                if(card.GetComponent<Card>().numValue.suitValueString.Equals(flushsuit)) {
+                    numOccurances[card.GetComponent<Card>().numValue - 2]++;
+                }
+            }
+            
+            int consec = 0;
+            for(int j = 12; j >= 0; j--) {
+                if(numOccurances[j] == 0) {
+                    consec = 0;
+                } else {
+                    consec++;
+                }
+                if(consec == 5 && j = 8) {
+                    return j+2+600;
+                }
+            }
+
             return -1;
         } 
 
