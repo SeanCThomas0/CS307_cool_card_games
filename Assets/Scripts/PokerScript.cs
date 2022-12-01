@@ -320,6 +320,7 @@ public class PokerScript : MonoBehaviour
         int currentScore = 0;
         int winningCard = 0;
         int tempWinningCard = 0;
+        int highestCard = 0;
         
         int hasPair(List<GameObject> tempCombindedCards) {
             int[] numOccurances = new int[13];
@@ -407,7 +408,7 @@ public class PokerScript : MonoBehaviour
                 }
             }
             
-            for(int j = 4; j >= 0; j--) {
+            for(int j = 3; j >= 0; j--) {
                 if(numOccurances[j] >= 5) {
                     return 300;
                 } 
@@ -473,7 +474,7 @@ public class PokerScript : MonoBehaviour
             }
 
             string flushsuit = "";
-            for(int j = 4; j >= 0; j--) {
+            for(int j = 3; j >= 0; j--) {
                 if(numSuitOccurances[j] >= 5) {
                     if(j == 0) {
                         flushsuit = "Clubs";
@@ -489,7 +490,7 @@ public class PokerScript : MonoBehaviour
             
             foreach (GameObject card in tempCombindedCards)
             {
-                if(card.GetComponent<Card>().numValue.suitValueString.Equals(flushsuit)) {
+                if(card.GetComponent<Card>().suitValueString.Equals(flushsuit)) {
                     numOccurances[card.GetComponent<Card>().numValue - 2]++;
                 }
             }
@@ -525,7 +526,7 @@ public class PokerScript : MonoBehaviour
             }
 
             string flushsuit = "";
-            for(int j = 4; j >= 0; j--) {
+            for(int j = 3; j >= 0; j--) {
                 if(numSuitOccurances[j] >= 5) {
                     if(j == 0) {
                         flushsuit = "Clubs";
@@ -541,7 +542,7 @@ public class PokerScript : MonoBehaviour
             
             foreach (GameObject card in tempCombindedCards)
             {
-                if(card.GetComponent<Card>().numValue.suitValueString.Equals(flushsuit)) {
+                if(card.GetComponent<Card>().suitValueString.Equals(flushsuit)) {
                     numOccurances[card.GetComponent<Card>().numValue - 2]++;
                 }
             }
@@ -553,7 +554,7 @@ public class PokerScript : MonoBehaviour
                 } else {
                     consec++;
                 }
-                if(consec == 5 && j = 8) {
+                if(consec == 5 && j == 8) {
                     return j+2+600;
                 }
             }
@@ -578,6 +579,7 @@ public class PokerScript : MonoBehaviour
                     }
                 }
             }
+            int tempHighestCard = currentScore;
 
             int check = hasPair(combindedCards);
             if(check != -1) {
@@ -621,11 +623,21 @@ public class PokerScript : MonoBehaviour
                 currentTopPlayer = currentPlayerCheck;
                 highestScore = currentScore;
                 winningCard = tempWinningCard;
+                highestCard = tempHighestCard;
             } else {
                 if(currentScore > highestScore) {
                     highestScore = currentScore;
                     currentTopPlayer = currentPlayerCheck;
                     winningCard = tempWinningCard;
+                    highestCard = tempHighestCard;
+                } else if (currentScore == highestScore) {
+                    if(highestCard < tempHighestCard)
+                    {
+                        highestScore = currentScore;
+                        currentTopPlayer = currentPlayerCheck;
+                        winningCard = tempWinningCard;
+                        highestCard = tempHighestCard;
+                    }
                 }
             }
             tempplayerQueue.Enqueue(currentPlayerCheck);
@@ -789,11 +801,9 @@ public class PokerScript : MonoBehaviour
                 //small blind is 2 chips big blind is 4 chips
                 currentDealer = dealQueue.Dequeue();
                 dealQueue.Enqueue(currentDealer);
-                playerQueue.Enqueue(currentDealer);
 
                 smallBlind = dealQueue.Dequeue();
                 dealQueue.Enqueue(smallBlind);
-                playerQueue.Enqueue(smallBlind);
                 smallBlind.setChipAmount(smallBlind.getChipAmount() - 2);
                 smallBlind.setCurrentBet(2);
                 potValue += 2;
@@ -801,7 +811,6 @@ public class PokerScript : MonoBehaviour
 
                 bigBlind = dealQueue.Dequeue();
                 dealQueue.Enqueue(bigBlind);
-                playerQueue.Enqueue(bigBlind);
                 bigBlind.setChipAmount(bigBlind.getChipAmount() - 4);
                 bigBlind.setCurrentBet(4);
                 potValue += 4;
@@ -809,7 +818,12 @@ public class PokerScript : MonoBehaviour
                 matchBet = 4;
 
                 currentPlayer = dealQueue.Peek();
-                playerQueue.Enqueue(currentPlayer);
+
+                for(int i = 0; i < dealQueue.Count; i++) {
+                    currentPlayer = dealQueue.Dequeue();
+                    playerQueue.Enqueue(currentPlayer);
+                    dealQueue.Enqueue(currentPlayer);
+                }
 
                 for(int i = 0; i < 3; i++) {
                     currentPlayer = playerQueue.Dequeue();
@@ -822,6 +836,7 @@ public class PokerScript : MonoBehaviour
                 pool = cardDealer.ShuffleCards(pool);
 
                 deckCount = 0;
+                Debug.Log("deal queue size: " + dealQueue.Count);
                 for(int i = 0; i < dealQueue.Count * 2; i++) {
                     currentPlayer.addToHand(pool[deckCount]);
                     deckCount++;
@@ -879,6 +894,15 @@ public class PokerScript : MonoBehaviour
                                         GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
                                     }
                                     
+                                } else if(intInput == currentPlayer.getChipAmount()) {
+                                    bool checkInput = currentPlayer.addToBetAmount(intInput);
+                                    if(checkInput == true) {
+                                        potValue += intInput;
+                                        PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                                        validBet = true;
+                                    } else {
+                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    }
                                 } else {
                                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: if you are entering a bet it must be within your chip amount";
                                 }
@@ -900,11 +924,17 @@ public class PokerScript : MonoBehaviour
                     Debug.Log(currentPlayer.getUserID() + " choosing");
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Pre Flop betting";
                     string compAction = currentPlayer.moveDecision();
-
+                    
+                    if(currentPlayer.getCurrentBet() + currentPlayer.getChipAmount() < matchBet) {
+                        compAction = "fold";
+                    }
                     //only have coputer match bet for now
                     if(compAction.Equals("match")) {
                         Debug.Log("matched");
                         if(currentPlayer.getCurrentBet() < matchBet) {
+                            if(matchBet - currentPlayer.getCurrentBet() == 0) {
+                                compAction = "check";
+                            }
                             potValue += matchBet - currentPlayer.getCurrentBet();
                             currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
                             Debug.Log(potValue);
@@ -918,6 +948,9 @@ public class PokerScript : MonoBehaviour
                             currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
                             Debug.Log(potValue);
                             PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                        }
+                        if(currentPlayer.getChipAmount() == 0) {
+                            compAction = "match";
                         }
                         System.Random rand = new System.Random();
                         int randIndex = rand.Next(0, currentPlayer.getChipAmount());
@@ -964,7 +997,7 @@ public class PokerScript : MonoBehaviour
                         if(i == 0) {
                             firstBet = currentPlayer.getCurrentBet(); 
                         } else {
-                            if(firstBet != currentPlayer.getCurrentBet()) {
+                            if(firstBet != currentPlayer.getCurrentBet() && currentPlayer.getChipAmount() != 0) {
                                 equalBets = false;
                             }
                         }
@@ -1039,6 +1072,15 @@ public class PokerScript : MonoBehaviour
                                         GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
                                     }
                                     
+                                } else if(intInput == currentPlayer.getChipAmount()) {
+                                    bool checkInput = currentPlayer.addToBetAmount(intInput);
+                                    if(checkInput == true) {
+                                        potValue += intInput;
+                                        PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                                        validBet = true;
+                                    } else {
+                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    }
                                 } else {
                                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: if you are entering a bet it must be within your chip amount";
                                 }
@@ -1060,11 +1102,17 @@ public class PokerScript : MonoBehaviour
                     Debug.Log(currentPlayer.getUserID() + " choosing");
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Pre Flop betting";
                     string compAction = currentPlayer.moveDecision();
-
+                    
+                    if(currentPlayer.getCurrentBet() + currentPlayer.getChipAmount() < matchBet) {
+                        compAction = "fold";
+                    }
                     //only have coputer match bet for now
                     if(compAction.Equals("match")) {
                         Debug.Log("matched");
                         if(currentPlayer.getCurrentBet() < matchBet) {
+                            if(matchBet - currentPlayer.getCurrentBet() == 0) {
+                                compAction = "check";
+                            }
                             potValue += matchBet - currentPlayer.getCurrentBet();
                             currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
                             Debug.Log(potValue);
@@ -1078,6 +1126,9 @@ public class PokerScript : MonoBehaviour
                             currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
                             Debug.Log(potValue);
                             PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                        }
+                        if(currentPlayer.getChipAmount() == 0) {
+                            compAction = "match";
                         }
                         System.Random rand = new System.Random();
                         int randIndex = rand.Next(0, currentPlayer.getChipAmount());
@@ -1124,7 +1175,7 @@ public class PokerScript : MonoBehaviour
                         if(i == 0) {
                             firstBet = currentPlayer.getCurrentBet(); 
                         } else {
-                            if(firstBet != currentPlayer.getCurrentBet()) {
+                            if(firstBet != currentPlayer.getCurrentBet() && currentPlayer.getChipAmount() != 0) {
                                 equalBets = false;
                             }
                         }
@@ -1197,6 +1248,15 @@ public class PokerScript : MonoBehaviour
                                         GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
                                     }
                                     
+                                } else if(intInput == currentPlayer.getChipAmount()) {
+                                    bool checkInput = currentPlayer.addToBetAmount(intInput);
+                                    if(checkInput == true) {
+                                        potValue += intInput;
+                                        PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                                        validBet = true;
+                                    } else {
+                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    }
                                 } else {
                                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: if you are entering a bet it must be within your chip amount";
                                 }
@@ -1218,11 +1278,17 @@ public class PokerScript : MonoBehaviour
                     Debug.Log(currentPlayer.getUserID() + " choosing");
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Pre Flop betting";
                     string compAction = currentPlayer.moveDecision();
-
+                    
+                    if(currentPlayer.getCurrentBet() + currentPlayer.getChipAmount() < matchBet) {
+                        compAction = "fold";
+                    }
                     //only have coputer match bet for now
                     if(compAction.Equals("match")) {
                         Debug.Log("matched");
                         if(currentPlayer.getCurrentBet() < matchBet) {
+                            if(matchBet - currentPlayer.getCurrentBet() == 0) {
+                                compAction = "check";
+                            }
                             potValue += matchBet - currentPlayer.getCurrentBet();
                             currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
                             Debug.Log(potValue);
@@ -1236,6 +1302,9 @@ public class PokerScript : MonoBehaviour
                             currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
                             Debug.Log(potValue);
                             PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                        }
+                        if(currentPlayer.getChipAmount() == 0) {
+                            compAction = "match";
                         }
                         System.Random rand = new System.Random();
                         int randIndex = rand.Next(0, currentPlayer.getChipAmount());
@@ -1282,7 +1351,7 @@ public class PokerScript : MonoBehaviour
                         if(i == 0) {
                             firstBet = currentPlayer.getCurrentBet(); 
                         } else {
-                            if(firstBet != currentPlayer.getCurrentBet()) {
+                            if(firstBet != currentPlayer.getCurrentBet() && currentPlayer.getChipAmount() != 0) {
                                 equalBets = false;
                             }
                         }
@@ -1354,6 +1423,15 @@ public class PokerScript : MonoBehaviour
                                         GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
                                     }
                                     
+                                } else if(intInput == currentPlayer.getChipAmount()) {
+                                    bool checkInput = currentPlayer.addToBetAmount(intInput);
+                                    if(checkInput == true) {
+                                        potValue += intInput;
+                                        PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                                        validBet = true;
+                                    } else {
+                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    }
                                 } else {
                                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: if you are entering a bet it must be within your chip amount";
                                 }
@@ -1375,11 +1453,17 @@ public class PokerScript : MonoBehaviour
                     Debug.Log(currentPlayer.getUserID() + " choosing");
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Pre Flop betting";
                     string compAction = currentPlayer.moveDecision();
-
+                    
+                    if(currentPlayer.getCurrentBet() + currentPlayer.getChipAmount() < matchBet) {
+                        compAction = "fold";
+                    }
                     //only have coputer match bet for now
                     if(compAction.Equals("match")) {
                         Debug.Log("matched");
                         if(currentPlayer.getCurrentBet() < matchBet) {
+                            if(matchBet - currentPlayer.getCurrentBet() == 0) {
+                                compAction = "check";
+                            }
                             potValue += matchBet - currentPlayer.getCurrentBet();
                             currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
                             Debug.Log(potValue);
@@ -1393,6 +1477,9 @@ public class PokerScript : MonoBehaviour
                             currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
                             Debug.Log(potValue);
                             PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                        }
+                        if(currentPlayer.getChipAmount() == 0) {
+                            compAction = "match";
                         }
                         System.Random rand = new System.Random();
                         int randIndex = rand.Next(0, currentPlayer.getChipAmount());
@@ -1439,7 +1526,7 @@ public class PokerScript : MonoBehaviour
                         if(i == 0) {
                             firstBet = currentPlayer.getCurrentBet(); 
                         } else {
-                            if(firstBet != currentPlayer.getCurrentBet()) {
+                            if(firstBet != currentPlayer.getCurrentBet() && currentPlayer.getChipAmount() != 0) {
                                 equalBets = false;
                             }
                         }
