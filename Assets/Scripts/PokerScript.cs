@@ -806,16 +806,29 @@ public class PokerScript : MonoBehaviour
 
                 smallBlind = dealQueue.Dequeue();
                 dealQueue.Enqueue(smallBlind);
-                smallBlind.setChipAmount(smallBlind.getChipAmount() - 2);
-                smallBlind.setCurrentBet(2);
-                potValue += 2;
+
+                if(smallBlind.getChipAmount() < 2) {
+                    potValue += smallBlind.getChipAmount();
+                    smallBlind.addToBetAmount(smallBlind.getChipAmount());
+                } else {
+                    smallBlind.setChipAmount(smallBlind.getChipAmount() - 2);
+                    smallBlind.setCurrentBet(2);
+                    potValue += 2;
+                }
+                
                 PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
 
                 bigBlind = dealQueue.Dequeue();
                 dealQueue.Enqueue(bigBlind);
-                bigBlind.setChipAmount(bigBlind.getChipAmount() - 4);
-                bigBlind.setCurrentBet(4);
-                potValue += 4;
+            
+                if(bigBlind.getChipAmount() < 4) {
+                    potValue += bigBlind.getChipAmount();
+                    bigBlind.addToBetAmount(bigBlind.getChipAmount());
+                } else {
+                    bigBlind.setChipAmount(bigBlind.getChipAmount() - 4);
+                    bigBlind.setCurrentBet(4);
+                    potValue += 4;
+                }
                 PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
                 matchBet = 4;
 
