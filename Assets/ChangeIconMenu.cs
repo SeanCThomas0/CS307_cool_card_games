@@ -31,7 +31,6 @@ public class ChangeIconMenu : MonoBehaviour
     private string uploadUrl;
     string curUserPhotoUrl;
     string curUserIcon = "";
-    bool changeSuccess = false;
 
     //Icon Game Objects
     public GameObject custom_icon;
