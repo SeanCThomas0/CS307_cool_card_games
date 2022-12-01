@@ -669,6 +669,8 @@ public class PokerScript : MonoBehaviour
     public static int deckCount = 0;
     public static int displayCount = 0;
     public int minMoves = 4;
+    public int maxNumbRounds = 2;
+    public int roundsCompleted = 0;
     /*
         0=Initial,
         1=pick up top card
@@ -1587,7 +1589,7 @@ public class PokerScript : MonoBehaviour
                     }
                 }
                 playerQueue.Clear();
-
+                roundsCompleted++;
                 currentState = 0;
             }
             
@@ -1605,11 +1607,30 @@ public class PokerScript : MonoBehaviour
 
     public bool checkForWinner()
     {
+        maxNumbRounds = 3;
+        Debug.Log("rounds completed: " + roundsCompleted);
+        Debug.Log("maxNumbRounds: " + maxNumbRounds);
         if(dealQueue.Count == 1) {
             currentPlayer = dealQueue.Dequeue();
             GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Poker game winner is player " + currentPlayer.getUserID();
             gameOver = true;
-        } 
+        } else if(roundsCompleted >= maxNumbRounds) {
+            CardPlayer currHighestPlayer = null;
+    
+            for(int i = 0; i < dealQueue.Count; i++) {
+                currentPlayer = dealQueue.Dequeue();
+                if(i == 0) {
+                    currHighestPlayer = currentPlayer;
+                } else {
+                    if(currentPlayer.getChipAmount() > currHighestPlayer.getChipAmount()) {
+                        currHighestPlayer = currentPlayer;
+                    }
+                }
+                dealQueue.Enqueue(currentPlayer);
+            }
+            GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Poker game winner is player " + currHighestPlayer.getUserID() + " reached max number of rounds " + maxNumbRounds;
+            gameOver = true;
+        }
         return gameOver;
     }
 
