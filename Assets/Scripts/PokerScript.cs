@@ -190,10 +190,6 @@ public class PokerScript : MonoBehaviour
             return returnCard;
         }
 
-        public void foldHand() {
-            
-        }
-
         /*gets card value and removes it from the User's hand*/
         public GameObject playCard(int indexInHand)
         {
@@ -313,8 +309,343 @@ public class PokerScript : MonoBehaviour
         currentCard.SetActive(false);
     }
 
-    public static CardPlayer determineWinner(Queue<CardPlayer> tempplayerQueue, List<GameObject> tempplayedCards) {
-        return tempplayerQueue.Dequeue();
+
+
+    public CardPlayer determineRoundWinner(Queue<CardPlayer> tempplayerQueue, List<GameObject> tempplayedCards) {
+        CardPlayer currentPlayerCheck = null;
+        CardPlayer currentTopPlayer = null;
+        List<GameObject> combindedCards = new List<GameObject>();
+        List<GameObject> topFiveCards = new List<GameObject>();
+        int highestScore = 0;
+        int currentScore = 0;
+        int winningCard = 0;
+        int tempWinningCard = 0;
+        int highestCard = 0;
+        
+        int hasPair(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[13];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                numOccurances[card.GetComponent<Card>().numValue - 2]++;
+            }
+            for(int j = 12; j >= 0; j--) {
+                if(numOccurances[j] >= 2) {
+                    tempWinningCard = j + 2;
+                    return j + 2 + 20;
+                }
+            }
+            return -1;
+        } 
+        int hasTwoPair(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[13];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                numOccurances[card.GetComponent<Card>().numValue - 2]++;
+            }
+
+            int doubleCount = 0;
+            int tempScore = 0;
+            for(int j = 12; j >= 0; j--) {
+                if(numOccurances[j] >= 2) {
+                    tempWinningCard = j + 2;
+                    tempScore += j + 2;
+                    doubleCount++;
+                }
+                if(doubleCount == 2) {
+                    return tempScore + 40;
+                }
+            }
+            return -1;
+        } 
+        int hasThree(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[13];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                numOccurances[card.GetComponent<Card>().numValue - 2]++;
+            }
+            
+            for(int j = 12; j >= 0; j--) {
+                if(numOccurances[j] >= 3) {
+                    tempWinningCard = j + 2;
+                    return j + 2 + 120;
+                    
+                }
+            }
+            return -1;
+        } 
+        int hasStraight(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[13];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                numOccurances[card.GetComponent<Card>().numValue - 2]++;
+            }
+            
+            int consec = 0;
+            for(int j = 12; j >= 0; j--) {
+                if(numOccurances[j] == 0) {
+                    consec = 0;
+                } else {
+                    consec++;
+                }
+                if(consec == 5) {
+                    return j+2+200;
+                }
+            }
+            return -1; 
+        } 
+        int hasFlush(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[4];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                if(card.GetComponent<Card>().suitValueString.Equals("Clubs")) {
+                    numOccurances[0]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Hearts")) {
+                    numOccurances[1]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Diamonds")) {
+                    numOccurances[2]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Spades")) {
+                    numOccurances[3]++;
+                }
+            }
+            
+            for(int j = 3; j >= 0; j--) {
+                if(numOccurances[j] >= 5) {
+                    return 300;
+                } 
+            }
+            return -1;  
+        } 
+        int hasFullHouse(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[13];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                numOccurances[card.GetComponent<Card>().numValue - 2]++;
+            }
+
+            int doubleCount = 0;
+            int tripleCount = 0; 
+            int tempScore = 0;
+            for(int j = 12; j >= 0; j--) {
+                if(numOccurances[j] >= 2) {
+                    tempWinningCard = j + 2;
+                    tempScore += j + 2;
+                    doubleCount++;
+                }
+                if(numOccurances[j] >= 3) {
+                    tempWinningCard = j + 2;
+                    tempScore += j + 2;
+                    tripleCount++;
+                }
+                if(doubleCount >= 2 && tripleCount >= 1) {
+                    return tempScore + 400;
+                }
+            }
+            return -1;  
+        } 
+        int hasFour(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[13];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                numOccurances[card.GetComponent<Card>().numValue - 2]++;
+            }
+            
+            for(int j = 12; j >= 0; j--) {
+                if(numOccurances[j] >= 3) {
+                    tempWinningCard = j + 2;
+                    return j + 2 + 500;
+                }
+            }
+            return -1;
+        } 
+        int hasStraightFlush(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[13];
+            int[] numSuitOccurances = new int[4];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                if(card.GetComponent<Card>().suitValueString.Equals("Clubs")) {
+                    numSuitOccurances[0]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Hearts")) {
+                    numSuitOccurances[1]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Diamonds")) {
+                    numSuitOccurances[2]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Spades")) {
+                    numSuitOccurances[3]++;
+                }
+            }
+
+            string flushsuit = "";
+            for(int j = 3; j >= 0; j--) {
+                if(numSuitOccurances[j] >= 5) {
+                    if(j == 0) {
+                        flushsuit = "Clubs";
+                    } else if(j == 1) {
+                        flushsuit = "Hearts";
+                    } else if(j == 2) {
+                        flushsuit = "Diamonds";
+                    } else if(j == 3) {
+                        flushsuit = "Spades";
+                    }
+                } 
+            }
+            
+            foreach (GameObject card in tempCombindedCards)
+            {
+                if(card.GetComponent<Card>().suitValueString.Equals(flushsuit)) {
+                    numOccurances[card.GetComponent<Card>().numValue - 2]++;
+                }
+            }
+            
+            int consec = 0;
+            for(int j = 12; j >= 0; j--) {
+                if(numOccurances[j] == 0) {
+                    consec = 0;
+                } else {
+                    consec++;
+                }
+                if(consec == 5) {
+                    return j+2+600;
+                }
+            }
+
+            return -1;
+        } 
+        int hasRoyalFlush(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[13];
+            int[] numSuitOccurances = new int[4];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                if(card.GetComponent<Card>().suitValueString.Equals("Clubs")) {
+                    numSuitOccurances[0]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Hearts")) {
+                    numSuitOccurances[1]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Diamonds")) {
+                    numSuitOccurances[2]++;
+                } else if(card.GetComponent<Card>().suitValueString.Equals("Spades")) {
+                    numSuitOccurances[3]++;
+                }
+            }
+
+            string flushsuit = "";
+            for(int j = 3; j >= 0; j--) {
+                if(numSuitOccurances[j] >= 5) {
+                    if(j == 0) {
+                        flushsuit = "Clubs";
+                    } else if(j == 1) {
+                        flushsuit = "Hearts";
+                    } else if(j == 2) {
+                        flushsuit = "Diamonds";
+                    } else if(j == 3) {
+                        flushsuit = "Spades";
+                    }
+                } 
+            }
+            
+            foreach (GameObject card in tempCombindedCards)
+            {
+                if(card.GetComponent<Card>().suitValueString.Equals(flushsuit)) {
+                    numOccurances[card.GetComponent<Card>().numValue - 2]++;
+                }
+            }
+            
+            int consec = 0;
+            for(int j = 12; j >= 0; j--) {
+                if(numOccurances[j] == 0) {
+                    consec = 0;
+                } else {
+                    consec++;
+                }
+                if(consec == 5 && j == 8) {
+                    return j+2+600;
+                }
+            }
+
+            return -1;
+        } 
+
+        for(int i = 0; i < tempplayerQueue.Count; i++) {
+            currentPlayerCheck = tempplayerQueue.Dequeue();
+            currentScore = 0;
+
+            for(int j = 0; j < tempplayedCards.Count; j++) {
+                combindedCards.Add(tempplayedCards[j]);
+            }
+            for(int j = 0; j < 2; j++) {
+                combindedCards.Add(currentPlayerCheck.peekAtCard(j));
+                if(j == 0) {
+                    currentScore = currentPlayerCheck.peekAtCard(j).GetComponent<Card>().numValue;
+                } else {
+                    if(currentPlayerCheck.peekAtCard(j).GetComponent<Card>().numValue > currentScore) {
+                        currentScore = currentPlayerCheck.peekAtCard(j).GetComponent<Card>().numValue;
+                    }
+                }
+            }
+            int tempHighestCard = currentScore;
+
+            int check = hasPair(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            check = hasTwoPair(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            check = hasThree(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            check = hasStraight(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            check = hasFlush(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            check = hasFullHouse(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            check = hasFour(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            check = hasStraightFlush(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            check = hasRoyalFlush(combindedCards);
+            if(check != -1) {
+                currentScore = check;
+            }
+            
+            //check to see if user score is > or equal to top score 
+            if(i == 0) {
+                currentTopPlayer = currentPlayerCheck;
+                highestScore = currentScore;
+                winningCard = tempWinningCard;
+                highestCard = tempHighestCard;
+            } else {
+                if(currentScore > highestScore) {
+                    highestScore = currentScore;
+                    currentTopPlayer = currentPlayerCheck;
+                    winningCard = tempWinningCard;
+                    highestCard = tempHighestCard;
+                } else if (currentScore == highestScore) {
+                    if(highestCard < tempHighestCard)
+                    {
+                        highestScore = currentScore;
+                        currentTopPlayer = currentPlayerCheck;
+                        winningCard = tempWinningCard;
+                        highestCard = tempHighestCard;
+                    }
+                }
+            }
+            tempplayerQueue.Enqueue(currentPlayerCheck);
+            combindedCards.Clear();
+        }
+        Debug.Log("Winnig card is: " + winningCard);
+        Debug.Log("round winner is User " + currentTopPlayer.getUserID() + " with Score " + highestScore);
+        return currentTopPlayer;
     }
 
     public string currentInput = "empty";
@@ -338,6 +669,8 @@ public class PokerScript : MonoBehaviour
     public static int deckCount = 0;
     public static int displayCount = 0;
     public int minMoves = 4;
+    public int maxNumbRounds = 2;
+    public int roundsCompleted = 0;
     /*
         0=Initial,
         1=pick up top card
@@ -470,11 +803,9 @@ public class PokerScript : MonoBehaviour
                 //small blind is 2 chips big blind is 4 chips
                 currentDealer = dealQueue.Dequeue();
                 dealQueue.Enqueue(currentDealer);
-                playerQueue.Enqueue(currentDealer);
 
                 smallBlind = dealQueue.Dequeue();
                 dealQueue.Enqueue(smallBlind);
-                playerQueue.Enqueue(smallBlind);
                 smallBlind.setChipAmount(smallBlind.getChipAmount() - 2);
                 smallBlind.setCurrentBet(2);
                 potValue += 2;
@@ -482,7 +813,6 @@ public class PokerScript : MonoBehaviour
 
                 bigBlind = dealQueue.Dequeue();
                 dealQueue.Enqueue(bigBlind);
-                playerQueue.Enqueue(bigBlind);
                 bigBlind.setChipAmount(bigBlind.getChipAmount() - 4);
                 bigBlind.setCurrentBet(4);
                 potValue += 4;
@@ -490,7 +820,12 @@ public class PokerScript : MonoBehaviour
                 matchBet = 4;
 
                 currentPlayer = dealQueue.Peek();
-                playerQueue.Enqueue(currentPlayer);
+
+                for(int i = 0; i < dealQueue.Count; i++) {
+                    currentPlayer = dealQueue.Dequeue();
+                    playerQueue.Enqueue(currentPlayer);
+                    dealQueue.Enqueue(currentPlayer);
+                }
 
                 for(int i = 0; i < 3; i++) {
                     currentPlayer = playerQueue.Dequeue();
@@ -503,13 +838,14 @@ public class PokerScript : MonoBehaviour
                 pool = cardDealer.ShuffleCards(pool);
 
                 deckCount = 0;
-                for(int i = 0; i < 8; i++) {
+                Debug.Log("deal queue size: " + dealQueue.Count);
+                for(int i = 0; i < dealQueue.Count * 2; i++) {
                     currentPlayer.addToHand(pool[deckCount]);
                     deckCount++;
                     playerQueue.Enqueue(currentPlayer);
                     currentPlayer = playerQueue.Dequeue();
                 }
-                for(int i = 0; i < 4; i++) {
+                for(int i = 0; i < dealQueue.Count; i++) {
                     currentPlayer.printHand();
                     playerQueue.Enqueue(currentPlayer);
                     currentPlayer = playerQueue.Dequeue();
@@ -560,6 +896,15 @@ public class PokerScript : MonoBehaviour
                                         GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
                                     }
                                     
+                                } else if(intInput == currentPlayer.getChipAmount()) {
+                                    bool checkInput = currentPlayer.addToBetAmount(intInput);
+                                    if(checkInput == true) {
+                                        potValue += intInput;
+                                        PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                                        validBet = true;
+                                    } else {
+                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    }
                                 } else {
                                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: if you are entering a bet it must be within your chip amount";
                                 }
@@ -581,11 +926,17 @@ public class PokerScript : MonoBehaviour
                     Debug.Log(currentPlayer.getUserID() + " choosing");
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Pre Flop betting";
                     string compAction = currentPlayer.moveDecision();
-
+                    
+                    if(currentPlayer.getCurrentBet() + currentPlayer.getChipAmount() < matchBet) {
+                        compAction = "fold";
+                    }
                     //only have coputer match bet for now
                     if(compAction.Equals("match")) {
                         Debug.Log("matched");
                         if(currentPlayer.getCurrentBet() < matchBet) {
+                            if(matchBet - currentPlayer.getCurrentBet() == 0) {
+                                compAction = "check";
+                            }
                             potValue += matchBet - currentPlayer.getCurrentBet();
                             currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
                             Debug.Log(potValue);
@@ -599,6 +950,9 @@ public class PokerScript : MonoBehaviour
                             currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
                             Debug.Log(potValue);
                             PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                        }
+                        if(currentPlayer.getChipAmount() == 0) {
+                            compAction = "match";
                         }
                         System.Random rand = new System.Random();
                         int randIndex = rand.Next(0, currentPlayer.getChipAmount());
@@ -645,7 +999,7 @@ public class PokerScript : MonoBehaviour
                         if(i == 0) {
                             firstBet = currentPlayer.getCurrentBet(); 
                         } else {
-                            if(firstBet != currentPlayer.getCurrentBet()) {
+                            if(firstBet != currentPlayer.getCurrentBet() && currentPlayer.getChipAmount() != 0) {
                                 equalBets = false;
                             }
                         }
@@ -720,6 +1074,15 @@ public class PokerScript : MonoBehaviour
                                         GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
                                     }
                                     
+                                } else if(intInput == currentPlayer.getChipAmount()) {
+                                    bool checkInput = currentPlayer.addToBetAmount(intInput);
+                                    if(checkInput == true) {
+                                        potValue += intInput;
+                                        PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                                        validBet = true;
+                                    } else {
+                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    }
                                 } else {
                                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: if you are entering a bet it must be within your chip amount";
                                 }
@@ -741,11 +1104,17 @@ public class PokerScript : MonoBehaviour
                     Debug.Log(currentPlayer.getUserID() + " choosing");
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Pre Flop betting";
                     string compAction = currentPlayer.moveDecision();
-
+                    
+                    if(currentPlayer.getCurrentBet() + currentPlayer.getChipAmount() < matchBet) {
+                        compAction = "fold";
+                    }
                     //only have coputer match bet for now
                     if(compAction.Equals("match")) {
                         Debug.Log("matched");
                         if(currentPlayer.getCurrentBet() < matchBet) {
+                            if(matchBet - currentPlayer.getCurrentBet() == 0) {
+                                compAction = "check";
+                            }
                             potValue += matchBet - currentPlayer.getCurrentBet();
                             currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
                             Debug.Log(potValue);
@@ -759,6 +1128,9 @@ public class PokerScript : MonoBehaviour
                             currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
                             Debug.Log(potValue);
                             PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                        }
+                        if(currentPlayer.getChipAmount() == 0) {
+                            compAction = "match";
                         }
                         System.Random rand = new System.Random();
                         int randIndex = rand.Next(0, currentPlayer.getChipAmount());
@@ -805,7 +1177,7 @@ public class PokerScript : MonoBehaviour
                         if(i == 0) {
                             firstBet = currentPlayer.getCurrentBet(); 
                         } else {
-                            if(firstBet != currentPlayer.getCurrentBet()) {
+                            if(firstBet != currentPlayer.getCurrentBet() && currentPlayer.getChipAmount() != 0) {
                                 equalBets = false;
                             }
                         }
@@ -878,6 +1250,15 @@ public class PokerScript : MonoBehaviour
                                         GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
                                     }
                                     
+                                } else if(intInput == currentPlayer.getChipAmount()) {
+                                    bool checkInput = currentPlayer.addToBetAmount(intInput);
+                                    if(checkInput == true) {
+                                        potValue += intInput;
+                                        PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                                        validBet = true;
+                                    } else {
+                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    }
                                 } else {
                                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: if you are entering a bet it must be within your chip amount";
                                 }
@@ -899,11 +1280,17 @@ public class PokerScript : MonoBehaviour
                     Debug.Log(currentPlayer.getUserID() + " choosing");
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Pre Flop betting";
                     string compAction = currentPlayer.moveDecision();
-
+                    
+                    if(currentPlayer.getCurrentBet() + currentPlayer.getChipAmount() < matchBet) {
+                        compAction = "fold";
+                    }
                     //only have coputer match bet for now
                     if(compAction.Equals("match")) {
                         Debug.Log("matched");
                         if(currentPlayer.getCurrentBet() < matchBet) {
+                            if(matchBet - currentPlayer.getCurrentBet() == 0) {
+                                compAction = "check";
+                            }
                             potValue += matchBet - currentPlayer.getCurrentBet();
                             currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
                             Debug.Log(potValue);
@@ -917,6 +1304,9 @@ public class PokerScript : MonoBehaviour
                             currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
                             Debug.Log(potValue);
                             PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                        }
+                        if(currentPlayer.getChipAmount() == 0) {
+                            compAction = "match";
                         }
                         System.Random rand = new System.Random();
                         int randIndex = rand.Next(0, currentPlayer.getChipAmount());
@@ -963,7 +1353,7 @@ public class PokerScript : MonoBehaviour
                         if(i == 0) {
                             firstBet = currentPlayer.getCurrentBet(); 
                         } else {
-                            if(firstBet != currentPlayer.getCurrentBet()) {
+                            if(firstBet != currentPlayer.getCurrentBet() && currentPlayer.getChipAmount() != 0) {
                                 equalBets = false;
                             }
                         }
@@ -1035,6 +1425,15 @@ public class PokerScript : MonoBehaviour
                                         GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
                                     }
                                     
+                                } else if(intInput == currentPlayer.getChipAmount()) {
+                                    bool checkInput = currentPlayer.addToBetAmount(intInput);
+                                    if(checkInput == true) {
+                                        potValue += intInput;
+                                        PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                                        validBet = true;
+                                    } else {
+                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: cannot bet more than you have";
+                                    }
                                 } else {
                                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid input: if you are entering a bet it must be within your chip amount";
                                 }
@@ -1056,11 +1455,17 @@ public class PokerScript : MonoBehaviour
                     Debug.Log(currentPlayer.getUserID() + " choosing");
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Pre Flop betting";
                     string compAction = currentPlayer.moveDecision();
-
+                    
+                    if(currentPlayer.getCurrentBet() + currentPlayer.getChipAmount() < matchBet) {
+                        compAction = "fold";
+                    }
                     //only have coputer match bet for now
                     if(compAction.Equals("match")) {
                         Debug.Log("matched");
                         if(currentPlayer.getCurrentBet() < matchBet) {
+                            if(matchBet - currentPlayer.getCurrentBet() == 0) {
+                                compAction = "check";
+                            }
                             potValue += matchBet - currentPlayer.getCurrentBet();
                             currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
                             Debug.Log(potValue);
@@ -1074,6 +1479,9 @@ public class PokerScript : MonoBehaviour
                             currentPlayer.addToBetAmount(matchBet - currentPlayer.getCurrentBet());
                             Debug.Log(potValue);
                             PotText.GetComponent<TMPro.TextMeshProUGUI>().text = "Pot Value: " + potValue;
+                        }
+                        if(currentPlayer.getChipAmount() == 0) {
+                            compAction = "match";
                         }
                         System.Random rand = new System.Random();
                         int randIndex = rand.Next(0, currentPlayer.getChipAmount());
@@ -1120,7 +1528,7 @@ public class PokerScript : MonoBehaviour
                         if(i == 0) {
                             firstBet = currentPlayer.getCurrentBet(); 
                         } else {
-                            if(firstBet != currentPlayer.getCurrentBet()) {
+                            if(firstBet != currentPlayer.getCurrentBet() && currentPlayer.getChipAmount() != 0) {
                                 equalBets = false;
                             }
                         }
@@ -1150,7 +1558,7 @@ public class PokerScript : MonoBehaviour
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Player " + currentPlayer.getUserID() + " wins the hand and a pot of " + potValue;
                     currentPlayer.addToChipAmount(potValue);
                 } else {
-                    roundWinner = determineWinner(playerQueue, playedCards);
+                    roundWinner = determineRoundWinner(playerQueue, playedCards);
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Player " + roundWinner.getUserID() + " wins the hand and a pot of " + potValue;
                     roundWinner.addToChipAmount(potValue);
                 }
@@ -1181,7 +1589,7 @@ public class PokerScript : MonoBehaviour
                     }
                 }
                 playerQueue.Clear();
-
+                roundsCompleted++;
                 currentState = 0;
             }
             
@@ -1199,11 +1607,30 @@ public class PokerScript : MonoBehaviour
 
     public bool checkForWinner()
     {
+        maxNumbRounds = 3;
+        Debug.Log("rounds completed: " + roundsCompleted);
+        Debug.Log("maxNumbRounds: " + maxNumbRounds);
         if(dealQueue.Count == 1) {
             currentPlayer = dealQueue.Dequeue();
             GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Poker game winner is player " + currentPlayer.getUserID();
             gameOver = true;
-        } 
+        } else if(roundsCompleted >= maxNumbRounds) {
+            CardPlayer currHighestPlayer = null;
+    
+            for(int i = 0; i < dealQueue.Count; i++) {
+                currentPlayer = dealQueue.Dequeue();
+                if(i == 0) {
+                    currHighestPlayer = currentPlayer;
+                } else {
+                    if(currentPlayer.getChipAmount() > currHighestPlayer.getChipAmount()) {
+                        currHighestPlayer = currentPlayer;
+                    }
+                }
+                dealQueue.Enqueue(currentPlayer);
+            }
+            GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Poker game winner is player " + currHighestPlayer.getUserID() + " reached max number of rounds " + maxNumbRounds;
+            gameOver = true;
+        }
         return gameOver;
     }
 

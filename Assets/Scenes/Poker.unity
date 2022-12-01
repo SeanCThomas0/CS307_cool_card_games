@@ -431,7 +431,7 @@ MonoBehaviour:
   chatRoomImage: {fileID: 0}
   friendSceneButton: {fileID: 0}
   inviteInformation: {fileID: 0}
-  mainCam: {fileID: 0}
+  mainCam: {fileID: 525023666}
   addFriendInput: {fileID: 0}
   addFriendButton: {fileID: 0}
   friendObjectButton: {fileID: 0}
@@ -2134,6 +2134,7 @@ MonoBehaviour:
   currentState: 0
   matchBet: 0
   numbMovesMade: 0
+  minMoves: 4
   sleeping: 0
   sleepRunning: 0
   pool: []
