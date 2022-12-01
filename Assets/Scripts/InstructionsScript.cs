@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Firebase.Auth;
 
 public class InstructionsScript : MonoBehaviour
 {
@@ -108,9 +109,15 @@ public class InstructionsScript : MonoBehaviour
     public void UseExitButton()
     {
         Debug.Log("Exit Button Pressed");
-        SceneManager.LoadScene("Scenes/MainMenu");
+        if (FirebaseAuth.DefaultInstance.CurrentUser == null)
+        {
+            SceneManager.LoadScene("Scenes/OfflineMainMenu");
+        }
+        else
+        {
+            SceneManager.LoadScene("Scenes/MainMenu");
+        }
     }
-
 }
 
 

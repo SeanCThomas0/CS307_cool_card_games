@@ -79,10 +79,6 @@ public class AuthController : MonoBehaviour
                 Debug.Log("Connected to photon : AuthController.cs");
                 PhotonNetwork.NickName = username;
             }
-        
-
-
-
         }
     }
 
@@ -413,5 +409,18 @@ public class AuthController : MonoBehaviour
         });
 
         Debug.Log("logged event: " + user.UserId + " " + user.Email + " " + user.DisplayName + " " + user.PhotoUrl);
+    }
+
+
+    public void OfflineMode()
+    {
+        if (FirebaseAuth.DefaultInstance.CurrentUser != null)
+        {
+            Debug.Log("Offline Mode Error! Currentuser != null!");
+        }
+        else
+        {
+            SceneManager.LoadScene("Scenes/OfflineMainMenu");
+        }
     }
 }

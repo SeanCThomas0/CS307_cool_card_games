@@ -30,6 +30,9 @@ EditorBuildSettings:
     path: Assets/Scenes/GameInstructions.unity
     guid: 04f9b83177059284f939b39462626524
   - enabled: 1
+    path: Assets/Scenes/OfflineMainMenu.unity
+    guid: 37589fc5a53b145f6b67e05a1fb00e7b
+  - enabled: 1
     path: Assets/Scenes/ContactDeveloper.unity
     guid: 1900dc1ebd6094704ac2444aaaa9e57c
   - enabled: 1

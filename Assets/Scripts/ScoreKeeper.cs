@@ -49,58 +49,59 @@ public class ScoreKeeper : MonoBehaviour
 
 
         user = FirebaseAuth.DefaultInstance.CurrentUser;
-        userRef = FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(user.UserId);
-        tournamentRef = FirebaseDatabase.DefaultInstance.RootReference.Child("tournament");
 
-        userRef.Child("game_statistics").Child("solitaire").Child("win_count").GetValueAsync().ContinueWith(task =>
+        if (user != null)
         {
-            if (task.IsCompleted)
+            userRef = FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(user.UserId);
+            tournamentRef = FirebaseDatabase.DefaultInstance.RootReference.Child("tournament");
+
+            userRef.Child("game_statistics").Child("solitaire").Child("win_count").GetValueAsync().ContinueWith(task =>
             {
-                if (task.Result.Value == null)
+                if (task.IsCompleted)
                 {
-                    Debug.Log("GetUserScore Null");
+                    if (task.Result.Value == null)
+                    {
+                        Debug.Log("GetUserScore Null");
+                        win_count = 0;
+                    }
+                    else
+                    {
+                        Debug.Log("GetUserScore Success");
+                        Debug.Log(task.Result.Value.ToString());
+                        win_count = Int32.Parse(task.Result.Value.ToString());
+                    }
+
+                }
+                else
+                {
+                    Debug.Log("GetUserScore Fail");
                     win_count = 0;
                 }
+            });
+
+            userRef.Child("game_statistics/solitaire/tournament/win_count").Child(curTime.Year.ToString()).Child(curTime.Month.ToString()).GetValueAsync().ContinueWith(task =>
+            {
+                if (task.IsCompleted)
+                {
+                    if (task.Result.Value == null)
+                    {
+                        Debug.Log("Tournament Score Null");
+                        tournament_win_count = 0;
+                    }
+                    else
+                    {
+                        Debug.Log("Tournament Score Success");
+                        Debug.Log(task.Result.Value.ToString());
+                        tournament_win_count = Int32.Parse(task.Result.Value.ToString());
+                    }
+                }
                 else
                 {
-                    Debug.Log("GetUserScore Success");
-                    Debug.Log(task.Result.Value.ToString());
-                    win_count = Int32.Parse(task.Result.Value.ToString());
-                }
-
-            }
-            else
-            {
-                Debug.Log("GetUserScore Fail");
-                win_count = 0;
-            }
-        });
-
-
-
-        userRef.Child("game_statistics/solitaire/tournament/win_count").Child(curTime.Year.ToString()).Child(curTime.Month.ToString()).GetValueAsync().ContinueWith(task =>
-        {
-            if (task.IsCompleted)
-            {
-                if (task.Result.Value == null)
-                {
-                    Debug.Log("Tournament Score Null");
+                    Debug.Log("Tournament Score Fail");
                     tournament_win_count = 0;
                 }
-                else
-                {
-                    Debug.Log("Tournament Score Success");
-                    Debug.Log(task.Result.Value.ToString());
-                    tournament_win_count = Int32.Parse(task.Result.Value.ToString());
-                }
-            }
-            else
-            {
-                Debug.Log("Tournament Score Fail");
-                tournament_win_count = 0;
-            }
-        });
-
+            });
+        }
     }
 
     // Update is called once per frame
@@ -134,12 +135,15 @@ public class ScoreKeeper : MonoBehaviour
         gamePanel.SetActive(false);
 
         print("You have won!");
-        win_count++;
-        tournament_win_count++;
-        userRef.Child("game_statistics/solitaire/win_count").SetValueAsync(win_count);
-        userRef.Child("game_statistics/solitaire/tournament/win_count").Child(curTime.Year.ToString()).Child(curTime.Month.ToString()).SetValueAsync(tournament_win_count);
+        if (user != null)
+        {
+            win_count++;
+            tournament_win_count++;
+            userRef.Child("game_statistics/solitaire/win_count").SetValueAsync(win_count);
+            userRef.Child("game_statistics/solitaire/tournament/win_count").Child(curTime.Year.ToString()).Child(curTime.Month.ToString()).SetValueAsync(tournament_win_count);
 
-        Debug.Log("New win_count: " + win_count);
-        Debug.Log("New tournament_win_count: " + tournament_win_count);
+            Debug.Log("New win_count: " + win_count);
+            Debug.Log("New tournament_win_count: " + tournament_win_count);
+        }
     }
 }

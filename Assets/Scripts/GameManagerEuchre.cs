@@ -967,65 +967,70 @@ public class GameManagerEuchre : MonoBehaviour
         currentState = -1;
 
         auth = FirebaseAuth.DefaultInstance;
-        userRef = FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre");
-        databaseUpdated = false;
-        curTime = System.DateTime.Now;
+        if (auth.CurrentUser != null)
+        {
+            Debug.Log("Online Mode");
 
-        if (auth.CurrentUser == null) {
-            Debug.Log("Current user = null");
+            userRef = FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/euchre");
+            databaseUpdated = false;
+            curTime = System.DateTime.Now;
+
+
+            userRef.Child("win_count").GetValueAsync().ContinueWith(task =>
+            {
+                if (task.IsCanceled)
+                {
+                    Debug.Log("win_count = 0");
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.Log("win_count = 0");
+                }
+                else
+                {
+                    curUserWinCount = Int32.Parse(task.Result.Value.ToString());
+                    Debug.Log("win_count = " + curUserWinCount);
+                }
+            });
+
+            userRef.Child("trick_count").GetValueAsync().ContinueWith(task =>
+            {
+                if (task.IsCanceled)
+                {
+                    Debug.Log("trick_count = 0");
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.Log("trick_count = 0");
+                }
+                else
+                {
+                    curUserTrickCount = Int32.Parse(task.Result.Value.ToString());
+                    Debug.Log("trick_count = " + curUserTrickCount);
+                }
+            });
+
+            userRef.Child("tournament/trick_count" + curTime.Year + "/" + curTime.Month).GetValueAsync().ContinueWith(task =>
+            {
+                if (task.IsCanceled)
+                {
+                    Debug.Log("tournament/trick_count = 0");
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.Log("tournament/trick_count = 0");
+                }
+                else
+                {
+                    curUserTournamentTrickCount = Int32.Parse(task.Result.Value.ToString());
+                    Debug.Log("tournament/trick_count = " + curUserTournamentTrickCount);
+                }
+            });
         }
-        
-        userRef.Child("win_count").GetValueAsync().ContinueWith(task =>
+        else
         {
-            if (task.IsCanceled)
-            {
-                Debug.Log("win_count = 0");
-            }
-            if (task.IsFaulted)
-            {
-                Debug.Log("win_count = 0");
-            }
-            else
-            {
-                curUserWinCount = Int32.Parse(task.Result.Value.ToString());
-                Debug.Log("win_count = " + curUserWinCount);
-            }
-        });
-
-        userRef.Child("trick_count").GetValueAsync().ContinueWith(task =>
-        {
-            if (task.IsCanceled)
-            {
-                Debug.Log("trick_count = 0");
-            }
-            if (task.IsFaulted)
-            {
-                Debug.Log("trick_count = 0");
-            }
-            else
-            {
-                curUserTrickCount = Int32.Parse(task.Result.Value.ToString());
-                Debug.Log("trick_count = " + curUserTrickCount);
-            }
-        });
-
-        userRef.Child("tournament/trick_count" + curTime.Year + "/" + curTime.Month).GetValueAsync().ContinueWith(task =>
-        {
-            if (task.IsCanceled)
-            {
-                Debug.Log("tournament/trick_count = 0");
-            }
-            if (task.IsFaulted)
-            {
-                Debug.Log("tournament/trick_count = 0");
-            }
-            else
-            {
-                curUserTournamentTrickCount = Int32.Parse(task.Result.Value.ToString());
-                Debug.Log("tournament/trick_count = " + curUserTournamentTrickCount);
-            }
-        });
-        
+            Debug.Log("Offline Mode");
+        }
     }
 
     private bool getJackValue(string trumpSuit, GameObject jack)
@@ -1196,8 +1201,8 @@ public class GameManagerEuchre : MonoBehaviour
                                     DisplayOneHand(dealer);
                                 }
                                 //Debug.Log("current move " + currentPlayer.getUserID());
-                                Debug.Log("GameManager recieved User pick/pass: " + currentInput);
-                                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "GameManager recieved User pick/pass: " + currentInput;
+                                Debug.Log("GameManager received User pick/pass: " + currentInput);
+                                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "GameManager received User pick/pass: " + currentInput;
                                 //Debug.Log("turn numb: " + pickCount);
                                 currentInput = "empty";
                                 while (!currentPlayer.getUserID().Equals(dealer.getUserID()))
@@ -1224,8 +1229,8 @@ public class GameManagerEuchre : MonoBehaviour
                         //Debug.Log("pickCount: " + pickCount);
                         //have computer choose whether to pick up or pass
                         string computerChoice = currentPlayer.pickUpDecision(topCard, dealer);
-                        Debug.Log("GameManager recieved Computer " + currentPlayer.getUserID() + " top card: " + computerChoice);
-                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "GameManager recieved Computer " + currentPlayer.getUserID() + " top card: " + computerChoice;
+                        Debug.Log("GameManager received Computer " + currentPlayer.getUserID() + " top card: " + computerChoice);
+                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "GameManager received Computer " + currentPlayer.getUserID() + " top card: " + computerChoice;
                         pickCount++;
                         //Debug.Log("current move " + currentPlayer.getUserID());
                         playerQueue.Enqueue(currentPlayer);
@@ -1306,8 +1311,8 @@ public class GameManagerEuchre : MonoBehaviour
                                 trumpCount++;
                                 trumpSuit = currentInput;
                                 TrumpHolder.GetComponent<TMPro.TextMeshProUGUI>().text = trumpSuit;
-                                Debug.Log("GameManager recieved trump pick " + currentInput + " from user: " + currentPlayer.getUserID());
-                                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "GameManager recieved trump pick " + currentInput + " from user: " + currentPlayer.getUserID();
+                                Debug.Log("GameManager received trump pick " + currentInput + " from user: " + currentPlayer.getUserID());
+                                GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "GameManager received trump pick " + currentInput + " from user: " + currentPlayer.getUserID();
                                 currentInput = "empty";
                                 while (!currentPlayer.getUserID().Equals(dealer.getUserID()))
                                 {
@@ -1326,8 +1331,8 @@ public class GameManagerEuchre : MonoBehaviour
                         //Debug.Log("trump count: " + trumpCount);
                         //have computer choose trump suit or pass
                         string trumpChoice = currentPlayer.suitOrPass(dealer);
-                        Debug.Log("GameManager recieved Computer " + currentPlayer.getUserID() + " trump pick " + trumpChoice);
-                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "GameManager recieved Computer " + currentPlayer.getUserID() + " trump pick " + trumpChoice;
+                        Debug.Log("GameManager received Computer " + currentPlayer.getUserID() + " trump pick " + trumpChoice);
+                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "GameManager received Computer " + currentPlayer.getUserID() + " trump pick " + trumpChoice;
                         trumpCount++;
                         if (!trumpChoice.Equals("Pass"))
                         {
@@ -1402,9 +1407,9 @@ public class GameManagerEuchre : MonoBehaviour
                                             flipCard(trickCards[cardCount]);
                                             DisplayOnePlay(trickCards[cardCount]);
                                             teamID[cardCount] = currentPlayer.getTeamNumber();
-                                            Debug.Log("GameManager recieved user index play " + currentInput);
-                                            Debug.Log("GameManager recieved User card play " + trickCards[cardCount].GetComponent<Card>().faceValue + " of " + trickCards[cardCount].GetComponent<Card>().suitValueString);
-                                            GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "GameManager recieved User card play " + trickCards[cardCount].GetComponent<Card>().faceValue + " of " + trickCards[cardCount].GetComponent<Card>().suitValueString;
+                                            Debug.Log("GameManager received user index play " + currentInput);
+                                            Debug.Log("GameManager received User card play " + trickCards[cardCount].GetComponent<Card>().faceValue + " of " + trickCards[cardCount].GetComponent<Card>().suitValueString);
+                                            GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "GameManager received User card play " + trickCards[cardCount].GetComponent<Card>().faceValue + " of " + trickCards[cardCount].GetComponent<Card>().suitValueString;
                                             cardCount++;
                                             currentInput = "empty";
                                             playerQueue.Enqueue(currentPlayer);
@@ -1433,9 +1438,9 @@ public class GameManagerEuchre : MonoBehaviour
                                         flipCard(trickCards[cardCount]);
                                         DisplayOnePlay(trickCards[cardCount]);
                                         teamID[cardCount] = currentPlayer.getTeamNumber();
-                                        Debug.Log("GameManager recieved user index play " + currentInput);
-                                        Debug.Log("GameManager recieved User card play " + trickCards[cardCount].GetComponent<Card>().faceValue + " of " + trickCards[cardCount].GetComponent<Card>().suitValueString);
-                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "GameManager recieved User card play " + trickCards[cardCount].GetComponent<Card>().faceValue + " of " + trickCards[cardCount].GetComponent<Card>().suitValueString;
+                                        Debug.Log("GameManager received user index play " + currentInput);
+                                        Debug.Log("GameManager received User card play " + trickCards[cardCount].GetComponent<Card>().faceValue + " of " + trickCards[cardCount].GetComponent<Card>().suitValueString);
+                                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "GameManager received User card play " + trickCards[cardCount].GetComponent<Card>().faceValue + " of " + trickCards[cardCount].GetComponent<Card>().suitValueString;
                                         cardCount++;
                                         currentInput = "empty";
                                         playerQueue.Enqueue(currentPlayer);
@@ -1471,8 +1476,8 @@ public class GameManagerEuchre : MonoBehaviour
                         }
                         trickCards[cardCount] = playedCard;
                         teamID[cardCount] = currentPlayer.getTeamNumber();
-                        Debug.Log("GameManager recieved Computer " + currentPlayer.getUserID() + " card play " + playedCard.GetComponent<Card>().faceValue + " of " + playedCard.GetComponent<Card>().suitValueString);
-                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "GameManager recieved Computer " + currentPlayer.getUserID() + " card play " + playedCard.GetComponent<Card>().faceValue + " of " + playedCard.GetComponent<Card>().suitValueString;
+                        Debug.Log("GameManager received Computer " + currentPlayer.getUserID() + " card play " + playedCard.GetComponent<Card>().faceValue + " of " + playedCard.GetComponent<Card>().suitValueString);
+                        GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "GameManager received Computer " + currentPlayer.getUserID() + " card play " + playedCard.GetComponent<Card>().faceValue + " of " + playedCard.GetComponent<Card>().suitValueString;
                         cardCount++;
                         playerQueue.Enqueue(currentPlayer);
                         currentPlayer = playerQueue.Dequeue();
@@ -1508,8 +1513,11 @@ public class GameManagerEuchre : MonoBehaviour
                             currentPlayer = playerQueue.Dequeue();
                         }
                         //update database with trick count
-                        userRef.Child("trick_count").SetValueAsync(++curUserTrickCount);
-                        userRef.Child("tournament/trick_count/" + curTime.Year + "/" + curTime.Month).SetValueAsync(++curUserTournamentTrickCount);
+                        if (auth.CurrentUser != null)
+                        {
+                            userRef.Child("trick_count").SetValueAsync(++curUserTrickCount);
+                            userRef.Child("tournament/trick_count/" + curTime.Year + "/" + curTime.Month).SetValueAsync(++curUserTournamentTrickCount);
+                        }
                     }
                     else
                     {
@@ -1603,12 +1611,16 @@ public class GameManagerEuchre : MonoBehaviour
             GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Team 1 wins!";
             Debug.Log(message);
 
-            //Update win_count in database
-            if (!databaseUpdated)
+            if (auth.CurrentUser != null)
             {
-                userRef.Child("win_count").SetValueAsync(++curUserWinCount);
-                databaseUpdated = true;
+                //Update win_count in database
+                if (!databaseUpdated)
+                {
+                    userRef.Child("win_count").SetValueAsync(++curUserWinCount);
+                    databaseUpdated = true;
+                }
             }
+
 
             return true;
         }

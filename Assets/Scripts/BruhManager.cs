@@ -509,12 +509,13 @@ public class BruhManager : MonoBehaviour
             playerWin = true;
             Debug.Log("Player wins");
 
-
+            if (user != null)
+            {
                 userRef.Child("win_count").SetValueAsync(++curUserWinCount);
                 userRef.Child("tournament/win_count/" + curTime.Year + "/" + curTime.Month).SetValueAsync(++curUserTournamentWinCount);
-            Debug.Log("win_count: " + curUserWinCount);
-            Debug.Log("tournament/win_count: " + curUserTournamentWinCount);
-            
+                Debug.Log("win_count: " + curUserWinCount);
+                Debug.Log("tournament/win_count: " + curUserTournamentWinCount);
+            }
 
             GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "You Win!!!";
             Music.Pause();
@@ -903,17 +904,21 @@ public class BruhManager : MonoBehaviour
         currentState = 0;
 
         user = FirebaseAuth.DefaultInstance.CurrentUser;
-        userRef = FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(user.UserId).Child("game_statistics/bruh");
 
-        databaseUpdated = false;
-        curTime = System.DateTime.Now;
-
-        if (user == null)
+        if (user != null)
         {
-            Debug.Log("Current user = null");
-        }
+            userRef = FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(user.UserId).Child("game_statistics/bruh");
 
-        StartCoroutine(LoadRankingData());
+            databaseUpdated = false;
+            curTime = System.DateTime.Now;
+
+            if (user == null)
+            {
+                Debug.Log("Current user = null");
+            }
+
+            StartCoroutine(LoadRankingData());
+        }
     }
 
     // Update is called once per frame
