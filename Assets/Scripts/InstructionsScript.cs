@@ -62,8 +62,7 @@ public class InstructionsScript : MonoBehaviour
     {
         //display Euchre Rules in textBox
         Debug.Log("Euchre Button Pressed");
-        string text1 = System.IO.File.ReadAllText("/Users/jonathanm./Desktop/CS 307/Cool Card Games Project/CS307_cool_card_games/Assets/GameTextFiles");
-        // string text1 = System.IO.File.ReadAllText("Assets/GameTextFiles/EuchreTextpg1.txt");
+        string text1 = System.IO.File.ReadAllText("Assets/GameTextFiles/EuchreTextpg1.txt");
         //string text2 = System.IO.File.ReadAllText("Assets/GameTextFiles/EuchreTextpg2.txt");
         TextBox1.GetComponent<TMPro.TextMeshProUGUI>().text = text1;
         //TextBox2.GetComponent<TMPro.TextMeshProUGUI>().text = text2;
