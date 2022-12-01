@@ -311,21 +311,65 @@ public class PokerScript : MonoBehaviour
 
 
 
-    public CardPlayer determineWinner(Queue<CardPlayer> tempplayerQueue, List<GameObject> tempplayedCards) {
+    public CardPlayer determineRoundWinner(Queue<CardPlayer> tempplayerQueue, List<GameObject> tempplayedCards) {
         CardPlayer currentPlayerCheck = null;
         CardPlayer currentTopPlayer = null;
         List<GameObject> combindedCards = new List<GameObject>();
         List<GameObject> topFiveCards = new List<GameObject>();
         int highestScore = 0;
         int currentScore = 0;
+        int winningCard = 0;
+        int tempWinningCard = 0;
         
         int hasPair(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[13];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                numOccurances[card.GetComponent<Card>().numValue - 2]++;
+            }
+            for(int j = 12; j >= 0; j--) {
+                if(numOccurances[j] >= 2) {
+                    tempWinningCard = j + 2;
+                    return j + 2 + 20;
+                }
+            }
             return -1;
         } 
         int hasTwoPair(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[13];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                numOccurances[card.GetComponent<Card>().numValue - 2]++;
+            }
+
+            int doubleCount = 0;
+            int tempScore = 0;
+            for(int j = 12; j >= 0; j--) {
+                if(numOccurances[j] >= 2) {
+                    tempWinningCard = j + 2;
+                    tempScore += j + 2;
+                    doubleCount++;
+                }
+                if(doubleCount == 2) {
+                    return tempScore + 40;
+                }
+            }
             return -1;
         } 
         int hasThree(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[13];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                numOccurances[card.GetComponent<Card>().numValue - 2]++;
+            }
+            
+            for(int j = 12; j >= 0; j--) {
+                if(numOccurances[j] >= 3) {
+                    tempWinningCard = j + 2;
+                    return j + 2 + 120;
+                    
+                }
+            }
             return -1;
         } 
         int hasStraight(List<GameObject> tempCombindedCards) {
@@ -338,6 +382,18 @@ public class PokerScript : MonoBehaviour
             return -1;  
         } 
         int hasFour(List<GameObject> tempCombindedCards) {
+            int[] numOccurances = new int[13];
+            foreach (GameObject card in tempCombindedCards)
+            {
+                numOccurances[card.GetComponent<Card>().numValue - 2]++;
+            }
+            
+            for(int j = 12; j >= 0; j--) {
+                if(numOccurances[j] >= 3) {
+                    tempWinningCard = j + 2;
+                    return j + 2 + 300;
+                }
+            }
             return -1;
         } 
         int hasStraightFlush(List<GameObject> tempCombindedCards) {
@@ -349,12 +405,20 @@ public class PokerScript : MonoBehaviour
 
         for(int i = 0; i < tempplayerQueue.Count; i++) {
             currentPlayerCheck = tempplayerQueue.Dequeue();
+            currentScore = 0;
 
             for(int j = 0; j < tempplayedCards.Count; j++) {
                 combindedCards.Add(tempplayedCards[j]);
             }
             for(int j = 0; j < 2; j++) {
                 combindedCards.Add(currentPlayerCheck.peekAtCard(j));
+                if(j == 0) {
+                    currentScore = currentPlayerCheck.peekAtCard(j).GetComponent<Card>().numValue;
+                } else {
+                    if(currentPlayerCheck.peekAtCard(j).GetComponent<Card>().numValue > currentScore) {
+                        currentScore = currentPlayerCheck.peekAtCard(j).GetComponent<Card>().numValue;
+                    }
+                }
             }
 
             int check = hasPair(combindedCards);
@@ -398,15 +462,19 @@ public class PokerScript : MonoBehaviour
             if(i == 0) {
                 currentTopPlayer = currentPlayerCheck;
                 highestScore = currentScore;
+                winningCard = tempWinningCard;
             } else {
                 if(currentScore > highestScore) {
                     highestScore = currentScore;
                     currentTopPlayer = currentPlayerCheck;
+                    winningCard = tempWinningCard;
                 }
             }
             tempplayerQueue.Enqueue(currentPlayerCheck);
+            combindedCards.Clear();
         }
-        
+        Debug.Log("Winnig card is: " + winningCard);
+        Debug.Log("round winner is User " + currentTopPlayer.getUserID() + " with Score " + highestScore);
         return currentTopPlayer;
     }
 
@@ -596,13 +664,13 @@ public class PokerScript : MonoBehaviour
                 pool = cardDealer.ShuffleCards(pool);
 
                 deckCount = 0;
-                for(int i = 0; i < 8; i++) {
+                for(int i = 0; i < dealQueue.Count * 2; i++) {
                     currentPlayer.addToHand(pool[deckCount]);
                     deckCount++;
                     playerQueue.Enqueue(currentPlayer);
                     currentPlayer = playerQueue.Dequeue();
                 }
-                for(int i = 0; i < 4; i++) {
+                for(int i = 0; i < dealQueue.Count; i++) {
                     currentPlayer.printHand();
                     playerQueue.Enqueue(currentPlayer);
                     currentPlayer = playerQueue.Dequeue();
@@ -1243,7 +1311,7 @@ public class PokerScript : MonoBehaviour
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Player " + currentPlayer.getUserID() + " wins the hand and a pot of " + potValue;
                     currentPlayer.addToChipAmount(potValue);
                 } else {
-                    roundWinner = determineWinner(playerQueue, playedCards);
+                    roundWinner = determineRoundWinner(playerQueue, playedCards);
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Player " + roundWinner.getUserID() + " wins the hand and a pot of " + potValue;
                     roundWinner.addToChipAmount(potValue);
                 }
