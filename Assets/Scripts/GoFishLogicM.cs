@@ -1129,6 +1129,11 @@ public class GoFishLogicM : MonoBehaviourPun
                 List<GameObject> newPool = new List<GameObject>();
                 String temp = "";
                 GameObject newCard = Instantiate(card) as GameObject;
+
+                // newCard.GetComponent<Card>().numValue = ;
+                // newCard.GetComponent<Card>().suitValue = ;
+                // cardDealer.SetSprite();
+
                 newCard.SetActive(false);
                 for( int i = 0; i < poolRPC.Length; i++) {
                     
