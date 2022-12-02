@@ -1038,6 +1038,7 @@ MonoBehaviour:
   quitButton: {fileID: 1564771131}
   exitButton: {fileID: 766570421}
   botDiffButtonText: {fileID: 24125319}
+  card: {fileID: 4994407739428068693, guid: c81a5e7c73e804cdbae75f39d8f3c7b7, type: 3}
   diffiBot: 0
   isPlayerOne: 0
   isPlayerTwo: 0
