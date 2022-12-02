@@ -42,9 +42,16 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     private GameObject friendSceneButton;
 
     [SerializeField]
-    private GameObject inviteInformation;
+    private GameObject inviteImage;
 
-    public static string username;
+    [SerializeField]
+    private GameObject acceptButton;
+
+    [SerializeField]
+    private GameObject declineButton;
+    
+
+    public static string username = "nguye614";
     //public static Action<PhotonStatus> OnStatusUpdated = delegate { };
 
     private UserPreferences.backgroundColor backgroundColor;
@@ -114,7 +121,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         }
     }
 
-    public void ConnectToServer()
+    public async void ConnectToServer()
     {
         Debug.Log("Connecting");
         chatClient = new ChatClient(this);
@@ -122,7 +129,31 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         //Connect to Photon Server and set username to input field
         if (string.IsNullOrEmpty(username))
         {
-            username = usernameInputField.text;
+            //get username from database
+            await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("username").GetValueAsync().ContinueWith(work =>
+            {
+                if (work.IsCanceled)
+                {
+                    Debug.Log("get username cancelled");
+                }
+                if (work.IsFaulted)
+                {
+                    Debug.Log("get username faulted");
+                }
+                else
+                {
+                    if (work.Result.Value != null)
+                    {
+                        username = work.Result.Value.ToString();
+                        Debug.Log("from firebase (username) =" + username);
+                    }
+                    else
+                    {
+                        username = "N/A";
+                        Debug.Log("nothing in firebase (username), set to = N/A");
+                    }
+                }
+            });
         }
         chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new Photon.Chat.AuthenticationValues(username));
 
@@ -196,8 +227,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     //when button is pressed, join chatroom
     public void JoinChatRoom()
     {
-        joinChatButton.SetActive(false);
-        usernameInput.SetActive(false);
         chatRoomImage.SetActive(true);
         friendSceneButton.SetActive(true);
     }
@@ -231,7 +260,12 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
         //invite message is received
         if (message.ToString().Contains("has invited you to join ") && !message.ToString().Contains(username)) {
-            inviteInformation.SetActive(true);
+            Debug.Log("invite received");
+            Debug.Log(message.ToString());
+            inviteImage.GetComponentInChildren<TMP_Text>().text = message.ToString();
+            inviteImage.SetActive(true);
+            acceptButton.SetActive(true);
+            declineButton.SetActive(true);
             return;
         }
 
@@ -491,18 +525,38 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     }
 
     //invite friend to join game lobby
-    public void inviteFriend(GameObject friend) {
-        chatClient.SendPrivateMessage(friend.GetComponentInChildren<TMP_Text>().text, username + " has invited you to join (game)</color>");
+    public void inviteFriend(GameObject gameButton) {
+        string gameName = gameButton.GetComponentInChildren<TMP_Text>().text;
+        chatClient.SendPrivateMessage(toInput.text, username + " has invited you to join " + gameName);
     }
 
     //accept invite
-    public void acceptButton() {
-        inviteInformation.SetActive(false);
+    public void acceptButtonClicked() {
+        int pos = inviteImage.GetComponentInChildren<TMP_Text>().text.IndexOf("join");
+        string gameName = inviteImage.GetComponentInChildren<TMP_Text>().text.Substring(pos+5);
+        int colorPos = gameName.IndexOf("</");
+        gameName = gameName.Substring(0, colorPos);
+        Debug.Log(gameName);
+        if (gameName.Equals("Go Fish")) {
+            gameName = "GoFish";
+        }
+        else if (gameName.Equals("Euchre")) {
+            gameName = "EuchreTestScene";
+        }
+        else {
+            gameName = "Poker";
+        }
+        SceneManager.LoadScene(gameName);
+        inviteImage.SetActive(false);
+        acceptButton.SetActive(false);
+        declineButton.SetActive(false);
     }
 
     //decline invite
-    public void declineButton() {
-        inviteInformation.SetActive(false);
+    public void declineButtonClicked() {
+        inviteImage.SetActive(false);
+        acceptButton.SetActive(false);
+        declineButton.SetActive(false);
     }
 
     IEnumerator updateLastOnline() {
