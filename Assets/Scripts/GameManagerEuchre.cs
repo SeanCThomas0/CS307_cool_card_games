@@ -790,6 +790,9 @@ public class GameManagerEuchre : MonoBehaviour
     public CardPlayer currentPlayer = null;
     public int gameStep = 0;
     public int currentState = 0;
+    public int previousState = 0;
+    public bool paused = false;
+    public bool rulesPaused = false;
     /*
         0=Initial,
         1=pick up top card
@@ -1115,6 +1118,25 @@ public class GameManagerEuchre : MonoBehaviour
         return maxIndex;
     }
     /* end of functions to calculate winner of a given trick*/
+    public void Pause() {
+        Time.timeScale = 0f;
+        paused = true;
+    }
+
+    public void Resume() {
+        Time.timeScale = 1f;
+        paused = false;
+    }
+
+    public void RulesPause() {
+        Time.timeScale = 0f;
+        rulesPaused = true;
+    }
+
+    public void RulesResume() {
+        Time.timeScale = 1f;
+        rulesPaused = false;
+    }
 
     void gameDecision()
     {
@@ -1132,6 +1154,14 @@ public class GameManagerEuchre : MonoBehaviour
                     currentState = 0;
                     currentInput = "empty";
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Game Starting";
+                }
+                if (paused) {
+                    previousState = currentState;
+                    currentState = 6;
+                }
+                if (rulesPaused) {
+                    previousState = currentState;
+                    currentState = 7;
                 }
             }
             if (currentState == 0)
@@ -1163,7 +1193,14 @@ public class GameManagerEuchre : MonoBehaviour
                 DisplayTopCard(topCard);
                 currentPlayer = playerQueue.Dequeue();
                 currentState = 1;
-
+                if (paused) {
+                    previousState = currentState;
+                    currentState = 6;
+                }
+                if (rulesPaused) {
+                    previousState = currentState;
+                    currentState = 7;
+                }
             }
             if (currentState == 1)
             { //have players choose to pick up top card 
@@ -1264,10 +1301,26 @@ public class GameManagerEuchre : MonoBehaviour
                     if (pickCount == 20)
                     {
                         currentState = 3;
+                        if (paused) {
+                            previousState = currentState;
+                            currentState = 6;
+                        }
+                        if (rulesPaused) {
+                            previousState = currentState;
+                            currentState = 7;
+                        }
                     }
                     else
                     {
                         currentState = 2;
+                        if (paused) {
+                            previousState = currentState;
+                            currentState = 6;
+                        }
+                        if (rulesPaused) {
+                            previousState = currentState;
+                            currentState = 7;
+                        }
                     }
                 }
             }
@@ -1357,6 +1410,14 @@ public class GameManagerEuchre : MonoBehaviour
                     printed = false;
                     currentState = 3;
                     trumpCount = 0;
+                    if (paused) {
+                        previousState = currentState;
+                        currentState = 6;
+                    }
+                    if (rulesPaused) {
+                        previousState = currentState;
+                        currentState = 7;
+                    }
                 }
             }
             if (currentState == 3)
@@ -1488,6 +1549,14 @@ public class GameManagerEuchre : MonoBehaviour
                 {
                     printed = false;
                     currentState = 4;
+                    if (paused) {
+                        previousState = currentState;
+                        currentState = 6;
+                    }
+                    if (rulesPaused) {
+                        previousState = currentState;
+                        currentState = 7;
+                    }
                 }
             }
             if (currentState == 4)
@@ -1535,6 +1604,14 @@ public class GameManagerEuchre : MonoBehaviour
                 else
                 {
                     currentState = 5;
+                    if (paused) {
+                        previousState = currentState;
+                        currentState = 6;
+                    }
+                    if (rulesPaused) {
+                        previousState = currentState;
+                        currentState = 7;
+                    }
                 }
                 Debug.Log("Trick Score, team one: " + oneTrickScore + " team two: " + twoTrickScore);
                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Trick Score, team one: " + oneTrickScore + " team two: " + twoTrickScore;
@@ -1583,6 +1660,32 @@ public class GameManagerEuchre : MonoBehaviour
                 playerQueue.Enqueue(currentPlayer);
 
                 currentState = 0;
+                if (paused) {
+                    previousState = currentState;
+                    currentState = 6;
+                }
+                if (rulesPaused) {
+                    previousState = currentState;
+                    currentState = 7;
+                }
+            }
+            if (currentState == 6) {
+                Debug.Log("got here 1");
+                while (paused == true) {
+                    if (paused == false) {
+                        break;
+                    }
+                }
+                currentState = previousState;
+            }
+            if (currentState == 7) {
+                Debug.Log("got here 2");
+                while (rulesPaused == true) {
+                    if (rulesPaused == false) {
+                        break;
+                    }
+                }
+                currentState = previousState;
             }
         }
         //yield return null;
@@ -1640,8 +1743,21 @@ public class GameManagerEuchre : MonoBehaviour
         //Debug.Log("sleep value: " + sleeping);
         if (sleeping == false)
         {
-            //Debug.Log("Game decision run");
+            Debug.Log("something 3");
+            
             gameDecision();
+            if (paused) 
+            {
+                Debug.Log("something 1");
+                previousState = currentState;
+                currentState = 6;
+            }
+            if (rulesPaused) 
+            {
+                Debug.Log("something 2");
+                previousState = currentState;
+                currentState = 7;
+            }
         }
         if (sleepRunning == false)
         {
