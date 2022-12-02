@@ -27,6 +27,8 @@ public class PokerScript : MonoBehaviour
     private CardDealer cardDealer;
     public bool game_won = false;
 
+    public Transform canvas;
+
     /*Temporary card class for testing to be replaced with CardDealer script*/
     public static float userXPos = 0f;
     public static float userYPos = 0f;
@@ -201,7 +203,7 @@ public class PokerScript : MonoBehaviour
          //visually show cards 
         private void DisplayOneHand()
         {
-            float x = -9;
+            float x = -8;
             float z = 0;
 
             Debug.Log("\n" + userID + "Current hand:");
@@ -219,7 +221,7 @@ public class PokerScript : MonoBehaviour
 
         private void DisplayTwoHand()
         {
-            float x = -4;
+            float x = -3;
             float z = 0;
 
             for (int i = 0; i < getHandList().Count; i++)
@@ -236,7 +238,7 @@ public class PokerScript : MonoBehaviour
 
         private void DisplayThreeHand()
         {
-            float x = 2;
+            float x = 3;
             float z = 0;
 
             for (int i = 0; i < getHandList().Count; i++)
@@ -252,7 +254,7 @@ public class PokerScript : MonoBehaviour
 
         private void DisplayFourHand()
         {
-            float x = 8;
+            float x = 7;
             float z = 0;
 
             for (int i = 0; i < getHandList().Count; i++)
@@ -708,6 +710,8 @@ public class PokerScript : MonoBehaviour
         
         foreach (GameObject cards in pool)
         {
+            cards.transform.SetParent(canvas);
+
             //Debug.Log(cards.GetComponent<Card>().numValue + " of " + cards.GetComponent<Card>().suitValue);
             if (cards.GetComponent<Card>().numValue == 11)
             {
