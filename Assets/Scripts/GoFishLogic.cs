@@ -7,6 +7,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
+
 public class GoFishLogic : MonoBehaviour
 {
     public GameObject cardDealerController; // to get CardDealer
@@ -65,12 +69,14 @@ public class GoFishLogic : MonoBehaviour
 
     private int indexInHand;
 
-    private DatabaseReference databaseReference;
+    private DatabaseReference userRef;
     private FirebaseAuth auth;
     private int curUserWinCount = 0;
     private int todayWinCount = 0;
     private int curUserSetCount = 0;
     private int todaySetCount = 0;
+    private int curUserTournamentSetCount = 0;
+    DateTime curTime;
     private bool updatedDatabase;
 
     [SerializeField] public AudioSource ClickSound;
@@ -79,12 +85,18 @@ public class GoFishLogic : MonoBehaviour
     [SerializeField] public AudioSource Music;
 
 
+    [SerializeField] public bool isMultiplayer;
+
+
     private UserPreferences.backgroundColor backgroundColor;
     public GameObject mainCam;
 
     void OnEnable()
     {
         backgroundColor = (UserPreferences.backgroundColor)PlayerPrefs.GetInt("backgroundColor");
+
+        if (isMultiplayer) PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
+
 
         switch (backgroundColor)
         {
@@ -214,74 +226,95 @@ public class GoFishLogic : MonoBehaviour
 
         // Set Firebase authenticator and database reference
         auth = FirebaseAuth.DefaultInstance;
-        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
-
-        // Retrieve current user game statistics
-        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/win_count").GetValueAsync().ContinueWith(task =>
+        if (auth.CurrentUser != null)
         {
-            if (task.IsCanceled)
-            {
-                Debug.Log("win_count = 0");
-            }
-            if (task.IsFaulted)
-            {
-                Debug.Log("win_count = 0");
-            }
-            else
-            {
-                curUserWinCount = Int32.Parse(task.Result.Value.ToString());
-                Debug.Log("win_count = " + curUserWinCount);
-            }
-        });
+            userRef = FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(auth.CurrentUser.UserId);
+            curTime = System.DateTime.Now;
 
-        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/win_count").GetValueAsync().ContinueWith(task =>
-        {
-            if (task.IsCanceled)
+            // Retrieve current user game statistics
+            userRef.Child("game_statistics/go_fish/win_count").GetValueAsync().ContinueWith(task =>
             {
-                Debug.Log("win_count = 0");
-            }
-            if (task.IsFaulted)
-            {
-                Debug.Log("win_count = 0");
-            }
-            else
-            {
-                todayWinCount = Int32.Parse(task.Result.Value.ToString());
-            }
-        });
+                if (task.IsCanceled)
+                {
+                    Debug.Log("win_count = 0");
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.Log("win_count = 0");
+                }
+                else
+                {
+                    curUserWinCount = Int32.Parse(task.Result.Value.ToString());
+                    Debug.Log("win_count = " + curUserWinCount);
+                }
+            });
 
-        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/set_count").GetValueAsync().ContinueWith(task =>
-        {
-            if (task.IsCanceled)
+            userRef.Child("daily_goals/go_fish/win_count").GetValueAsync().ContinueWith(task =>
             {
-                Debug.Log("set_count = 0");
-            }
-            if (task.IsFaulted)
-            {
-                Debug.Log("set_count = 0");
-            }
-            else
-            {
-                curUserSetCount = Int32.Parse(task.Result.Value.ToString());
-                Debug.Log("set_count = " + curUserSetCount);
-            }
-        });
+                if (task.IsCanceled)
+                {
+                    Debug.Log("win_count = 0");
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.Log("win_count = 0");
+                }
+                else
+                {
+                    todayWinCount = Int32.Parse(task.Result.Value.ToString());
+                }
+            });
 
-        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/set_count").GetValueAsync().ContinueWith(task =>
-        {
-            if (task.IsCanceled)
+            userRef.Child("game_statistics/go_fish/set_count").GetValueAsync().ContinueWith(task =>
             {
-                Debug.Log("win_count = 0");
-            }
-            if (task.IsFaulted)
+                if (task.IsCanceled)
+                {
+                    Debug.Log("set_count = 0");
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.Log("set_count = 0");
+                }
+                else
+                {
+                    curUserSetCount = Int32.Parse(task.Result.Value.ToString());
+                    Debug.Log("set_count = " + curUserSetCount);
+                }
+            });
+
+            userRef.Child("daily_goals/go_fish/set_count").GetValueAsync().ContinueWith(task =>
             {
-                Debug.Log("win_count = 0");
-            }
-            else
+                if (task.IsCanceled)
+                {
+                    Debug.Log("win_count = 0");
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.Log("win_count = 0");
+                }
+                else
+                {
+                    todaySetCount = Int32.Parse(task.Result.Value.ToString());
+                }
+            });
+
+            userRef.Child("game_statistics/go_fish/tournament/set_count/" + curTime.Year + "/" + curTime.Month).GetValueAsync().ContinueWith(task =>
             {
-                todaySetCount = Int32.Parse(task.Result.Value.ToString());
-            }
-        });
+                if (task.IsCanceled)
+                {
+                    Debug.Log("tournament/set_count = 0");
+                }
+                if (task.IsFaulted)
+                {
+                    Debug.Log("tournament/set_count = 0");
+                }
+                else
+                {
+                    curUserTournamentSetCount = Int32.Parse(task.Result.Value.ToString());
+                    Debug.Log("tournament/set_count = " + curUserTournamentSetCount);
+                }
+            });
+        }
 
         updatedDatabase = false;
     }
@@ -334,7 +367,8 @@ public class GoFishLogic : MonoBehaviour
                 {
                     guideText.GetComponent<TMPro.TextMeshProUGUI>().text = "Select a player to request a rank from.";
                 }
-                if (timer >= 10f) {
+                if (timer >= 10f && !isMultiplayer) {
+                    //REMOVE THIS MUTLIPLAYER CHECK WHEN MULTIPLAY IS FINISHED
                     timer = 0;
                     PickFromPool(pool[UnityEngine.Random.Range(0, pool.Count)]);
                     DetermineNextPlayer();
@@ -451,13 +485,18 @@ public class GoFishLogic : MonoBehaviour
 
                 for (int i = 1; i < players.Length; i++)
                 {
-                    //Updates current user's set count
-                    if (players[i].GetComponent<Player>().userID.Equals("1") && !updatedDatabase)
+                    if (auth.CurrentUser != null)
                     {
-                        curUserSetCount += players[i].GetComponent<Player>().numOfSetsOfFour;
-                        todaySetCount += players[i].GetComponent<Player>().numOfSetsOfFour;
-                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/set_count").SetValueAsync(curUserSetCount);
-                        databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/set_count").SetValueAsync(todaySetCount);
+                        //Updates current user's set count
+                        if (players[i].GetComponent<Player>().userID.Equals("1") && !updatedDatabase)
+                        {
+                            curUserSetCount += players[i].GetComponent<Player>().numOfSetsOfFour;
+                            todaySetCount += players[i].GetComponent<Player>().numOfSetsOfFour;
+                            curUserTournamentSetCount += players[i].GetComponent<Player>().numOfSetsOfFour;
+                            userRef.Child("game_statistics/go_fish/set_count").SetValueAsync(curUserSetCount);
+                            userRef.Child("daily_goals/go_fish/set_count").SetValueAsync(todaySetCount);
+                            userRef.Child("game_statistics/go_fish/tournament/set_count/" + curTime.Year + "/" + curTime.Month).SetValueAsync(curUserTournamentSetCount);
+                        }
                     }
 
                     if (players[i].GetComponent<Player>().numOfSetsOfFour > maxPlayer.GetComponent<Player>().numOfSetsOfFour)
@@ -477,8 +516,13 @@ public class GoFishLogic : MonoBehaviour
                         if (players[i].GetComponent<Player>().userID.Equals("1") && !updatedDatabase)
                         {
                             WinSound.Play();
-                            databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("game_statistics/go_fish/win_count").SetValueAsync(++curUserWinCount);
-                            databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("daily_goals/go_fish/win_count").SetValueAsync(++todayWinCount);
+                            if (auth.CurrentUser != null)
+                            {
+                                userRef.Child("game_statistics/go_fish/win_count").SetValueAsync(++curUserWinCount);
+                                userRef.Child("daily_goals/go_fish/win_count").SetValueAsync(++todayWinCount);
+                                Debug.Log("game_statistics/go_fish/win_count : " + curUserWinCount);
+                                Debug.Log("daily_goals/go_fish/win_count : " + todayWinCount);
+                            }
                         }
                         winningPlayers.Add(players[i]);
                     }
@@ -642,6 +686,10 @@ public class GoFishLogic : MonoBehaviour
                             gameAlert = gameAlerts.PICK_PLAYER;
                         }
                         ClickSound.Play();
+
+                        //TEST, MAKE SURE TO REMOVE
+                        if(isMultiplayer) SendCardsToPlayer(PhotonNetwork.NickName);
+                        //TEST, MAKE SURE TO REMOVE
                         break;
 
                     case gameStates.PICK_NUM_TO_REQEUST:
@@ -996,7 +1044,14 @@ public class GoFishLogic : MonoBehaviour
 
     public void Exit()
     {
-        SceneManager.LoadScene("Scenes/MainMenu");
+        if (auth.CurrentUser == null)
+        {
+            SceneManager.LoadScene("Scenes/OfflineMainMenu");
+        }
+        else
+        {
+            SceneManager.LoadScene("Scenes/MainMenu");
+        }
     }
 
     public void ChangeBotDIfficulty()
@@ -1012,4 +1067,49 @@ public class GoFishLogic : MonoBehaviour
             botDiffButtonText.GetComponent<TMPro.TextMeshProUGUI>().text = "Bot Mode: Easy";
         }
     }
+
+    /*  PHOTON MULTIPLAYER STUFF!  */
+
+
+    private void OnDisable()
+    {
+
+        if (isMultiplayer) PhotonNetwork.NetworkingClient.EventReceived -= OnEvent;
+    }
+
+    private void OnEvent(EventData photonEvent)
+    {
+        if (isMultiplayer) {
+            if(photonEvent.Code == (int)PhotonEventCodes.HostToClientData) {
+                Debug.Log("Trying to get data");
+                object[] data = (object[]) photonEvent.CustomData;
+                string username = (string) data[0];
+
+                Debug.Log(username);
+                Debug.Log("Should have printed data ^");
+            }
+        }
+
+    }
+
+    
+    public static void SendCardsToPlayer(string username){
+        object[] content = new object[]
+        {
+            username
+        };
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions {Receivers = ReceiverGroup.All};
+        PhotonNetwork.RaiseEvent((int) PhotonEventCodes.HostToClientData,content,raiseEventOptions, SendOptions.SendUnreliable);
+        Debug.Log("Tried to use raise event - client");
+    }
+
+
+
+
+
+
+
+
+
+
 }
