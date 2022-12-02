@@ -33,6 +33,7 @@ public class GoFishLogicM : MonoBehaviourPun
     public GameObject quitButton;
     public GameObject exitButton;
     public GameObject botDiffButtonText;
+    public GameObject card;
 
 
     private float timer;
@@ -241,7 +242,7 @@ public class GoFishLogicM : MonoBehaviourPun
         for(int i = 0; i < pool.Count; i++) {
             String temp = pool[i].GetComponent<Card>().suitValueString;
             temp+= " ";
-            temp +=pool[i].GetComponent<Card>().numValueString;
+            temp +=pool[i].GetComponent<Card>().numValue;
             temp+= "|";
             poolRPC += temp;
             //Debug.Log(temp);
@@ -1125,6 +1126,20 @@ public class GoFishLogicM : MonoBehaviourPun
 
                 Debug.Log(poolRPC);
                 Debug.Log("Should have printed data ^");
+                List<GameObject> newPool = new List<GameObject>();
+                String temp = "";
+                GameObject newCard = Instantiate(card) as GameObject;
+                newCard.SetActive(false);
+                for( int i = 0; i < poolRPC.Length; i++) {
+                    
+                    if (poolRPC[i] != '|'){
+                        temp += poolRPC[i];
+                    }
+                    else {
+                        Debug.Log(temp);
+                        temp = "";
+                    }
+                }
             }
         }
 
