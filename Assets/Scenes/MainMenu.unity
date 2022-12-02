@@ -11537,7 +11537,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: loading...
+  m_text: Incomplete. Win 8 games!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -13919,8 +13919,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -30}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 70.37256, y: -20.6133}
+  m_SizeDelta: {x: 340.7451, y: 31.2265}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &475799100
 MonoBehaviour:
@@ -25990,8 +25990,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -59}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 135.55, y: -48.5225}
+  m_SizeDelta: {x: 471.11, y: 29.045}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &881486420
 MonoBehaviour:
@@ -29990,8 +29990,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -30}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 71.0174, y: -18.9035}
+  m_SizeDelta: {x: 342.0348, y: 27.8071}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &977522419
 MonoBehaviour:
@@ -33507,8 +33507,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1, y: -31}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 62.6198, y: -18.5}
+  m_SizeDelta: {x: 327.2395, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1078932259
 GameObject:
@@ -42240,8 +42240,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -32}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 67.7764, y: -20.867615}
+  m_SizeDelta: {x: 335.5528, y: 27.7353}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1331784166
 MonoBehaviour:
@@ -44178,8 +44178,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -34}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 135.55284, y: -21.5}
+  m_SizeDelta: {x: 471.1057, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1396707788
 MonoBehaviour:
@@ -48405,7 +48405,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: loading...
+  m_text: Incomplete. Win 4 games!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -58651,8 +58651,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1, y: -55.999985}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 62.62, y: -44.1637}
+  m_SizeDelta: {x: 327.24, y: 26.3275}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1771681460
 GameObject:
@@ -67389,7 +67389,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2049705502}
   m_Layer: 0
-  m_Name: Achievements (Juan)
+  m_Name: Achievements
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

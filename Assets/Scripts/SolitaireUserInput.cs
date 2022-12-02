@@ -8,6 +8,7 @@ public class SolitaireUserInput : MonoBehaviour
 {
     public GameObject slot1;
     public GameObject wrongMove;
+    private Vector2 startPosition;
     
     private Solitaire solitaire;
     private float timer;
