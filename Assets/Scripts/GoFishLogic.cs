@@ -36,6 +36,8 @@ public class GoFishLogic : MonoBehaviour
 
     private float timer;
 
+    public Transform canvas;
+
     private enum gameStates
     {
         PICK_FROM_POOL,
@@ -144,6 +146,7 @@ public class GoFishLogic : MonoBehaviour
 
         for (int i = 0; i < pool.Count; i++)
         {
+            pool[i].transform.SetParent(canvas);
             pool[i].GetComponent<Card>().inPool = true;
         }
 
