@@ -110,7 +110,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
         //must be called repeatedly to make chatClient function
         if (chatClient != null)
         {
-            chatClient.Service();
+            //chatClient.Service();
         }
     }
 
