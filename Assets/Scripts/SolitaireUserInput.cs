@@ -8,7 +8,6 @@ public class SolitaireUserInput : MonoBehaviour
 {
     public GameObject slot1;
     public GameObject wrongMove;
-    private bool isDragging = false;
     private Vector2 startPosition;
     
     private Solitaire solitaire;
@@ -48,10 +47,6 @@ public class SolitaireUserInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isDragging) {
-            Debug.Log(isDragging);
-            transform.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        }
         totalTimer += Time.deltaTime;
         time = (int) totalTimer;
         timeText.text = time.ToString();
@@ -67,18 +62,6 @@ public class SolitaireUserInput : MonoBehaviour
             clickCount = 0;
         }
         GetMouseClick();
-    }
-
-    public void StartDrag() 
-    {
-        Debug.Log("clicked");
-        startPosition = transform.position;
-        isDragging = true;
-    }
-
-    public void EndDrag() 
-    {
-        isDragging = false;
     }
 
     void GetMouseClick() {
