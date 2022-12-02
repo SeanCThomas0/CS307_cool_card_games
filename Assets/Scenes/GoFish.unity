@@ -722,7 +722,83 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.32
---- !u!1 &539551518
+--- !u!1 &426495896
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 426495898}
+  - component: {fileID: 426495897}
+  m_Layer: 0
+  m_Name: FriendManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &426495897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 426495896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc3b668de49f74a5fbf7c7b085cbdc9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  msgInput: {fileID: 0}
+  msgArea: {fileID: 0}
+  toInput: {fileID: 0}
+  usernameInputField: {fileID: 0}
+  joinChatButton: {fileID: 0}
+  usernameInput: {fileID: 0}
+  chatRoomImage: {fileID: 0}
+  friendSceneButton: {fileID: 0}
+  inviteInformation: {fileID: 0}
+  mainCam: {fileID: 1958733817}
+  addFriendInput: {fileID: 0}
+  addFriendButton: {fileID: 0}
+  friendObjectButton: {fileID: 0}
+  contentContainer: {fileID: 0}
+  lastOnlineInfoText: {fileID: 0}
+  currentGameText: {fileID: 0}
+  friendInformation: {fileID: 0}
+--- !u!4 &426495898
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 426495896}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &693534098 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 5210697117267412122, guid: 5196beef684b33349931c1b203fae570, type: 3}
+  m_PrefabInstance: {fileID: 865262491}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &731994892 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8189398408075451658, guid: 714259784f91c4ff1808ce2539c7c6ba, type: 3}
+  m_PrefabInstance: {fileID: 1778215374}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &731994896 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8189398408075451660, guid: 714259784f91c4ff1808ce2539c7c6ba, type: 3}
+  m_PrefabInstance: {fileID: 1778215374}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &766570421
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -774,8 +850,75 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ShowMaskGraphic: 1
---- !u!114 &539551521
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 766570424}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 780356556}
+        m_TargetAssemblyTypeName: GoFishLogic, Scripts
+        m_MethodName: Exit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1603908490}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 426495897}
+        m_TargetAssemblyTypeName: ChatManager, Scripts
+        m_MethodName: updateCurrentGame
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 766570421}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &766570424
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -843,13 +986,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e6569cf091c7411f943186bb32d0f04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!114 &692413647
-MonoBehaviour:
+  cardDealerController: {fileID: 1033690096}
+  playerOne: {fileID: 58216171}
+  playerTwo: {fileID: 924078579}
+  playerThree: {fileID: 731994892}
+  playerFour: {fileID: 328814603}
+  playerTwoIsBot: 0
+  playerThreeIsBot: 0
+  playerFourIsBot: 0
+  guideText: {fileID: 1001943163}
+  quitButton: {fileID: 1564771131}
+  exitButton: {fileID: 766570421}
+  botDiffButtonText: {fileID: 24125319}
+  diffiBot: 0
+  ClickSound: {fileID: 1603908490}
+  WinSound: {fileID: 9123316615734622581}
+  CardSound: {fileID: 361958316}
+  Music: {fileID: 693534098}
+  isMultiplayer: 0
+  mainCam: {fileID: 1958733817}
+--- !u!4 &780356557
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
