@@ -169,12 +169,12 @@ public class GoFishLogicM : MonoBehaviourPun
             case 2:
                 queue.Enqueue(playerOne);
                 DistributeCards(playerOne, 5);
-                DisplayHand(playerOne);
+                //DisplayHand(playerOne);
 
                 queue.Enqueue(playerTwo);
-                playerTwoIsBot = true;
+                playerTwoIsBot = false;
                 DistributeCards(playerTwo, 5);
-                DisplayHand(playerTwo);
+                //DisplayHand(playerTwo);
 
                 playerThree.SetActive(false);
                 playerFour.SetActive(false);
@@ -237,20 +237,23 @@ public class GoFishLogicM : MonoBehaviourPun
 
         // display pool
 
-                List<String> poolRPC = new List<String>();
+        List<String> poolRPC = new List<String>();
         for(int i = 0; i < pool.Count; i++) {
             String temp = pool[i].GetComponent<Card>().suitValueString;
             temp+= " ";
             temp +=pool[i].GetComponent<Card>().numValueString;
             poolRPC.Add(temp);
-            Debug.Log(temp);
+            //Debug.Log(temp);
         }
 
 
         if (photonView.IsMine) {
             DisplayPool();
+            DisplayHand(playerOne);
+            DisplayHand(playerTwo);
             isPlayerOne = true;
             isPlayerTwo = false;
+            SendCardsToPlayer(poolRPC);
         }
         else {
             isPlayerOne = false;
@@ -1117,9 +1120,9 @@ public class GoFishLogicM : MonoBehaviourPun
             if(photonEvent.Code == (int)PhotonEventCodes.HostToClientData) {
                 Debug.Log("Trying to get data");
                 object[] data = (object[]) photonEvent.CustomData;
-                string username = (string) data[0];
+                List<String> poolRPC = (List<String>) data[0];
 
-                Debug.Log(username);
+                Debug.Log(poolRPC);
                 Debug.Log("Should have printed data ^");
             }
         }
@@ -1127,10 +1130,10 @@ public class GoFishLogicM : MonoBehaviourPun
     }
 
     
-    public static void SendCardsToPlayer(string username){
+    public static void SendCardsToPlayer(List<String> poolRPC){
         object[] content = new object[]
         {
-            username
+            poolRPC
         };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions {Receivers = ReceiverGroup.All};
         PhotonNetwork.RaiseEvent((int) PhotonEventCodes.HostToClientData,content,raiseEventOptions, SendOptions.SendUnreliable);

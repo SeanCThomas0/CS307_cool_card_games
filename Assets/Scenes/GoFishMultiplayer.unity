@@ -893,8 +893,8 @@ GameObject:
   m_Component:
   - component: {fileID: 780356557}
   - component: {fileID: 780356558}
-  - component: {fileID: 780356559}
   - component: {fileID: 780356560}
+  - component: {fileID: 780356561}
   m_Layer: 0
   m_Name: LogicController
   m_TagString: Untagged
@@ -1013,7 +1013,41 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &780356559
+--- !u!114 &780356560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 780356555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3feb47600dd417048875618330083f46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardDealerController: {fileID: 1033690096}
+  pool: []
+  playerOne: {fileID: 58216171}
+  playerTwo: {fileID: 924078579}
+  playerThree: {fileID: 731994892}
+  playerFour: {fileID: 328814603}
+  playerTwoIsBot: 0
+  playerThreeIsBot: 0
+  playerFourIsBot: 0
+  guideText: {fileID: 1001943163}
+  quitButton: {fileID: 1564771131}
+  exitButton: {fileID: 766570421}
+  botDiffButtonText: {fileID: 24125319}
+  diffiBot: 0
+  isPlayerOne: 0
+  isPlayerTwo: 0
+  ClickSound: {fileID: 1603908490}
+  WinSound: {fileID: 9123316615734622581}
+  CardSound: {fileID: 361958316}
+  Music: {fileID: 693534098}
+  isMultiplayer: 1
+  mainCam: {fileID: 1958733817}
+--- !u!114 &780356561
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1035,37 +1069,6 @@ MonoBehaviour:
   sceneViewId: 2
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &780356560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 780356555}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3feb47600dd417048875618330083f46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cardDealerController: {fileID: 1033690096}
-  playerOne: {fileID: 58216171}
-  playerTwo: {fileID: 924078579}
-  playerThree: {fileID: 731994892}
-  playerFour: {fileID: 328814603}
-  playerTwoIsBot: 0
-  playerThreeIsBot: 0
-  playerFourIsBot: 0
-  guideText: {fileID: 1001943163}
-  quitButton: {fileID: 1564771131}
-  exitButton: {fileID: 766570421}
-  botDiffButtonText: {fileID: 24125319}
-  diffiBot: 0
-  ClickSound: {fileID: 1603908490}
-  WinSound: {fileID: 9123316615734622581}
-  CardSound: {fileID: 361958316}
-  Music: {fileID: 693534098}
-  isMultiplayer: 1
-  mainCam: {fileID: 1958733817}
 --- !u!1001 &865262491
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1366,28 +1369,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 721050325665838455, guid: b4bb549f8488f472ea7a94fb1c151106, type: 3}
   m_PrefabInstance: {fileID: 721050325219356295}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1033690097
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1033690096}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 1
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1001 &1054955296
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2304,6 +2285,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerThree
       objectReference: {fileID: 0}
+    - target: {fileID: 8189398408075451658, guid: 714259784f91c4ff1808ce2539c7c6ba, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8189398408075451660, guid: 714259784f91c4ff1808ce2539c7c6ba, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -2841,6 +2826,10 @@ PrefabInstance:
     - target: {fileID: 8189398408075451658, guid: 714259784f91c4ff1808ce2539c7c6ba, type: 3}
       propertyPath: m_Name
       value: PlayerFour
+      objectReference: {fileID: 0}
+    - target: {fileID: 8189398408075451658, guid: 714259784f91c4ff1808ce2539c7c6ba, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8189398408075451660, guid: 714259784f91c4ff1808ce2539c7c6ba, type: 3}
       propertyPath: m_RootOrder
