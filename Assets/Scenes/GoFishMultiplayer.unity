@@ -493,7 +493,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &410450048
 RectTransform:
   m_ObjectHideFlags: 0
@@ -559,7 +559,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 780356556}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: GoFishLogic, Scripts
         m_MethodName: ChangeBotDIfficulty
         m_Mode: 1
@@ -821,7 +821,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 780356556}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: GoFishLogic, Scripts
         m_MethodName: Exit
         m_Mode: 1
@@ -892,9 +892,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 780356557}
-  - component: {fileID: 780356556}
   - component: {fileID: 780356558}
   - component: {fileID: 780356559}
+  - component: {fileID: 780356560}
   m_Layer: 0
   m_Name: LogicController
   m_TagString: Untagged
@@ -902,37 +902,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &780356556
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 780356555}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e6569cf091c7411f943186bb32d0f04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cardDealerController: {fileID: 1033690096}
-  playerOne: {fileID: 58216171}
-  playerTwo: {fileID: 924078579}
-  playerThree: {fileID: 731994892}
-  playerFour: {fileID: 328814603}
-  playerTwoIsBot: 0
-  playerThreeIsBot: 0
-  playerFourIsBot: 0
-  guideText: {fileID: 1001943163}
-  quitButton: {fileID: 1564771131}
-  exitButton: {fileID: 766570421}
-  botDiffButtonText: {fileID: 24125319}
-  diffiBot: 0
-  ClickSound: {fileID: 1603908490}
-  WinSound: {fileID: 9123316615734622581}
-  CardSound: {fileID: 361958316}
-  Music: {fileID: 693534098}
-  isMultiplayer: 1
-  mainCam: {fileID: 1958733817}
 --- !u!4 &780356557
 Transform:
   m_ObjectHideFlags: 0
@@ -1066,6 +1035,37 @@ MonoBehaviour:
   sceneViewId: 2
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &780356560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 780356555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3feb47600dd417048875618330083f46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardDealerController: {fileID: 1033690096}
+  playerOne: {fileID: 58216171}
+  playerTwo: {fileID: 924078579}
+  playerThree: {fileID: 731994892}
+  playerFour: {fileID: 328814603}
+  playerTwoIsBot: 0
+  playerThreeIsBot: 0
+  playerFourIsBot: 0
+  guideText: {fileID: 1001943163}
+  quitButton: {fileID: 1564771131}
+  exitButton: {fileID: 766570421}
+  botDiffButtonText: {fileID: 24125319}
+  diffiBot: 0
+  ClickSound: {fileID: 1603908490}
+  WinSound: {fileID: 9123316615734622581}
+  CardSound: {fileID: 361958316}
+  Music: {fileID: 693534098}
+  isMultiplayer: 1
+  mainCam: {fileID: 1958733817}
 --- !u!1001 &865262491
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2169,7 +2169,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 780356556}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: GoFishLogic, Scripts
         m_MethodName: Exit
         m_Mode: 1
