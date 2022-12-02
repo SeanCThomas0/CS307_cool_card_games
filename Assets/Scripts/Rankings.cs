@@ -85,16 +85,13 @@ public class Rankings : MonoBehaviour
 
             foreach (DataSnapshot childSnapshot in snapshot.Children.Reverse<DataSnapshot>())
             {
-
+                string username = childSnapshot.Child("user_data/username").Value.ToString();
+                
+                //Debug.Log(username);
                 if (childSnapshot.Child("game_statistics/" + path).Value == null)
                 {
                     break;
                 }
-
-                Debug.Log(childSnapshot.Key);
-
-                string username = childSnapshot.Child("user_data/username").Value.ToString();
-                //Debug.Log(username);
 
                 string stat = childSnapshot.Child("game_statistics/" + path).Value.ToString();
 

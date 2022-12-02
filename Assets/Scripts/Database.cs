@@ -38,7 +38,6 @@ public class Database : MonoBehaviour
     public void CreateAccountData(Firebase.Auth.FirebaseUser user)
     {
         DatabaseReference userRef = databaseReference.Child("users").Child(user.UserId);
-        
 
         //user_data
         Debug.Log("Database");

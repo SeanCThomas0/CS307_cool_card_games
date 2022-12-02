@@ -1246,18 +1246,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1874869070}
-        m_TargetAssemblyTypeName: ChatManager, Scripts
-        m_MethodName: updateCurrentGame
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 707182327}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &707182330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3384,67 +3372,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1805993610}
   m_CullTransparentMesh: 1
---- !u!1 &1874869069
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1874869071}
-  - component: {fileID: 1874869070}
-  m_Layer: 0
-  m_Name: FriendManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1874869070
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1874869069}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc3b668de49f74a5fbf7c7b085cbdc9a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  msgInput: {fileID: 0}
-  msgArea: {fileID: 0}
-  toInput: {fileID: 0}
-  usernameInputField: {fileID: 0}
-  joinChatButton: {fileID: 0}
-  usernameInput: {fileID: 0}
-  chatRoomImage: {fileID: 0}
-  friendSceneButton: {fileID: 0}
-  inviteInformation: {fileID: 0}
-  mainCam: {fileID: 0}
-  addFriendInput: {fileID: 0}
-  addFriendButton: {fileID: 0}
-  friendObjectButton: {fileID: 0}
-  contentContainer: {fileID: 0}
-  lastOnlineInfoText: {fileID: 0}
-  currentGameText: {fileID: 0}
-  friendInformation: {fileID: 0}
---- !u!4 &1874869071
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1874869069}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1914681053
 GameObject:
   m_ObjectHideFlags: 0
