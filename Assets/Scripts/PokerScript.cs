@@ -273,7 +273,7 @@ public class PokerScript : MonoBehaviour
             if(experienced) {
                 if (randIndex < 5) {
                     return "fold";
-                } else if(randIndex > 65) {
+                } else if(randIndex > 75) {
                     return "raise";
                 } else {
                     return "match";
@@ -570,6 +570,14 @@ public class PokerScript : MonoBehaviour
                 combindedCards.Add(tempplayedCards[j]);
             }
             for(int j = 0; j < 2; j++) {
+                if(currentPlayerCheck.peekAtCard(j).GetComponent<Card>().numValue == 14) {
+                    currentPlayerCheck.peekAtCard(j).GetComponent<Card>().numValue = 1;
+                }
+                cardDealer.SetSprite(currentPlayerCheck.peekAtCard(j));
+                if(currentPlayerCheck.peekAtCard(j).GetComponent<Card>().numValue == 1) {
+                    currentPlayerCheck.peekAtCard(j).GetComponent<Card>().numValue = 14;
+                }
+                
                 combindedCards.Add(currentPlayerCheck.peekAtCard(j));
                 if(j == 0) {
                     currentScore = currentPlayerCheck.peekAtCard(j).GetComponent<Card>().numValue;
@@ -853,6 +861,17 @@ public class PokerScript : MonoBehaviour
                 deckCount = 0;
                 Debug.Log("deal queue size: " + dealQueue.Count);
                 for(int i = 0; i < dealQueue.Count * 2; i++) {
+                    if(currentPlayer.getIsHuman() == false) {
+                        cardDealer.ShowBackKeepValue(pool[deckCount], Card.backColor.BLUE, Card.backDesign.OUTLINE_SIMPLE_PATTERN);
+                    } else {
+                        if(pool[deckCount].GetComponent<Card>().numValue == 14) {
+                            pool[deckCount].GetComponent<Card>().numValue = 1;
+                        }
+                        cardDealer.SetSprite(pool[deckCount]);
+                        if(pool[deckCount].GetComponent<Card>().numValue == 1) {
+                            pool[deckCount].GetComponent<Card>().numValue = 14;
+                        }
+                    }
                     currentPlayer.addToHand(pool[deckCount]);
                     deckCount++;
                     playerQueue.Enqueue(currentPlayer);
@@ -969,6 +988,9 @@ public class PokerScript : MonoBehaviour
                         }
                         System.Random rand = new System.Random();
                         int randIndex = rand.Next(0, currentPlayer.getChipAmount());
+                        if(currentPlayer.getChipAmount() == 1) {
+                            randIndex = 1;
+                        }
                         currentPlayer.addToBetAmount(randIndex);
                         potValue += randIndex;
                         matchBet = currentPlayer.getCurrentBet();
@@ -1038,6 +1060,13 @@ public class PokerScript : MonoBehaviour
                 Debug.Log("deal flop");
                 deckCount++;
                 for(int i = 0; i < 3; i++) {
+                    if(pool[deckCount].GetComponent<Card>().numValue == 14) {
+                        pool[deckCount].GetComponent<Card>().numValue = 1;
+                    }
+                    cardDealer.SetSprite(pool[deckCount]);
+                    if(pool[deckCount].GetComponent<Card>().numValue == 1) {
+                        pool[deckCount].GetComponent<Card>().numValue = 14;
+                    }
                     playedCards.Add(pool[deckCount]);
                     displayDeckCard(pool[deckCount]);
                     deckCount++;
@@ -1147,6 +1176,9 @@ public class PokerScript : MonoBehaviour
                         }
                         System.Random rand = new System.Random();
                         int randIndex = rand.Next(0, currentPlayer.getChipAmount());
+                        if(currentPlayer.getChipAmount() == 1) {
+                            randIndex = 1;
+                        }
                         currentPlayer.addToBetAmount(randIndex);
                         potValue += randIndex;
                         matchBet = currentPlayer.getCurrentBet();
@@ -1215,6 +1247,13 @@ public class PokerScript : MonoBehaviour
                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing turn card";
                 Debug.Log("deal turn");
                 deckCount++;
+                if(pool[deckCount].GetComponent<Card>().numValue == 14) {
+                    pool[deckCount].GetComponent<Card>().numValue = 1;
+                }
+                cardDealer.SetSprite(pool[deckCount]);
+                if(pool[deckCount].GetComponent<Card>().numValue == 1) {
+                    pool[deckCount].GetComponent<Card>().numValue = 14;
+                }
                 playedCards.Add(pool[deckCount]);
                 displayDeckCard(pool[deckCount]);
                 deckCount++;
@@ -1323,6 +1362,9 @@ public class PokerScript : MonoBehaviour
                         }
                         System.Random rand = new System.Random();
                         int randIndex = rand.Next(0, currentPlayer.getChipAmount());
+                        if(currentPlayer.getChipAmount() == 1) {
+                            randIndex = 1;
+                        }
                         currentPlayer.addToBetAmount(randIndex);
                         potValue += randIndex;
                         matchBet = currentPlayer.getCurrentBet();
@@ -1390,6 +1432,13 @@ public class PokerScript : MonoBehaviour
                 GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Dealing river card";
                 Debug.Log("deal river");
                 deckCount++;
+                if(pool[deckCount].GetComponent<Card>().numValue == 14) {
+                    pool[deckCount].GetComponent<Card>().numValue = 1;
+                }
+                cardDealer.SetSprite(pool[deckCount]);
+                if(pool[deckCount].GetComponent<Card>().numValue == 1) {
+                    pool[deckCount].GetComponent<Card>().numValue = 14;
+                }
                 playedCards.Add(pool[deckCount]);
                 displayDeckCard(pool[deckCount]);
                 deckCount++;
@@ -1498,6 +1547,9 @@ public class PokerScript : MonoBehaviour
                         }
                         System.Random rand = new System.Random();
                         int randIndex = rand.Next(0, currentPlayer.getChipAmount());
+                        if(currentPlayer.getChipAmount() == 1) {
+                            randIndex = 1;
+                        }
                         currentPlayer.addToBetAmount(randIndex);
                         potValue += randIndex;
                         matchBet = currentPlayer.getCurrentBet();
@@ -1572,6 +1624,7 @@ public class PokerScript : MonoBehaviour
                     currentPlayer.addToChipAmount(potValue);
                 } else {
                     roundWinner = determineRoundWinner(playerQueue, playedCards);
+
                     GameMessages.GetComponent<TMPro.TextMeshProUGUI>().text = "Player " + roundWinner.getUserID() + " wins the hand and a pot of " + potValue;
                     roundWinner.addToChipAmount(potValue);
                 }
