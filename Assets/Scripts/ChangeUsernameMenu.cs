@@ -37,11 +37,6 @@ public class ChangeUsernameMenu : MonoBehaviour
 
     private IEnumerator UpdateUsername()
     {
-        if (usernameText.Equals(""))
-        {
-            usernameText = user.DisplayName;
-        }
-
         Firebase.Auth.UserProfile profile = new Firebase.Auth.UserProfile
         {
             DisplayName = usernameText,
@@ -56,8 +51,7 @@ public class ChangeUsernameMenu : MonoBehaviour
             if (task.IsFaulted)
             {
                 Debug.Log("UpdateUserProfileAsync encountered an error: " + task.Exception);
-                Firebase.FirebaseException e = task.Exception.Flatten().InnerException as Firebase.FirebaseException;
-                ErrorMessage((AuthError)e.ErrorCode);
+                ErrorMessage(task.Exception);
                 return;
             }
 
@@ -80,7 +74,7 @@ public class ChangeUsernameMenu : MonoBehaviour
         });
     }
 
-    private void ErrorMessage(AuthError e)
+    private void ErrorMessage(System.AggregateException e)
     {
         Debug.Log("Exception: " + e);
     }

@@ -21,17 +21,11 @@ EditorBuildSettings:
     path: Assets/Scenes/LoginPage.unity
     guid: f9f99a741b5d29f4f935171605e798d1
   - enabled: 1
-    path: Assets/Scenes/Poker.unity
-    guid: 577c05781537edf439c15d73f8ab3885
-  - enabled: 1
     path: Assets/Scenes/EuchreTestScene.unity
     guid: ca0c616aab1663a419b14d0de99f70d9
   - enabled: 1
     path: Assets/Scenes/GameInstructions.unity
     guid: 04f9b83177059284f939b39462626524
-  - enabled: 1
-    path: Assets/Scenes/OfflineMainMenu.unity
-    guid: 37589fc5a53b145f6b67e05a1fb00e7b
   - enabled: 1
     path: Assets/Scenes/ContactDeveloper.unity
     guid: 1900dc1ebd6094704ac2444aaaa9e57c
@@ -41,7 +35,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GoFish.unity
     guid: 520c40cae671245d3a80c6ffcdbe8b0f
-  - enabled: 1
-    path: Assets/Scenes/GoFishMultiplayer.unity
-    guid: 0efbbd8be37b60a429c8439ab51caeb2
   m_configObjects: {}

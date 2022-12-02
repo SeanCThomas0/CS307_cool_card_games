@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.IO;
-//using SimpleFileBrowser;
+using SimpleFileBrowser;
 
 using Firebase;
 using Firebase.Extensions;
@@ -22,7 +22,6 @@ public class UploadImage : MonoBehaviour
 
     public GameObject uploadOption;
 
-    /*
     // Start is called before the first frame update
     void Start()
     {
@@ -106,5 +105,4 @@ public class UploadImage : MonoBehaviour
             rawImage.texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
         }
     }
-    */
 }
