@@ -755,4 +755,5 @@ public class DailyGoals : MonoBehaviour
             DetermineComplete();
         }
     }
+    
 }
