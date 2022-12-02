@@ -34,8 +34,6 @@ public class GoFishLogic : MonoBehaviour
     public GameObject exitButton;
     public GameObject botDiffButtonText;
 
-    private static bool isPaused = false;
-
     private float timer;
 
     private enum gameStates
@@ -786,16 +784,6 @@ public class GoFishLogic : MonoBehaviour
                 Debug.Log("Collided: " + hit.collider.name);
             }
         }
-    }
-
-    public void Pause() {
-        Time.timeScale = 0f;
-        isPaused = true;
-    }
-
-    public void Resume() {
-        Time.timeScale = 1f;
-        isPaused = false;
     }
 
     private void BotPlay()
