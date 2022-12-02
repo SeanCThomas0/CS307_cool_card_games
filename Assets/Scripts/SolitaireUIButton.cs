@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
-using Firebase.Auth;
 
 public class SolitaireUIButton : MonoBehaviour
 {
@@ -14,7 +13,6 @@ public class SolitaireUIButton : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     public bool hintClicked = false;
     public List<GameObject> possibleHints;
-    public static bool isPaused = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,17 +23,7 @@ public class SolitaireUIButton : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-    }
-
-    public void Pause() {
-        Time.timeScale = 0f;
-        isPaused = true;
-    }
-
-    public void Resume() {
-        Time.timeScale = 1f;
-        isPaused = false;
+        
     }
 
     public void PlayAgain() {
@@ -88,18 +76,9 @@ public class SolitaireUIButton : MonoBehaviour
     }
 
     public void Quit(string scene) {
-        if (scene.Equals("Scenes/MainMenu") && FirebaseAuth.DefaultInstance.CurrentUser == null)
-        {
-            Debug.Log("Change to Scenes/OfflineMainMenu");
-            SceneManager.LoadScene("Scenes/OfflineMainMenu");
-        }
-        else
-        {
-            Debug.Log("Change to " + scene);
-            SceneManager.LoadScene(scene);
-        }
+        Debug.Log("Change to" + scene);
+        SceneManager.LoadScene(scene);
     }
-
     public void Hint() {
         if (solitaire.playSpace1.Count != 0) {
             GameObject space1Card = Instantiate(solitaire.cardPrefab, new Vector3(100, 100, 0), Quaternion.identity);

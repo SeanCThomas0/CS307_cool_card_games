@@ -18,7 +18,7 @@ public class UserPreferences : MonoBehaviour
         PURPLE
     }
 
-    //private string DATA_URL = "https://cool-card-games-default-rtdb.firebaseio.com/";
+    private string DATA_URL = "https://cool-card-games-default-rtdb.firebaseio.com/";
 
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
@@ -359,8 +359,6 @@ public class UserPreferences : MonoBehaviour
         {
             await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/logo").SetValueAsync(true);
         }
-
-        await databaseReference.Child("users").Child(auth.CurrentUser.UserId).Child("customization/unlocked_cards/upload").SetValueAsync(true);
     }
 
     public async void ChangeCardSize()
@@ -747,11 +745,11 @@ public class UserPreferences : MonoBehaviour
                 checkUploadTwo.SetActive(false);
                 break;
             case Card.customDesign.UPLOAD:
-                checkUnlocked.transform.localPosition = new Vector3(202, 5, 0);
-                checkDefault.SetActive(false);
-                checkUnlocked.SetActive(false);
+                checkUnlocked.transform.localPosition = new Vector3(90, -85, -10);
                 checkUploadOne.SetActive(true);
                 checkUploadTwo.SetActive(true);
+                checkDefault.SetActive(false);
+                checkUnlocked.SetActive(false);
                 break;
         }
 

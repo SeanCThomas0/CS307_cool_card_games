@@ -8,8 +8,6 @@ using Photon.Pun;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using Firebase.Auth;
-using Firebase.Database;
 
 
 /*
@@ -41,17 +39,11 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     [SerializeField]
     private GameObject friendSceneButton;
 
-    [SerializeField]
-    private GameObject inviteInformation;
-
     public static string username;
     //public static Action<PhotonStatus> OnStatusUpdated = delegate { };
 
     private UserPreferences.backgroundColor backgroundColor;
     public GameObject mainCam;
-
-    private DatabaseReference databaseReference;
-    private FirebaseAuth auth;
 
     void OnEnable()
     {
@@ -97,9 +89,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             //OnSubscribed(new string[] {"Chatroom"}, new bool[] {true});
         }
 
-        auth = FirebaseAuth.DefaultInstance;
-        databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
-
 
 
     }
@@ -125,10 +114,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
             username = usernameInputField.text;
         }
         chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new Photon.Chat.AuthenticationValues(username));
-
-        //call infinite loop to update last online value for current user
-        StartCoroutine(updateLastOnline());
-
 
     }
 
@@ -168,7 +153,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         chatClient.Unsubscribe(new string[] { PhotonNetwork.CurrentRoom.Name });
         chatClient.SetOnlineStatus(ChatUserStatus.Offline);
-        
         Debug.Log("Leave");
     }
 
@@ -228,13 +212,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public void OnPrivateMessage(string sender, object message, string channelName)
     {
         Debug.Log("Received Private");
-
-        //invite message is received
-        if (message.ToString().Contains("has invited you to join ") && !message.ToString().Contains(username)) {
-            inviteInformation.SetActive(true);
-            return;
-        }
-
         if (string.IsNullOrEmpty(msgArea.text))
         {
             msgArea.text += "<color=black>(Private) " + message;
@@ -259,7 +236,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public void OnStatusUpdate(string user, int status, bool gotMessage, object message)
     {
         Debug.Log("OnStatusUpdate: " + user + "changed to " + status);
-
         GameObject[] friends = GameObject.FindGameObjectsWithTag("Friend");
         GameObject friendUpdate = friends[0];
         foreach (GameObject friend in friends)
@@ -335,14 +311,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     private Transform contentContainer;
     bool removeFriendbool = false;
 
-    [SerializeField]
-    private TMP_Text lastOnlineInfoText;
-    [SerializeField]
-    private TMP_Text currentGameText;
-    [SerializeField]
-    private GameObject friendInformation;
-    
-
     public void addPreviousFriends(string[] friends)
     {
 
@@ -400,140 +368,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     public void changeToMainMenuScene()
     {
         SceneManager.LoadScene("MainMenu");
-    }
-
-    //display information like last online and what game a friend
-    //is playing when clicking on a friend object
-    public void displayFriendInformation(GameObject friend) {
-        if(removeFriendbool) {
-            return;
-        }
-        string username = friend.GetComponentInChildren<TMP_Text>().text;
-        //if friend is offline change current game to N/A
-        if (friend.GetComponentInChildren<Image>().color == Color.red) {
-            databaseReference.Child("friend_info").Child(username).Child("current_game").SetValueAsync("N/A");
-        }
-
-        getFriendInfo(username);
-
-        friendInformation.SetActive(true);
-    
-    }
-
-    public async void getFriendInfo(string username) {
-        
-        string lastOnline  = "";
-        string currentGame = "";
-
-        //get last online value from database
-        await databaseReference.Child("friend_info").Child(username).Child("last_online").GetValueAsync().ContinueWith(work =>
-        {
-            if (work.IsCanceled)
-            {
-                Debug.Log("get last online cancelled");
-            }
-            if (work.IsFaulted)
-            {
-                Debug.Log("get last online faulted");
-            }
-            else
-            {
-                if (work.Result.Value != null)
-                {
-                    lastOnline = work.Result.Value.ToString();
-                    Debug.Log("from firebase (last_online) =" + lastOnline);
-                }
-                else
-                {
-                    lastOnline = "N/A";
-                    Debug.Log("nothing in firebase (last_online), set to = N/A");
-                }
-            }
-        });
-
-        //get current game value from database
-        await databaseReference.Child("friend_info").Child(username).Child("current_game").GetValueAsync().ContinueWith(work =>
-        {
-            if (work.IsCanceled)
-            {
-                Debug.Log("get current game cancelled");
-            }
-            if (work.IsFaulted)
-            {
-                Debug.Log("get current game faulted");
-            }
-            else
-            {
-                if (work.Result.Value != null)
-                {
-                    currentGame = work.Result.Value.ToString();
-                    Debug.Log("from firebase (current_game) =" + currentGame);
-                }
-                else
-                {
-                    currentGame = "N/A";
-                    Debug.Log("nothing in firebase (current_game), set to = N/A");
-                }
-            }
-        });
-
-        lastOnlineInfoText.text = lastOnline;
-        currentGameText.text = currentGame;
-
-        Debug.Log("Last Online: " + lastOnline);
-        Debug.Log("Current Game: " + currentGame);
-
-    }
-
-    //close the friend information page
-    public void closeButton() {
-        friendInformation.SetActive(false);
-    }
-
-    //invite friend to join game lobby
-    public void inviteFriend(GameObject friend) {
-        chatClient.SendPrivateMessage(friend.GetComponentInChildren<TMP_Text>().text, username + " has invited you to join (game)</color>");
-    }
-
-    //accept invite
-    public void acceptButton() {
-        inviteInformation.SetActive(false);
-    }
-
-    //decline invite
-    public void declineButton() {
-        inviteInformation.SetActive(false);
-    }
-
-    IEnumerator updateLastOnline() {
-
-        Debug.Log("update");
-
-        //put last online info in database
-        DateTime utc = System.DateTime.UtcNow;
-        utc = utc.AddHours(-5);
-        string lastOnline = utc.ToString("HH:mm dd MMMM, yyyy");
-        databaseReference.Child("friend_info").Child(username).Child("last_online").SetValueAsync(lastOnline);
-
-        yield return new WaitForSeconds(60);
-
-        StartCoroutine(updateLastOnline());
-        
-    }
-
-    //put current game playing in database
-    public void updateCurrentGame(GameObject gameButton) {
-        Debug.Log("update current Game");
-
-        //put name of game scene into database
-        string gameName = gameButton.GetComponentInChildren<TMP_Text>().text;
-        
-        if (gameName.Equals("Exit")) {
-            gameName = "N/A";
-        }
-
-        databaseReference.Child("friend_info").Child(username).Child("current_game").SetValueAsync(gameName);
-
     }
 
 
