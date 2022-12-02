@@ -27,6 +27,18 @@ namespace PhotonScripts
         // Update is called once per frame
         void Update()
         {
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 2 && PhotonNetwork.CurrentRoom.Name == "GoFish") {
+                //StartGame("GoFishMultiplayer");
+                //int wha  =0;
+                SceneManager.LoadScene("GoFishMultiplayer");
+                //Debug.Log("JOINED ROOM SEE IF FULL, IF IT IS LOAD SCENE");
+
+
+
+
+
+            }
+
             
         }
         public override void OnConnectedToMaster()
@@ -135,15 +147,10 @@ namespace PhotonScripts
             }
             if (PhotonNetwork.CurrentRoom.PlayerCount == 2) {
                 //StartGame("GoFishMultiplayer");
-                int wha  =0;
-                SceneManager.LoadScene("GoFishMultiplayer");
-                Debug.Log("JOINED ROOM SEE IF FULL, IF IT IS LOAD SCENE");
-                object[] content = new object[]
-                {
-                    wha
-                };
-                RaiseEventOptions raiseEventOptions = new RaiseEventOptions {Receivers = ReceiverGroup.All};
-                PhotonNetwork.RaiseEvent((int) PhotonEventCodes.StartGame,content,raiseEventOptions, SendOptions.SendUnreliable);
+                //int wha  =0;
+                //SceneManager.LoadScene("GoFishMultiplayer");
+                //Debug.Log("JOINED ROOM SEE IF FULL, IF IT IS LOAD SCENE");
+
 
 
 
