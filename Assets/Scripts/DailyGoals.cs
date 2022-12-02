@@ -1024,4 +1024,5 @@ public class DailyGoals : MonoBehaviour
             }
         });
     }
+    
 }
