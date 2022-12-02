@@ -27,17 +27,12 @@ namespace PhotonScripts
         // Update is called once per frame
         void Update()
         {
-            if (PhotonNetwork.CurrentRoom.PlayerCount == 2 && PhotonNetwork.CurrentRoom.Name == "GoFish") {
-                //StartGame("GoFishMultiplayer");
-                //int wha  =0;
-                SceneManager.LoadScene("GoFishMultiplayer");
-                //Debug.Log("JOINED ROOM SEE IF FULL, IF IT IS LOAD SCENE");
-
-
-
-
-
+            if (PhotonNetwork.IsConnectedAndReady) {
+                if (PhotonNetwork.CurrentRoom.PlayerCount == 2 && PhotonNetwork.CurrentRoom.Name == "GoFish") {
+                    SceneManager.LoadScene("GoFishMultiplayer");
+                }
             }
+
 
             
         }
