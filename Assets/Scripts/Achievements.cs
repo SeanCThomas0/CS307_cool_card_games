@@ -58,19 +58,11 @@ public class Achievements : MonoBehaviour
             {
                 if (task.Result.Value != null)
                 {
-                    int tempVal = Int32.Parse(task.Result.Value.ToString());
-                    if (tempVal < 5) 
-                    {
-                        tempSetTo = "Get 5 wins for Go Fish: " + task.Result.Value.ToString() + "/5 Incomplete";
-                    } 
-                    else
-                    {
-                        tempSetTo = "Get 5 wins for Go Fish: 5/5 Completed";
-                    }
+                    tempSetTo = "Wins: " + task.Result.Value.ToString();
                 }
                 else
                 {
-                    tempSetTo = "Get 5 wins for Go Fish: 0/5 Incomplete";
+                    tempSetTo = "Wins: Not Available";
                 }
             }
         });
@@ -92,19 +84,11 @@ public class Achievements : MonoBehaviour
             {
                 if (task.Result.Value != null)
                 {
-                    int tempVal = Int32.Parse(task.Result.Value.ToString());
-                    if (tempVal < 20)
-                    {
-                        tempSetTo = "Get 20 sets in Go Fish: " + task.Result.Value.ToString() + "/20 Incomplete";
-                    } 
-                    else 
-                    {
-                        tempSetTo = "Get 20 sets in Go Fish: 20/20 Completed";
-                    }
+                    tempSetTo = "Sets: " + task.Result.Value.ToString();
                 }
                 else
                 {
-                    tempSetTo = "Get 20 sets in Go Fish: 0/20 Incomplete";
+                    tempSetTo = "Sets: Not Available";
                 }
             }
         });
@@ -126,19 +110,11 @@ public class Achievements : MonoBehaviour
             {
                 if (task.Result.Value != null)
                 {
-                    int tempVal = Int32.Parse(task.Result.Value.ToString());
-                    if (tempVal < 5)
-                    {
-                        tempSetTo = "Get 5 wins in Solitaire: " + task.Result.Value.ToString() + "/5 Incomplete";
-                    }
-                    else
-                    {
-                        tempSetTo = "Get 5 wins in Solitaire: 5/5 Completed";
-                    }
+                    tempSetTo = "Wins: " + task.Result.Value.ToString();
                 }
                 else
                 {
-                    tempSetTo = "Get 5 wins in Solitaire: 0/5 Incomplete";
+                    tempSetTo = "Wins: Not Available";
                 }
             }
         });
@@ -160,19 +136,11 @@ public class Achievements : MonoBehaviour
             {
                 if (task.Result.Value != null)
                 {
-                    int tempVal = Int32.Parse(task.Result.Value.ToString());
-                    if (tempVal < 5)
-                    {
-                        tempSetTo = "Get 5 wins in Euchre: " + task.Result.Value.ToString() + "/5 Incomplete";
-                    }
-                    else
-                    {
-                        tempSetTo = "Get 5 wins in Euchre: 5/5 Completed";
-                    }
+                    tempSetTo = "Wins: " + task.Result.Value.ToString();
                 }
                 else
                 {
-                    tempSetTo = "Get 5 wins in Euchre: 0/5 Incomplete";
+                    tempSetTo = "Wins: Not Available";
                 }
             }
         });
@@ -194,16 +162,11 @@ public class Achievements : MonoBehaviour
             {
                 if (task.Result.Value != null)
                 {
-                    int tempVal = Int32.Parse(task.Result.Value.ToString());
-                    if (tempVal < 20) {
-                        tempSetTo = "Get 20 tricks in Euchre: " + task.Result.Value.ToString() + "/20 Incomplete";
-                    } else {
-                        tempSetTo = "Get 20 tricks in Euchre: 20/20 Completed";
-                    }
+                    tempSetTo = "Tricks: " + task.Result.Value.ToString();
                 }
                 else
                 {
-                    tempSetTo = "Get 20 tricks in Euchre: 0/20 Incomplete";
+                    tempSetTo = "Tricks: Not Available";
                 }
             }
         });
@@ -225,19 +188,11 @@ public class Achievements : MonoBehaviour
             {
                 if (task.Result.Value != null)
                 {
-                    int tempVal = Int32.Parse(task.Result.Value.ToString());
-                    if (tempVal < 10)
-                    {
-                        tempSetTo = "Get 10 wins in Bruh: " + task.Result.Value.ToString() + "/10 Incomplete";
-                    }
-                    else
-                    {
-                        tempSetTo = "Get 10 wins in Bruh: 10/10 Completed";
-                    }
+                    tempSetTo = "Wins: " + task.Result.Value.ToString();
                 }
                 else
                 {
-                    tempSetTo = "Get 10 wins in Bruh: 0/10 Incomplete";
+                    tempSetTo = "Wins: Not Available";
                 }
             }
         });
@@ -259,19 +214,11 @@ public class Achievements : MonoBehaviour
             {
                 if (task.Result.Value != null)
                 {
-                    int tempVal = Int32.Parse(task.Result.Value.ToString());
-                    if (tempVal < 10)
-                    {
-                        tempSetTo = "Get 10 wins in Poker: " + task.Result.Value.ToString() + "/10 Incomplete";
-                    }
-                    else
-                    {
-                        tempSetTo = "Get 10 wins in Poker: 10/10 Completed";
-                    }
+                    tempSetTo = "Wins: " + task.Result.Value.ToString();
                 }
                 else
                 {
-                    tempSetTo = "Get 10 wins in Poker: 0/10 Incomplete";
+                    tempSetTo = "Wins: Not Available";
                 }
             }
         });
