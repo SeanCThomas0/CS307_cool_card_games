@@ -5,6 +5,8 @@ using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
 using UnityEngine.SceneManagement;
+using TMPro;
+
 
 
 
@@ -14,6 +16,8 @@ namespace PhotonScripts
         IMatchmakingCallbacks, IInRoomCallbacks, ILobbyCallbacks, IErrorInfoCallback, IConnectionCallbacks
 
     {
+
+        [SerializeField] private TMPro.TextMeshProUGUI GoFishPlayerCountText = null;
         // Start is called before the first frame update
         void Start()
         {
@@ -118,6 +122,7 @@ namespace PhotonScripts
                 PhotonNetwork.JoinOrCreateRoom("GoFish",options, null);
                 //SceneManager.LoadScene("GoFishMultiplayer");
                 
+                
                 //StartGame("GoFishMultiplayer");
             }
         }
@@ -125,10 +130,24 @@ namespace PhotonScripts
         public override void OnJoinedRoom(){
             Debug.Log("joined room:" + PhotonNetwork.CurrentRoom.Name);
             Debug.Log("Players in " +PhotonNetwork.CurrentRoom.Name +":" + PhotonNetwork.CurrentRoom.PlayerCount);
+            if(PhotonNetwork.CurrentRoom.Name =="GoFish") {
+                updateTextPlayersInGoFishRoom(PhotonNetwork.CurrentRoom.PlayerCount);
+            }
             if (PhotonNetwork.CurrentRoom.PlayerCount == 2) {
                 //StartGame("GoFishMultiplayer");
+                int wha  =0;
                 SceneManager.LoadScene("GoFishMultiplayer");
                 Debug.Log("JOINED ROOM SEE IF FULL, IF IT IS LOAD SCENE");
+                object[] content = new object[]
+                {
+                    wha
+                };
+                RaiseEventOptions raiseEventOptions = new RaiseEventOptions {Receivers = ReceiverGroup.All};
+                PhotonNetwork.RaiseEvent((int) PhotonEventCodes.StartGame,content,raiseEventOptions, SendOptions.SendUnreliable);
+
+
+
+
             }
         }
 
@@ -139,6 +158,13 @@ namespace PhotonScripts
         {
             Debug.LogWarning("Network Controller was destoryed: could be bad? ");
         }
+
+        public void updateTextPlayersInGoFishRoom(int numOfPlayers) {
+            GoFishPlayerCountText.text = numOfPlayers.ToString("0");
+
+        }
+
+
 
 
     }
