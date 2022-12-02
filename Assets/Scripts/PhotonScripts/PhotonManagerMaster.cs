@@ -28,8 +28,12 @@ namespace PhotonScripts
         void Update()
         {
             if (PhotonNetwork.IsConnectedAndReady) {
-                if (PhotonNetwork.CurrentRoom.PlayerCount == 2 && PhotonNetwork.CurrentRoom.Name == "GoFish") {
-                    SceneManager.LoadScene("GoFishMultiplayer");
+                if (PhotonNetwork.CurrentRoom != null)
+                {
+                    if (PhotonNetwork.CurrentRoom.PlayerCount == 2 && PhotonNetwork.CurrentRoom.Name == "GoFish")
+                    {
+                        SceneManager.LoadScene("GoFishMultiplayer");
+                    }
                 }
             }
 

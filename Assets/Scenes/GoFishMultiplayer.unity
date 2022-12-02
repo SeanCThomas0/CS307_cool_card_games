@@ -821,8 +821,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GoFishLogic, Scripts
+      - m_Target: {fileID: 780356560}
+        m_TargetAssemblyTypeName: GoFishLogicM, Scripts
         m_MethodName: Exit
         m_Mode: 1
         m_Arguments:
