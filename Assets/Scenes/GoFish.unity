@@ -998,6 +998,7 @@ MonoBehaviour:
   quitButton: {fileID: 1564771131}
   exitButton: {fileID: 766570421}
   botDiffButtonText: {fileID: 24125319}
+  canvas: {fileID: 1933980445}
   diffiBot: 0
   ClickSound: {fileID: 1603908490}
   WinSound: {fileID: 9123316615734622581}
