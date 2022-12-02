@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Firebase.Auth;
+using Firebase.Database;
 
 
 public class BruhManager : MonoBehaviour
@@ -52,6 +54,13 @@ public class BruhManager : MonoBehaviour
 
     private UserPreferences.backgroundColor backgroundColor;
     public GameObject mainCam;
+
+    private FirebaseUser user;
+    private DatabaseReference userRef;
+    private DateTime curTime;
+    private int curUserTournamentWinCount = 0;
+    private int curUserWinCount = 0;
+    private bool databaseUpdated = false;
 
     [SerializeField] public AudioSource ClickSound;
     [SerializeField] public AudioSource WinSound;
@@ -499,6 +508,15 @@ public class BruhManager : MonoBehaviour
             gameEnded = true;
             playerWin = true;
             Debug.Log("Player wins");
+
+            if (user != null)
+            {
+                userRef.Child("win_count").SetValueAsync(++curUserWinCount);
+                userRef.Child("tournament/win_count/" + curTime.Year + "/" + curTime.Month).SetValueAsync(++curUserTournamentWinCount);
+                Debug.Log("win_count: " + curUserWinCount);
+                Debug.Log("tournament/win_count: " + curUserTournamentWinCount);
+            }
+
             GameText.GetComponent<TMPro.TextMeshProUGUI>().text = "You Win!!!";
             Music.Pause();
             WinSound.Play();
@@ -515,7 +533,11 @@ public class BruhManager : MonoBehaviour
 
     public void gameLoop()
     {
-        bool finished = checkForWinner();
+        bool finished = false;
+        if (!gameEnded)
+        {
+            finished = checkForWinner();
+        }
         if (finished == false && gameEnded == false)
         {
             if (currentState == 0)
@@ -806,7 +828,6 @@ public class BruhManager : MonoBehaviour
                 currentState = 1;
             }
         }
-
     }
 
     IEnumerator sleepFunction()
@@ -881,6 +902,23 @@ public class BruhManager : MonoBehaviour
 
         userPlayer = new CardPlayer("1");
         currentState = 0;
+
+        user = FirebaseAuth.DefaultInstance.CurrentUser;
+
+        if (user != null)
+        {
+            userRef = FirebaseDatabase.DefaultInstance.RootReference.Child("users").Child(user.UserId).Child("game_statistics/bruh");
+
+            databaseUpdated = false;
+            curTime = System.DateTime.Now;
+
+            if (user == null)
+            {
+                Debug.Log("Current user = null");
+            }
+
+            StartCoroutine(LoadRankingData());
+        }
     }
 
     // Update is called once per frame
@@ -932,4 +970,44 @@ public class BruhManager : MonoBehaviour
         diff = false;
         currentInput = "DiffButton";
     }
+
+    private IEnumerator LoadRankingData()
+    {
+        yield return userRef.Child("win_count").GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("win_count = 0");
+            }
+            if (task.IsFaulted)
+            {
+                Debug.Log("win_count = 0");
+            }
+            else
+            {
+                curUserWinCount = Int32.Parse(task.Result.Value.ToString());
+                Debug.Log("win_count = " + curUserWinCount);
+            }
+
+
+        });
+
+        userRef.Child("tournament/win_count/" + curTime.Year + "/" + curTime.Month).GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("tournament/win_count = 0");
+            }
+            if (task.IsFaulted)
+            {
+                Debug.Log("tournament/win_count = 0");
+            }
+            else
+            {
+                curUserTournamentWinCount = Int32.Parse(task.Result.Value.ToString());
+                Debug.Log("tournament/win_count = " + curUserTournamentWinCount);
+            }
+        });
+    }
+
 }
