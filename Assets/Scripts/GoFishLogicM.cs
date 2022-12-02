@@ -237,12 +237,13 @@ public class GoFishLogicM : MonoBehaviourPun
 
         // display pool
 
-        List<String> poolRPC = new List<String>();
+        String poolRPC ="";
         for(int i = 0; i < pool.Count; i++) {
             String temp = pool[i].GetComponent<Card>().suitValueString;
             temp+= " ";
             temp +=pool[i].GetComponent<Card>().numValueString;
-            poolRPC.Add(temp);
+            temp+= "|";
+            poolRPC += temp;
             //Debug.Log(temp);
         }
 
@@ -1120,7 +1121,7 @@ public class GoFishLogicM : MonoBehaviourPun
             if(photonEvent.Code == (int)PhotonEventCodes.HostToClientData) {
                 Debug.Log("Trying to get data");
                 object[] data = (object[]) photonEvent.CustomData;
-                List<String> poolRPC = (List<String>) data[0];
+                String poolRPC = (String) data[0];
 
                 Debug.Log(poolRPC);
                 Debug.Log("Should have printed data ^");
@@ -1130,7 +1131,7 @@ public class GoFishLogicM : MonoBehaviourPun
     }
 
     
-    public static void SendCardsToPlayer(List<String> poolRPC){
+    public static void SendCardsToPlayer(String poolRPC){
         object[] content = new object[]
         {
             poolRPC
