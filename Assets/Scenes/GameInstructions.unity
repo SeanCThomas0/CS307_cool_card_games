@@ -1853,8 +1853,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1798859122}
   m_HandleRect: {fileID: 1798859121}
   m_Direction: 2
-  m_Value: 1.000001
-  m_Size: 0.571273
+  m_Value: 1.0000005
+  m_Size: 0.40825683
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2124,8 +2124,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.21976626}
   m_AnchorMax: {x: 1, y: 0.7404209}
-  m_AnchoredPosition: {x: -39.391968, y: -207.7416}
-  m_SizeDelta: {x: -140.4915, y: 719.0031}
+  m_AnchoredPosition: {x: -37.733276, y: -412.06213}
+  m_SizeDelta: {x: -137.1741, y: 1127.6443}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1430259721
 MonoBehaviour:
@@ -2210,7 +2210,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 18.35022, z: 0, w: -169.83105}
+  m_margin: {x: 0, y: 18.35022, z: 0, w: 0.50579834}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
