@@ -39,7 +39,7 @@ While this is currently a working program, there are always things to improve up
 - Animations
 - and more...
 
-## About the Programmers (at time of development)
+## About the Programmers
 Jonathan Maskew, Isaac Stephan, Grant Larsen, Sean Thomas, Tommy Nguyen, Juan Diaz were active contributors to the project. At the time of development, each were Juniors in Computer Science at Purdue University.
 
 Jonathan Maskew contributed Go Fish (and the AI to play against) as well as many customizability features. He implemented a card dealer class for the card games to utilize. He added the ability for card size to be change as well as the ability to select and upload custom card backs. He implemented the ability to change background colors. He also added a stats page to view from the profile. Lastly, he implemented the daily goals.
